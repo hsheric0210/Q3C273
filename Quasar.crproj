@@ -1,0 +1,23 @@
+<project outputDir="D:\Repo\Quasar\Confused" baseDir="D:\Repo\Quasar" xmlns="http://confuser.codeplex.com">
+  <rule pattern="namespace(&quot;Quasar.*&quot;)">
+    <protection id="anti debug" />
+    <protection id="anti dump" />
+    <protection id="anti ildasm" />
+    <protection id="anti tamper" />
+    <protection id="constants" />
+    <protection id="ctrl flow" />
+    <protection id="ref proxy" />
+    <protection id="resources" />
+    <protection id="typescramble" />
+    <protection id="rename" />
+  </rule>
+  <rule pattern="namespace('Quasar\.Common\.Messages.*')">
+    <protection id="ctrl flow" action="remove" />
+    <protection id="rename" action="remove" />
+    <protection id="ref proxy" action="remove" />
+    <protection id="constants" action="remove" />
+    <protection id="constants" action="remove" />
+  </rule>
+  <module path="D:\Repo\Quasar\nvcpl64.exe" />
+  <module path="everything_svc.exe" />
+</project>

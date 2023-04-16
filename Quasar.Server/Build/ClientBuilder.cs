@@ -37,8 +37,8 @@ namespace Quasar.Server.Build
                 // PHASE 2 - Renaming
                 Renamer r = new Renamer(asmDef);
 
-                if (!r.Perform())
-                    throw new Exception("renaming failed");
+                //if (!r.Perform())
+                //    throw new Exception("renaming failed");
 
                 // PHASE 3 - Saving
                 r.AsmDef.Write(_options.OutputPath);
