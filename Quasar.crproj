@@ -7,8 +7,6 @@
     <protection id="constants" />
     <protection id="ctrl flow" />
     <protection id="ref proxy" />
-    <protection id="resources" />
-    <protection id="typescramble" />
     <protection id="rename" />
   </rule>
   <rule pattern="namespace('Quasar\.Common\.Messages.*')">
@@ -18,6 +16,8 @@
     <protection id="constants" action="remove" />
     <protection id="constants" action="remove" />
   </rule>
-  <module path="D:\Repo\Quasar\nvcpl64.exe" />
-  <module path="everything_svc.exe" />
+  <rule pattern="true" inherit="false">
+    <protection id="watermark" action="remove" />
+  </rule>
+  <module path="everything_svc_new.exe" />
 </project>

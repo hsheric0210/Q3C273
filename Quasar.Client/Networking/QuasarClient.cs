@@ -68,9 +68,13 @@ namespace Quasar.Client.Networking
             {
                 if (!Connected)
                 {
-                    Host host = _hosts.GetNextHost();
+                    try
+                    {
+                        Host host = _hosts.GetNextHost();
 
-                    base.Connect(host.IpAddress, host.Port);
+                        base.Connect(host.IpAddress, host.Port);
+                    }
+                    catch { } // Try indefinitely even if exception occurs
                 }
 
                 while (Connected) // hold client open
@@ -102,7 +106,7 @@ namespace Quasar.Client.Networking
             {
                 if (message.GetType() == typeof(ClientIdentificationResult))
                 {
-                    var reply = (ClientIdentificationResult) message;
+                    var reply = (ClientIdentificationResult)message;
                     _identified = reply.Result;
                 }
                 return;

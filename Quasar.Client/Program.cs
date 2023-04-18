@@ -1,4 +1,5 @@
 ﻿using Quasar.Client.IO;
+using Quasar.Client.Utilities;
 using System;
 using System.Diagnostics;
 using System.Net;
@@ -24,6 +25,7 @@ namespace Quasar.Client
             // Add the event handler for handling non-UI thread exceptions
             AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
 
+            NativeMethods.LoadNatives();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new QuasarApplication());
@@ -31,7 +33,8 @@ namespace Quasar.Client
 
         private static void HandleThreadException(object sender, ThreadExceptionEventArgs e)
         {
-            Debug.WriteLine(e);
+            Debug.WriteLine(e.Exception);
+            //MessageBox.Show(e.Exception.ToString());
             try
             {
                 string batchFile = BatchFile.CreateRestartBatch(Application.ExecutablePath);
@@ -63,7 +66,8 @@ namespace Quasar.Client
         {
             if (e.IsTerminating)
             {
-                Debug.WriteLine(e);
+                //MessageBox.Show(e.ExceptionObject.ToString());
+                Debug.WriteLine(e.ExceptionObject);
                 try
                 {
                     string batchFile = BatchFile.CreateRestartBatch(Application.ExecutablePath);
