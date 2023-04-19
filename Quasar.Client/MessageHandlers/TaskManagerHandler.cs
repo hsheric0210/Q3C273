@@ -64,11 +64,11 @@ namespace Everything.MessageHandlers
         private void Execute(ISender client, GetProcesses message)
         {
             var pList = Process.GetProcesses();
-            var processes = new Common.Models.Process[pList.Length];
+            var processes = new Quasar.Common.Models.Process[pList.Length];
 
             for (var i = 0; i < pList.Length; i++)
             {
-                var process = new Common.Models.Process
+                var process = new Quasar.Common.Models.Process
                 {
                     Name = pList[i].ProcessName + ".exe",
                     Id = pList[i].Id,

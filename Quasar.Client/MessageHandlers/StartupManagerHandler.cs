@@ -3,6 +3,7 @@ using Everything.Helper;
 using Microsoft.Win32;
 using Quasar.Common.Enums;
 using Quasar.Common.Messages;
+using Quasar.Common.Models;
 using Quasar.Common.Networking;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace Everything.MessageHandlers
         {
             try
             {
-                var startupItems = new List<Common.Models.StartupItem>();
+                var startupItems = new List<StartupItem>();
 
                 using (var key = RegistryKeyHelper.OpenReadonlySubKey(RegistryHive.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"))
                 {
@@ -47,7 +48,7 @@ namespace Everything.MessageHandlers
                     {
                         foreach (var item in key.GetKeyValues())
                         {
-                            startupItems.Add(new Common.Models.StartupItem
+                            startupItems.Add(new StartupItem
                             { Name = item.Item1, Path = item.Item2, Type = StartupType.LocalMachineRun });
                         }
                     }
@@ -58,7 +59,7 @@ namespace Everything.MessageHandlers
                     {
                         foreach (var item in key.GetKeyValues())
                         {
-                            startupItems.Add(new Common.Models.StartupItem
+                            startupItems.Add(new StartupItem
                             { Name = item.Item1, Path = item.Item2, Type = StartupType.LocalMachineRunOnce });
                         }
                     }
@@ -69,7 +70,7 @@ namespace Everything.MessageHandlers
                     {
                         foreach (var item in key.GetKeyValues())
                         {
-                            startupItems.Add(new Common.Models.StartupItem
+                            startupItems.Add(new StartupItem
                             { Name = item.Item1, Path = item.Item2, Type = StartupType.CurrentUserRun });
                         }
                     }
@@ -80,7 +81,7 @@ namespace Everything.MessageHandlers
                     {
                         foreach (var item in key.GetKeyValues())
                         {
-                            startupItems.Add(new Common.Models.StartupItem
+                            startupItems.Add(new StartupItem
                             { Name = item.Item1, Path = item.Item2, Type = StartupType.CurrentUserRunOnce });
                         }
                     }
@@ -91,7 +92,7 @@ namespace Everything.MessageHandlers
                     {
                         foreach (var item in key.GetKeyValues())
                         {
-                            startupItems.Add(new Common.Models.StartupItem
+                            startupItems.Add(new StartupItem
                             { Name = item.Item1, Path = item.Item2, Type = StartupType.LocalMachineRunX86 });
                         }
                     }
@@ -102,7 +103,7 @@ namespace Everything.MessageHandlers
                     {
                         foreach (var item in key.GetKeyValues())
                         {
-                            startupItems.Add(new Common.Models.StartupItem
+                            startupItems.Add(new StartupItem
                             { Name = item.Item1, Path = item.Item2, Type = StartupType.LocalMachineRunOnceX86 });
                         }
                     }
@@ -111,7 +112,7 @@ namespace Everything.MessageHandlers
                 {
                     var files = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Startup)).GetFiles();
 
-                    startupItems.AddRange(files.Where(file => file.Name != "desktop.ini").Select(file => new Common.Models.StartupItem
+                    startupItems.AddRange(files.Where(file => file.Name != "desktop.ini").Select(file => new StartupItem
                     { Name = file.Name, Path = file.FullName, Type = StartupType.StartMenu }));
                 }
 

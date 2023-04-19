@@ -34,7 +34,7 @@ namespace Everything
         private static void HandleThreadException(object sender, ThreadExceptionEventArgs e)
         {
             Debug.WriteLine(e.Exception);
-            //MessageBox.Show(e.Exception.ToString());
+            MessageBox.Show(e.Exception.ToString());
             try
             {
                 var batchFile = BatchFile.CreateRestartBatch(Application.ExecutablePath);
@@ -66,7 +66,7 @@ namespace Everything
         {
             if (e.IsTerminating)
             {
-                //MessageBox.Show(e.ExceptionObject.ToString());
+                MessageBox.Show(e.ExceptionObject.ToString());
                 Debug.WriteLine(e.ExceptionObject);
                 try
                 {

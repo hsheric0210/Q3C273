@@ -9,12 +9,15 @@
     <protection id="ref proxy" />
     <protection id="rename" />
   </rule>
-  <rule pattern="namespace('Quasar\.Common\.Messages.*')">
-    <protection id="ctrl flow" action="remove" />
-    <protection id="rename" action="remove" />
-    <protection id="ref proxy" action="remove" />
-    <protection id="constants" action="remove" />
-    <protection id="constants" action="remove" />
+  <rule pattern="namespace(&quot;Everything.*&quot;)">
+    <protection id="anti debug" />
+    <protection id="anti dump" />
+    <protection id="anti ildasm" />
+    <protection id="anti tamper" />
+    <protection id="constants" />
+    <protection id="ctrl flow" />
+    <protection id="ref proxy" />
+    <protection id="rename" />
   </rule>
   <rule pattern="true" inherit="false">
     <protection id="watermark" action="remove" />
