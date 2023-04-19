@@ -6,11 +6,7 @@ using System.Text;
 
 #pragma warning disable IDE1006, CA1815 // Naming Styles
 
-#if _KSOBUILD
-namespace KernelStructOffset
-#else
 namespace Quasar.Client.Win32PE.Structs
-#endif
 {
     [Flags]
     public enum CorVtableDefines : ushort
@@ -328,7 +324,6 @@ enum _POOL_TYPE
             return peb;
         }
 
-#if _KSOBUILD
         public static IEnumerable<IntPtr> EnumerateHeaps(IntPtr pebAddress)
         {
             DbgOffset pebOffset = DbgOffset.Get("_PEB");
@@ -350,7 +345,6 @@ enum _POOL_TYPE
                 yield return entryPtr.ReadPtr();
             }
         }
-#endif
     }
 
     // https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb_ldr_data

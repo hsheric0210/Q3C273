@@ -8,11 +8,7 @@ using System.Threading;
 
 #pragma warning disable IDE1006 // Naming Styles
 
-#if _KSOBUILD
-namespace KernelStructOffset
-#else
 namespace Quasar.Client.Win32PE.Structs
-#endif
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct StructFieldInfo
