@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace Quasar.Client.MessageHandlers
+namespace Everything.MessageHandlers
 {
     public class ShutdownHandler : IMessageProcessor
     {

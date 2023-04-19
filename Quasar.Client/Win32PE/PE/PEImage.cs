@@ -1,11 +1,11 @@
-﻿using Quasar.Client.Win32PE.Structs;
+﻿using Everything.Win32PE.Structs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Quasar.Client.Win32PE.PE
+namespace Everything.Win32PE.PE
 {
     public class PEImage
     {

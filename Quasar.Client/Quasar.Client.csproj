@@ -25,6 +25,7 @@
   </PropertyGroup>
   <PropertyGroup>
   <ApplicationManifest>app.manifest</ApplicationManifest>
+  <RootNamespace>Everything</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
   <Reference Include="System.Management" />

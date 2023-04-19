@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Quasar.Client.IpGeoLocation
+namespace Everything.IpGeoLocation
 {
     /// <summary>
     /// Factory to retrieve and cache the last IP geolocation information for <see cref="MINIMUM_VALID_TIME"/> minutes.

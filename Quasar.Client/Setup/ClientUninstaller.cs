@@ -1,5 +1,5 @@
-﻿using Quasar.Client.Config;
-using Quasar.Client.IO;
+﻿using Everything.Config;
+using Everything.IO;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace Quasar.Client.Setup
+namespace Everything.Setup
 {
     public class ClientUninstaller : ClientSetupBase
     {
@@ -22,7 +22,7 @@ namespace Quasar.Client.Setup
             if (Settings.ENABLELOGGER && Directory.Exists(Settings.LOGSPATH))
             {
                 // this must match the keylogger log files
-                Regex reg = new Regex(@"^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$");
+                var reg = new Regex(@"^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$");
 
                 foreach (var logFile in Directory.GetFiles(Settings.LOGSPATH, "*", SearchOption.TopDirectoryOnly)
                     .Where(path => reg.IsMatch(Path.GetFileName(path))).ToList())
@@ -38,9 +38,9 @@ namespace Quasar.Client.Setup
                 }
             }
 
-            string batchFile = BatchFile.CreateUninstallBatch(Application.ExecutablePath);
+            var batchFile = BatchFile.CreateUninstallBatch(Application.ExecutablePath);
 
-            ProcessStartInfo startInfo = new ProcessStartInfo
+            var startInfo = new ProcessStartInfo
             {
                 WindowStyle = ProcessWindowStyle.Hidden,
                 UseShellExecute = true,

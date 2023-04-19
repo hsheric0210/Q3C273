@@ -5,9 +5,10 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Quasar.Client.MouseKeyHook.Implementation;
+using Everything.MouseKeyHook;
+using Everything.MouseKeyHook.Implementation;
 
-namespace Quasar.Client.MouseKeyHook.HotKeys
+namespace Everything.MouseKeyHook.HotKeys
 {
     /// <summary>
     ///     An immutable set of Hot Keys that provides an event for when the set is activated.

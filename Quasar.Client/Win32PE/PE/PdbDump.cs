@@ -1,11 +1,11 @@
-﻿using Quasar.Client.Utilities;
-using Quasar.Client.Win32PE.Structs;
+﻿using Everything.Win32PE.Structs;
+using Quasar.Client.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Quasar.Client.Win32PE.PE
+namespace Everything.Win32PE.PE
 {
     // mridgers/pdbdump.c
     // https://gist.github.com/mridgers/2968595

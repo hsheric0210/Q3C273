@@ -7,7 +7,7 @@ using System.Text;
 
 #pragma warning disable IDE1006, CA1815 // Naming Styles
 
-namespace Quasar.Client.Win32PE.Structs
+namespace Everything.Win32PE.Structs
 {
     [Flags]
     public enum CorVtableDefines : ushort
@@ -327,22 +327,18 @@ enum _POOL_TYPE
 
         public static IEnumerable<IntPtr> EnumerateHeaps(IntPtr pebAddress)
         {
-            DbgOffset pebOffset = DbgOffset.Get("_PEB");
+            var pebOffset = DbgOffset.Get("_PEB");
 
-            IntPtr processHeapsPtr = pebOffset.GetPointer(pebAddress, "ProcessHeaps").ReadPtr();
+            var processHeapsPtr = pebOffset.GetPointer(pebAddress, "ProcessHeaps").ReadPtr();
             if (processHeapsPtr == IntPtr.Zero)
-            {
                 yield break;
-            }
 
-            if (pebOffset.TryRead<int>(pebAddress, "NumberOfHeaps", out int numberOfHeaps) == false)
-            {
+            if (pebOffset.TryRead<int>(pebAddress, "NumberOfHeaps", out var numberOfHeaps) == false)
                 yield break;
-            }
 
-            for (int i = 0; i < numberOfHeaps; i++)
+            for (var i = 0; i < numberOfHeaps; i++)
             {
-                IntPtr entryPtr = processHeapsPtr + (IntPtr.Size * i);
+                var entryPtr = processHeapsPtr + IntPtr.Size * i;
                 yield return entryPtr.ReadPtr();
             }
         }

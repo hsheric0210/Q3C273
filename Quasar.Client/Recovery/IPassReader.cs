@@ -1,7 +1,7 @@
 ﻿using Quasar.Common.Models;
 using System.Collections.Generic;
 
-namespace Quasar.Client.Recovery
+namespace Everything.Recovery
 {
     /// <summary>
     /// Provides a common way to read stored accounts from applications.

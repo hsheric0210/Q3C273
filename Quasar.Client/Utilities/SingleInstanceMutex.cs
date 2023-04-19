@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Quasar.Client.Utilities
+namespace Everything.Utilities
 {
     /// <summary>
     /// A user-wide mutex that ensures that only one instance runs at a time.
@@ -52,9 +52,7 @@ namespace Quasar.Client.Utilities
                 return;
 
             if (disposing)
-            {
                 _appMutex?.Dispose();
-            }
 
             IsDisposed = true;
         }

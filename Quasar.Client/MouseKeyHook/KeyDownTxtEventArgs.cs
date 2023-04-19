@@ -1,6 +1,6 @@
 using System;
 
-namespace Quasar.Client.MouseKeyHook
+namespace Everything.MouseKeyHook
 {
     public class KeyDownTxtEventArgs : EventArgs
     {

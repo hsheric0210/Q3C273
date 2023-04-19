@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Quasar.Client.Win32PE.Structs
+namespace Everything.Win32PE.Structs
 {
     public class DbgOffset
     {

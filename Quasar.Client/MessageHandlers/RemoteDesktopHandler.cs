@@ -1,4 +1,4 @@
-﻿using Quasar.Client.Helper;
+﻿using Everything.Helper;
 using Quasar.Common.Enums;
 using Quasar.Common.Messages;
 using Quasar.Common.Networking;
@@ -10,7 +10,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
 
-namespace Quasar.Client.MessageHandlers
+namespace Everything.MessageHandlers
 {
     public class RemoteDesktopHandler : NotificationMessageProcessor, IDisposable
     {

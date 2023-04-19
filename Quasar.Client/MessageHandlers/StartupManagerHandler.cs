@@ -1,6 +1,6 @@
-﻿using Microsoft.Win32;
-using Quasar.Client.Extensions;
-using Quasar.Client.Helper;
+﻿using Everything.Extensions;
+using Everything.Helper;
+using Microsoft.Win32;
 using Quasar.Common.Enums;
 using Quasar.Common.Messages;
 using Quasar.Common.Networking;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Quasar.Client.MessageHandlers
+namespace Everything.MessageHandlers
 {
     public class StartupManagerHandler : IMessageProcessor
     {

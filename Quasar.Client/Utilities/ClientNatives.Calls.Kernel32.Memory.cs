@@ -1,4 +1,4 @@
-﻿using Quasar.Client.Win32PE.Structs;
+﻿using Everything.Win32PE.Structs;
 using System;
 
 namespace Quasar.Client.Utilities

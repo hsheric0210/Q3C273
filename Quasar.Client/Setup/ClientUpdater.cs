@@ -1,12 +1,12 @@
-﻿using Quasar.Client.Config;
-using Quasar.Client.IO;
+﻿using Everything.Config;
+using Everything.IO;
 using Quasar.Common.Helpers;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
-namespace Quasar.Client.Setup
+namespace Everything.Setup
 {
     public class ClientUpdater : ClientSetupBase
     {
@@ -18,9 +18,9 @@ namespace Quasar.Client.Setup
             if (!FileHelper.HasExecutableIdentifier(bytes))
                 throw new Exception("No executable file.");
 
-            string batchFile = BatchFile.CreateUpdateBatch(Application.ExecutablePath, newFilePath);
+            var batchFile = BatchFile.CreateUpdateBatch(Application.ExecutablePath, newFilePath);
 
-            ProcessStartInfo startInfo = new ProcessStartInfo
+            var startInfo = new ProcessStartInfo
             {
                 WindowStyle = ProcessWindowStyle.Hidden,
                 UseShellExecute = true,

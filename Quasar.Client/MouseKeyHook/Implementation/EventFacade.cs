@@ -5,7 +5,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace Quasar.Client.MouseKeyHook.Implementation
+namespace Everything.MouseKeyHook.Implementation
 {
     internal abstract class EventFacade : IKeyboardMouseEvents
     {

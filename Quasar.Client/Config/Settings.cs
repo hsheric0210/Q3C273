@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace Quasar.Client.Config
+namespace Everything.Config
 {
     /// <summary>
     /// Stores the configuration of the client.
@@ -71,7 +71,8 @@ namespace Quasar.Client.Config
 
         public static bool Initialize()
         {
-            if (string.IsNullOrEmpty(VERSION)) return false;
+            if (string.IsNullOrEmpty(VERSION))
+                return false;
             var aes = new Aes256(ENCRYPTIONKEY);
             TAG = aes.Decrypt(TAG);
             VERSION = aes.Decrypt(VERSION);
@@ -98,10 +99,10 @@ namespace Quasar.Client.Config
         {
             try
             {
-                var csp = (RSACryptoServiceProvider) SERVERCERTIFICATE.PublicKey.Key;
+                var csp = (RSACryptoServiceProvider)SERVERCERTIFICATE.PublicKey.Key;
                 return csp.VerifyHash(Sha256.ComputeHash(Encoding.UTF8.GetBytes(ENCRYPTIONKEY)), CryptoConfig.MapNameToOID("SHA256"),
                     Convert.FromBase64String(SERVERSIGNATURE));
-                
+
             }
             catch (Exception)
             {

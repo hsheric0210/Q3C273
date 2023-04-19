@@ -1,6 +1,6 @@
-﻿using Quasar.Client.Win32PE.Structs;
+﻿using Everything.Win32PE.Structs;
 
-namespace Quasar.Client.Win32PE.PE
+namespace Everything.Win32PE.PE
 {
     public static class ILDecoder
     {

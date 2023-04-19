@@ -4,7 +4,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace Quasar.Client.MouseKeyHook.WinApi
+namespace Everything.MouseKeyHook.WinApi
 {
     /// <summary>
     ///     The <see cref="MouseStruct" /> structure contains information about a mouse input event.

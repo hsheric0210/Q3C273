@@ -1,4 +1,4 @@
-﻿using Quasar.Client.Win32PE.Structs;
+﻿using Everything.Win32PE.Structs;
 using System;
 using System.Runtime.InteropServices;
 using System.Text;

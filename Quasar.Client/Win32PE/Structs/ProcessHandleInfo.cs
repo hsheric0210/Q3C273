@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Quasar.Client.Win32PE.Structs
+namespace Everything.Win32PE.Structs
 {
     /// <summary>
     /// Supported since Windows 8/2012

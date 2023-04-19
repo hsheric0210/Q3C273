@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Quasar.Client.Win32PE.PE
+namespace Everything.Win32PE.PE
 {
     public class BufferPtr : IDisposable
     {

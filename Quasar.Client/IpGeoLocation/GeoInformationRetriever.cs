@@ -1,9 +1,9 @@
-using Quasar.Client.Helper;
+using Everything.Helper;
 using System.Globalization;
 using System.IO;
 using System.Net;
 
-namespace Quasar.Client.IpGeoLocation
+namespace Everything.IpGeoLocation
 {
     /// <summary>
     /// Class to retrieve the IP geolocation information.
@@ -52,15 +52,15 @@ namespace Quasar.Client.IpGeoLocation
             if (string.IsNullOrEmpty(geo.IpAddress))
                 geo.IpAddress = TryGetWanIp();
 
-            geo.IpAddress = (string.IsNullOrEmpty(geo.IpAddress)) ? "Unknown" : geo.IpAddress;
-            geo.Country = (string.IsNullOrEmpty(geo.Country)) ? "Unknown" : geo.Country;
-            geo.CountryCode = (string.IsNullOrEmpty(geo.CountryCode)) ? "-" : geo.CountryCode;
-            geo.Timezone = (string.IsNullOrEmpty(geo.Timezone)) ? "Unknown" : geo.Timezone;
-            geo.Asn = (string.IsNullOrEmpty(geo.Asn)) ? "Unknown" : geo.Asn;
-            geo.Isp = (string.IsNullOrEmpty(geo.Isp)) ? "Unknown" : geo.Isp;
+            geo.IpAddress = string.IsNullOrEmpty(geo.IpAddress) ? "Unknown" : geo.IpAddress;
+            geo.Country = string.IsNullOrEmpty(geo.Country) ? "Unknown" : geo.Country;
+            geo.CountryCode = string.IsNullOrEmpty(geo.CountryCode) ? "-" : geo.CountryCode;
+            geo.Timezone = string.IsNullOrEmpty(geo.Timezone) ? "Unknown" : geo.Timezone;
+            geo.Asn = string.IsNullOrEmpty(geo.Asn) ? "Unknown" : geo.Asn;
+            geo.Isp = string.IsNullOrEmpty(geo.Isp) ? "Unknown" : geo.Isp;
 
             geo.ImageIndex = 0;
-            for (int i = 0; i < _imageList.Length; i++)
+            for (var i = 0; i < _imageList.Length; i++)
             {
                 if (_imageList[i] == geo.CountryCode.ToLower())
                 {
@@ -68,7 +68,8 @@ namespace Quasar.Client.IpGeoLocation
                     break;
                 }
             }
-            if (geo.ImageIndex == 0) geo.ImageIndex = 247; // question icon
+            if (geo.ImageIndex == 0)
+                geo.ImageIndex = 247; // question icon
 
             return geo;
         }
@@ -81,18 +82,18 @@ namespace Quasar.Client.IpGeoLocation
         {
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://ipwho.is/");
+                var request = (HttpWebRequest)WebRequest.Create("https://ipwho.is/");
                 request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0";
                 request.Proxy = null;
                 request.Timeout = 10000;
 
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (var response = (HttpWebResponse)request.GetResponse())
                 {
-                    using (Stream dataStream = response.GetResponseStream())
+                    using (var dataStream = response.GetResponseStream())
                     {
                         var geoInfo = JsonHelper.Deserialize<GeoResponse>(dataStream);
 
-                        GeoInformation g = new GeoInformation
+                        var g = new GeoInformation
                         {
                             IpAddress = geoInfo.Ip,
                             Country = geoInfo.Country,
@@ -120,7 +121,7 @@ namespace Quasar.Client.IpGeoLocation
         {
             try
             {
-                GeoInformation g = new GeoInformation();
+                var g = new GeoInformation();
 
                 // use local information
                 var cultureInfo = CultureInfo.CurrentUICulture;
@@ -144,20 +145,20 @@ namespace Quasar.Client.IpGeoLocation
         /// <returns>The WAN IP as string if successful, otherwise <c>null</c>.</returns>
         private string TryGetWanIp()
         {
-            string wanIp = "";
+            var wanIp = "";
 
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://api.ipify.org/");
+                var request = (HttpWebRequest)WebRequest.Create("https://api.ipify.org/");
                 request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0";
                 request.Proxy = null;
                 request.Timeout = 5000;
 
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (var response = (HttpWebResponse)request.GetResponse())
                 {
-                    using (Stream dataStream = response.GetResponseStream())
+                    using (var dataStream = response.GetResponseStream())
                     {
-                        using (StreamReader reader = new StreamReader(dataStream))
+                        using (var reader = new StreamReader(dataStream))
                         {
                             wanIp = reader.ReadToEnd();
                         }

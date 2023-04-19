@@ -1,7 +1,7 @@
-﻿using Quasar.Client.Config;
-using Quasar.Client.Helper;
-using Quasar.Client.IO;
-using Quasar.Client.IpGeoLocation;
+﻿using Everything.Config;
+using Everything.Helper;
+using Everything.IO;
+using Everything.IpGeoLocation;
 using Quasar.Client.User;
 using Quasar.Common.DNS;
 using Quasar.Common.Helpers;
@@ -12,7 +12,7 @@ using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 
-namespace Quasar.Client.Networking
+namespace Everything.Networking
 {
     public class QuasarClient : Client, IDisposable
     {
@@ -49,13 +49,13 @@ namespace Quasar.Client.Networking
         public QuasarClient(HostsManager hostsManager, X509Certificate2 serverCertificate)
             : base(serverCertificate)
         {
-            this._hosts = hostsManager;
-            this._random = new SafeRandom();
+            _hosts = hostsManager;
+            _random = new SafeRandom();
             ClientState += OnClientState;
             ClientRead += OnClientRead;
             ClientFail += OnClientFail;
-            this._tokenSource = new CancellationTokenSource();
-            this._token = _tokenSource.Token;
+            _tokenSource = new CancellationTokenSource();
+            _token = _tokenSource.Token;
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Quasar.Client.Networking
                 {
                     try
                     {
-                        Host host = _hosts.GetNextHost();
+                        var host = _hosts.GetNextHost();
 
                         Connect(host.IpAddress, host.Port);
                     }

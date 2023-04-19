@@ -4,7 +4,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace Quasar.Client.MouseKeyHook.WinApi
+namespace Everything.MouseKeyHook.WinApi
 {
     /// <summary>
     ///     The Point structure defines the X- and Y- coordinates of a point.

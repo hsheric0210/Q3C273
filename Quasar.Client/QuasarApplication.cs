@@ -1,10 +1,11 @@
-﻿using Quasar.Client.Config;
-using Quasar.Client.Logging;
+﻿using Everything.Config;
+using Everything.Logging;
+using Everything.MessageHandlers;
+using Everything.Networking;
+using Everything.User;
+using Everything.Utilities;
 using Quasar.Client.MessageHandlers;
-using Quasar.Client.Networking;
 using Quasar.Client.Setup;
-using Quasar.Client.User;
-using Quasar.Client.Utilities;
 using Quasar.Common.DNS;
 using Quasar.Common.Helpers;
 using Quasar.Common.Messages;
@@ -16,7 +17,7 @@ using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Quasar.Client
+namespace Everything
 {
     /// <summary>
     /// The client application which handles basic bootstrapping of the message processors and background tasks.
@@ -170,7 +171,7 @@ namespace Quasar.Client
             }
         }
 
-        private void ConnectClientOnClientState(Networking.Client s, bool connected)
+        private void ConnectClientOnClientState(Client s, bool connected)
         {
             if (connected)
                 _notifyIcon.Text = "Quasar Client\nConnection established";

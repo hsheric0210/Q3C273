@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Quasar.Client.Win32PE.Structs
+namespace Everything.Win32PE.Structs
 {
     public enum DebugNotifySession
     {

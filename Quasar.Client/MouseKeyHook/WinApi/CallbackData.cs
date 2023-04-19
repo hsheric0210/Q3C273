@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Quasar.Client.MouseKeyHook.WinApi
+namespace Everything.MouseKeyHook.WinApi
 {
     internal struct CallbackData
     {

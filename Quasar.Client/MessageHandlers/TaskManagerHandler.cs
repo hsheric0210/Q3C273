@@ -1,4 +1,4 @@
-﻿using Quasar.Client.Networking;
+﻿using Everything.Networking;
 using Quasar.Client.Setup;
 using Quasar.Common;
 using Quasar.Common.Enums;
@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Threading;
 
-namespace Quasar.Client.MessageHandlers
+namespace Everything.MessageHandlers
 {
     /// <summary>
     /// Handles messages for the interaction with tasks.
@@ -30,7 +30,7 @@ namespace Quasar.Client.MessageHandlers
             _webClient.DownloadFileCompleted += OnDownloadFileCompleted;
         }
 
-        private void OnClientStateChange(Networking.Client s, bool connected)
+        private void OnClientStateChange(Client s, bool connected)
         {
             if (!connected)
             {

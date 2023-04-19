@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Quasar.Client.MouseKeyHook.Implementation
+namespace Everything.MouseKeyHook.Implementation
 {
     internal class Chord : IEnumerable<Keys>
     {

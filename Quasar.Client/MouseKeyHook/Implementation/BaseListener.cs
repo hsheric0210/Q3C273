@@ -3,9 +3,9 @@
 // See license.txt or https://mit-license.org/
 
 using System;
-using Quasar.Client.MouseKeyHook.WinApi;
+using Everything.MouseKeyHook.WinApi;
 
-namespace Quasar.Client.MouseKeyHook.Implementation
+namespace Everything.MouseKeyHook.Implementation
 {
     internal abstract class BaseListener : IDisposable
     {

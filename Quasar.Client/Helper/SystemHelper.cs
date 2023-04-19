@@ -2,7 +2,7 @@
 using System;
 using System.Management;
 
-namespace Quasar.Client.Helper
+namespace Everything.Helper
 {
     public static class SystemHelper
     {
@@ -10,14 +10,14 @@ namespace Quasar.Client.Helper
         {
             try
             {
-                string uptime = string.Empty;
+                var uptime = string.Empty;
 
-                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem WHERE Primary='true'"))
+                using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem WHERE Primary='true'"))
                 {
                     foreach (ManagementObject mObject in searcher.Get())
                     {
-                        DateTime lastBootUpTime = ManagementDateTimeConverter.ToDateTime(mObject["LastBootUpTime"].ToString());
-                        TimeSpan uptimeSpan = TimeSpan.FromTicks((DateTime.Now - lastBootUpTime).Ticks);
+                        var lastBootUpTime = ManagementDateTimeConverter.ToDateTime(mObject["LastBootUpTime"].ToString());
+                        var uptimeSpan = TimeSpan.FromTicks((DateTime.Now - lastBootUpTime).Ticks);
 
                         uptime = string.Format("{0}d : {1}h : {2}m : {3}s", uptimeSpan.Days, uptimeSpan.Hours, uptimeSpan.Minutes, uptimeSpan.Seconds);
                         break;
@@ -44,12 +44,12 @@ namespace Quasar.Client.Helper
         {
             try
             {
-                string antivirusName = string.Empty;
+                var antivirusName = string.Empty;
                 // starting with Windows Vista we must use the root\SecurityCenter2 namespace
-                string scope = (PlatformHelper.VistaOrHigher) ? "root\\SecurityCenter2" : "root\\SecurityCenter";
-                string query = "SELECT * FROM AntivirusProduct";
+                var scope = PlatformHelper.VistaOrHigher ? "root\\SecurityCenter2" : "root\\SecurityCenter";
+                var query = "SELECT * FROM AntivirusProduct";
 
-                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query))
+                using (var searcher = new ManagementObjectSearcher(scope, query))
                 {
                     foreach (ManagementObject mObject in searcher.Get())
                     {
@@ -58,7 +58,7 @@ namespace Quasar.Client.Helper
                 }
                 antivirusName = StringHelper.RemoveLastChars(antivirusName);
 
-                return (!string.IsNullOrEmpty(antivirusName)) ? antivirusName : "N/A";
+                return !string.IsNullOrEmpty(antivirusName) ? antivirusName : "N/A";
             }
             catch
             {
@@ -70,12 +70,12 @@ namespace Quasar.Client.Helper
         {
             try
             {
-                string firewallName = string.Empty;
+                var firewallName = string.Empty;
                 // starting with Windows Vista we must use the root\SecurityCenter2 namespace
-                string scope = (PlatformHelper.VistaOrHigher) ? "root\\SecurityCenter2" : "root\\SecurityCenter";
-                string query = "SELECT * FROM FirewallProduct";
+                var scope = PlatformHelper.VistaOrHigher ? "root\\SecurityCenter2" : "root\\SecurityCenter";
+                var query = "SELECT * FROM FirewallProduct";
 
-                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query))
+                using (var searcher = new ManagementObjectSearcher(scope, query))
                 {
                     foreach (ManagementObject mObject in searcher.Get())
                     {
@@ -84,7 +84,7 @@ namespace Quasar.Client.Helper
                 }
                 firewallName = StringHelper.RemoveLastChars(firewallName);
 
-                return (!string.IsNullOrEmpty(firewallName)) ? firewallName : "N/A";
+                return !string.IsNullOrEmpty(firewallName) ? firewallName : "N/A";
             }
             catch
             {

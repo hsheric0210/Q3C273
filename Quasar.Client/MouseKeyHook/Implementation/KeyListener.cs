@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Quasar.Client.MouseKeyHook.WinApi;
+using Everything.MouseKeyHook.WinApi;
 
-namespace Quasar.Client.MouseKeyHook.Implementation
+namespace Everything.MouseKeyHook.Implementation
 {
     internal abstract class KeyListener : BaseListener, IKeyboardEvents
     {

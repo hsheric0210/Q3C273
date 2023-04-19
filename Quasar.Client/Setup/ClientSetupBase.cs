@@ -1,6 +1,6 @@
-﻿using Quasar.Client.User;
+﻿using Everything.User;
 
-namespace Quasar.Client.Setup
+namespace Everything.Setup
 {
     public abstract class ClientSetupBase
     {

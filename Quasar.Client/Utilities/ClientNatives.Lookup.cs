@@ -1,5 +1,5 @@
-﻿using Quasar.Client.Win32PE.PE;
-using Quasar.Client.Win32PE.Structs;
+﻿using Everything.Win32PE.PE;
+using Everything.Win32PE.Structs;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;

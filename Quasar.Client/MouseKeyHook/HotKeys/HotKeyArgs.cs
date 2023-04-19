@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Quasar.Client.MouseKeyHook.HotKeys
+namespace Everything.MouseKeyHook.HotKeys
 {
     /// <summary>
     ///     The event arguments passed when a HotKeySet's OnHotKeysDownHold event is triggered.

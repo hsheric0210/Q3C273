@@ -6,7 +6,7 @@ using Quasar.Common.Networking;
 using System;
 using System.Runtime.InteropServices;
 
-namespace Quasar.Client.MessageHandlers
+namespace Everything.MessageHandlers
 {
     public class TcpConnectionsHandler : IMessageProcessor
     {

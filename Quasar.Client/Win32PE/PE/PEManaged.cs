@@ -1,4 +1,4 @@
-﻿namespace Quasar.Client.Win32PE.PE
+﻿namespace Everything.Win32PE.PE
 {
     public struct ExportFunctionInfo
     {

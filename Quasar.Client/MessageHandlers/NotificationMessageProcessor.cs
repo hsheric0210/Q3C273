@@ -1,6 +1,6 @@
 ﻿using Quasar.Common.Messages;
 
-namespace Quasar.Client.MessageHandlers
+namespace Everything.MessageHandlers
 {
     public abstract class NotificationMessageProcessor : MessageProcessorBase<string>
     {

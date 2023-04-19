@@ -2,9 +2,10 @@
 // Copyright (c) 2015 George Mamaladze
 // See license.txt or https://mit-license.org/
 
+using Everything.MouseKeyHook;
 using System.Collections.Generic;
 
-namespace Quasar.Client.MouseKeyHook.HotKeys
+namespace Everything.MouseKeyHook.HotKeys
 {
     /// <summary>
     ///     A collection of HotKeySets

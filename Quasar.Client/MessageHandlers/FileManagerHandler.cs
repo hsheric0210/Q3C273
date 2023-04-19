@@ -1,4 +1,4 @@
-﻿using Quasar.Client.Networking;
+﻿using Everything.Networking;
 using Quasar.Common;
 using Quasar.Common.Enums;
 using Quasar.Common.Extensions;
@@ -14,7 +14,7 @@ using System.Linq;
 using System.Security;
 using System.Threading;
 
-namespace Quasar.Client.MessageHandlers
+namespace Everything.MessageHandlers
 {
     public class FileManagerHandler : NotificationMessageProcessor, IDisposable
     {
@@ -35,7 +35,7 @@ namespace Quasar.Client.MessageHandlers
             _token = _tokenSource.Token;
         }
 
-        private void OnClientStateChange(Networking.Client s, bool connected)
+        private void OnClientStateChange(Client s, bool connected)
         {
             switch (connected)
             {

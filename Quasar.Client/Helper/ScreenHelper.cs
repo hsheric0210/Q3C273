@@ -4,7 +4,7 @@ using System.Drawing.Imaging;
 using System.Windows.Forms;
 using Quasar.Client.Utilities;
 
-namespace Quasar.Client.Helper
+namespace Everything.Helper
 {
     public static class ScreenHelper
     {
@@ -12,13 +12,13 @@ namespace Quasar.Client.Helper
 
         public static Bitmap CaptureScreen(int screenNumber)
         {
-            Rectangle bounds = GetBounds(screenNumber);
-            Bitmap screen = new Bitmap(bounds.Width, bounds.Height, PixelFormat.Format32bppPArgb);
+            var bounds = GetBounds(screenNumber);
+            var screen = new Bitmap(bounds.Width, bounds.Height, PixelFormat.Format32bppPArgb);
 
-            using (Graphics g = Graphics.FromImage(screen))
+            using (var g = Graphics.FromImage(screen))
             {
-                IntPtr destDeviceContext = g.GetHdc();
-                IntPtr srcDeviceContext = ClientNatives.CreateDC("DISPLAY", null, null, IntPtr.Zero);
+                var destDeviceContext = g.GetHdc();
+                var srcDeviceContext = ClientNatives.CreateDC("DISPLAY", null, null, IntPtr.Zero);
 
                 ClientNatives.BitBlt(destDeviceContext, 0, 0, bounds.Width, bounds.Height, srcDeviceContext, bounds.X,
                     bounds.Y, SRCCOPY);

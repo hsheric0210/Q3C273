@@ -5,9 +5,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Quasar.Client.MouseKeyHook.WinApi;
+using Everything.MouseKeyHook.WinApi;
 
-namespace Quasar.Client.MouseKeyHook
+namespace Everything.MouseKeyHook
 {
     /// <summary>
     ///     Provides extended data for the MouseClickExt and MouseMoveExt events.

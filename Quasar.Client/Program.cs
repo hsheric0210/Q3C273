@@ -1,4 +1,4 @@
-﻿using Quasar.Client.IO;
+﻿using Everything.IO;
 using Quasar.Client.Utilities;
 using System;
 using System.Diagnostics;
@@ -6,7 +6,7 @@ using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Quasar.Client
+namespace Everything
 {
     internal static class Program
     {
@@ -37,9 +37,9 @@ namespace Quasar.Client
             //MessageBox.Show(e.Exception.ToString());
             try
             {
-                string batchFile = BatchFile.CreateRestartBatch(Application.ExecutablePath);
+                var batchFile = BatchFile.CreateRestartBatch(Application.ExecutablePath);
 
-                ProcessStartInfo startInfo = new ProcessStartInfo
+                var startInfo = new ProcessStartInfo
                 {
                     WindowStyle = ProcessWindowStyle.Hidden,
                     UseShellExecute = true,
@@ -70,9 +70,9 @@ namespace Quasar.Client
                 Debug.WriteLine(e.ExceptionObject);
                 try
                 {
-                    string batchFile = BatchFile.CreateRestartBatch(Application.ExecutablePath);
+                    var batchFile = BatchFile.CreateRestartBatch(Application.ExecutablePath);
 
-                    ProcessStartInfo startInfo = new ProcessStartInfo
+                    var startInfo = new ProcessStartInfo
                     {
                         WindowStyle = ProcessWindowStyle.Hidden,
                         UseShellExecute = true,

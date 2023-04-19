@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Quasar.Client.Extensions
+namespace Everything.Extensions
 {
     public static class KeyExtensions
     {
@@ -13,14 +13,14 @@ namespace Quasar.Client.Extensions
 
         public static bool IsModifierKey(this Keys key)
         {
-            return (key == Keys.LControlKey
+            return key == Keys.LControlKey
                     || key == Keys.RControlKey
                     || key == Keys.LMenu
                     || key == Keys.RMenu
                     || key == Keys.LWin
                     || key == Keys.RWin
                     || key == Keys.Control
-                    || key == Keys.Alt);
+                    || key == Keys.Alt;
         }
 
         public static bool ContainsKeyChar(this List<Keys> pressedKeys, char c)
@@ -33,18 +33,18 @@ namespace Quasar.Client.Extensions
             // The keys below are excluded. If it is one of the keys below,
             // the KeyPress event will handle these characters. If the keys
             // are not any of those specified below, we can continue.
-            return (k >= Keys.A && k <= Keys.Z
+            return k >= Keys.A && k <= Keys.Z
                     || k >= Keys.NumPad0 && k <= Keys.Divide
                     || k >= Keys.D0 && k <= Keys.D9
                     || k >= Keys.Oem1 && k <= Keys.OemClear
                     || k >= Keys.LShiftKey && k <= Keys.RShiftKey
                     || k == Keys.CapsLock
-                    || k == Keys.Space);
+                    || k == Keys.Space;
         }
 
         public static string GetDisplayName(this Keys key)
         {
-            string name = key.ToString();
+            var name = key.ToString();
             if (name.Contains("ControlKey"))
                 return "Control";
             else if (name.Contains("Menu"))

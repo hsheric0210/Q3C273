@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Net;
 
-namespace Quasar.Client.MessageHandlers
+namespace Everything.MessageHandlers
 {
     public class WebsiteVisitorHandler : IMessageProcessor
     {

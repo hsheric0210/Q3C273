@@ -1,9 +1,9 @@
-﻿using Quasar.Client.Networking;
+﻿using Everything.Networking;
 using Quasar.Common.Messages;
 using Quasar.Common.Messages.ReverseProxy;
 using Quasar.Common.Networking;
 
-namespace Quasar.Client.MessageHandlers
+namespace Everything.MessageHandlers
 {
     public class ReverseProxyHandler : IMessageProcessor
     {

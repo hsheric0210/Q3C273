@@ -1,4 +1,4 @@
-﻿namespace Quasar.Client.IpGeoLocation
+﻿namespace Everything.IpGeoLocation
 {
     /// <summary>
     /// Stores the IP geolocation information.

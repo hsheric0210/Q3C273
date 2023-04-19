@@ -2,9 +2,10 @@
 // Copyright (c) 2015 George Mamaladze
 // See license.txt or https://mit-license.org/
 
-using Quasar.Client.MouseKeyHook.WinApi;
+using Everything.MouseKeyHook;
+using Everything.MouseKeyHook.WinApi;
 
-namespace Quasar.Client.MouseKeyHook.Implementation
+namespace Everything.MouseKeyHook.Implementation
 {
     internal class AppMouseListener : MouseListener
     {

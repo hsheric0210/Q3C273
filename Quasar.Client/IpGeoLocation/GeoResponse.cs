@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Quasar.Client.IpGeoLocation
+namespace Everything.IpGeoLocation
 {
     [DataContract]
     public class GeoResponse

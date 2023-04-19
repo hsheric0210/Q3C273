@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Quasar.Client.Extensions
+namespace Everything.Extensions
 {
     /// <summary>
     /// Provides extensions for registry key and value operations.
@@ -19,7 +19,7 @@ namespace Quasar.Client.Extensions
         /// <returns>True if the provided name is null or empty, or the key is null; False if otherwise.</returns>
         private static bool IsNameOrValueNull(this string keyName, RegistryKey key)
         {
-            return (string.IsNullOrEmpty(keyName) || (key == null));
+            return string.IsNullOrEmpty(keyName) || key == null;
         }
 
         /// <summary>
@@ -175,10 +175,10 @@ namespace Quasar.Client.Extensions
         public static void CopyKey(this RegistryKey key, string oldName, string newName)
         {
             //Create a new key
-            using (RegistryKey newKey = key.CreateSubKey(newName))
+            using (var newKey = key.CreateSubKey(newName))
             {
                 //Open old key
-                using (RegistryKey oldKey = key.OpenSubKey(oldName, true))
+                using (var oldKey = key.OpenSubKey(oldName, true))
                 {
                     //Copy from old to new
                     RecursiveCopyKey(oldKey, newKey);
@@ -196,19 +196,19 @@ namespace Quasar.Client.Extensions
         {
 
             //Copy all of the registry values
-            foreach (string valueName in sourceKey.GetValueNames())
+            foreach (var valueName in sourceKey.GetValueNames())
             {
-                object valueObj = sourceKey.GetValue(valueName);
-                RegistryValueKind valueKind = sourceKey.GetValueKind(valueName);
+                var valueObj = sourceKey.GetValue(valueName);
+                var valueKind = sourceKey.GetValueKind(valueName);
                 destKey.SetValue(valueName, valueObj, valueKind);
             }
 
             //Copy all of the subkeys
-            foreach (string subKeyName in sourceKey.GetSubKeyNames())
+            foreach (var subKeyName in sourceKey.GetSubKeyNames())
             {
-                using (RegistryKey sourceSubkey = sourceKey.OpenSubKey(subKeyName))
+                using (var sourceSubkey = sourceKey.OpenSubKey(subKeyName))
                 {
-                    using (RegistryKey destSubKey = destKey.CreateSubKey(subKeyName))
+                    using (var destSubKey = destKey.CreateSubKey(subKeyName))
                     {
                         //Recursive call to copy the sub key data
                         RecursiveCopyKey(sourceSubkey, destSubKey);
@@ -237,16 +237,16 @@ namespace Quasar.Client.Extensions
                     {
                         case RegistryValueKind.String:
                         case RegistryValueKind.ExpandString:
-                            data = ByteConverter.ToString((byte[]) data);
+                            data = ByteConverter.ToString((byte[])data);
                             break;
                         case RegistryValueKind.DWord:
-                            data = ByteConverter.ToUInt32((byte[]) data);
+                            data = ByteConverter.ToUInt32((byte[])data);
                             break;
                         case RegistryValueKind.QWord:
-                            data = ByteConverter.ToUInt64((byte[]) data);
+                            data = ByteConverter.ToUInt64((byte[])data);
                             break;
                         case RegistryValueKind.MultiString:
-                            data = ByteConverter.ToStringArray((byte[]) data);
+                            data = ByteConverter.ToStringArray((byte[])data);
                             break;
                     }
                 }
@@ -314,8 +314,8 @@ namespace Quasar.Client.Extensions
         /// <param name="newName">The new name of the registry value.</param>
         public static void CopyValue(this RegistryKey key, string oldName, string newName)
         {
-            RegistryValueKind valueKind = key.GetValueKind(oldName);
-            object valueData = key.GetValue(oldName);
+            var valueKind = key.GetValueKind(oldName);
+            var valueData = key.GetValue(oldName);
 
             key.SetValue(newName, valueData, valueKind);
         }
@@ -328,12 +328,10 @@ namespace Quasar.Client.Extensions
         /// <returns>Returns <c>true</c> if the action succeeded, otherwise <c>false</c>.</returns>
         public static bool ContainsSubKey(this RegistryKey key, string name)
         {
-            foreach (string subkey in key.GetSubKeyNames())
+            foreach (var subkey in key.GetSubKeyNames())
             {
                 if (subkey == name)
-                {
                     return true;
-                }
             }
             return false;
         }
@@ -346,12 +344,10 @@ namespace Quasar.Client.Extensions
         /// <returns>Returns <c>true</c> if the action succeeded, otherwise <c>false</c>.</returns>
         public static bool ContainsValue(this RegistryKey key, string name)
         {
-            foreach (string value in key.GetValueNames())
+            foreach (var value in key.GetValueNames())
             {
                 if (value == name)
-                {
                     return true;
-                }
             }
             return false;
         }
@@ -364,7 +360,8 @@ namespace Quasar.Client.Extensions
         /// <returns>Yield returns formatted strings of the key and the key value.</returns>
         public static IEnumerable<Tuple<string, string>> GetKeyValues(this RegistryKey key)
         {
-            if (key == null) yield break;
+            if (key == null)
+                yield break;
 
             foreach (var k in key.GetValueNames().Where(keyVal => !keyVal.IsNameOrValueNull(key)).Where(k => !string.IsNullOrEmpty(k)))
             {
@@ -382,9 +379,9 @@ namespace Quasar.Client.Extensions
             switch (valueKind)
             {
                 case RegistryValueKind.Binary:
-                    return new byte[] {};
+                    return new byte[] { };
                 case RegistryValueKind.MultiString:
-                    return new string[] {};
+                    return new string[] { };
                 case RegistryValueKind.DWord:
                     return 0;
                 case RegistryValueKind.QWord:

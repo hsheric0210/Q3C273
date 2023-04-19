@@ -8,7 +8,7 @@ using System.Threading;
 
 #pragma warning disable IDE1006 // Naming Styles
 
-namespace Quasar.Client.Win32PE.Structs
+namespace Everything.Win32PE.Structs
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct StructFieldInfo

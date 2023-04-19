@@ -2,7 +2,7 @@
 using System;
 using System.Security.Principal;
 
-namespace Quasar.Client.User
+namespace Everything.User
 {
     public class UserAccount
     {
@@ -13,14 +13,12 @@ namespace Quasar.Client.User
         public UserAccount()
         {
             UserName = Environment.UserName;
-            using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
+            using (var identity = WindowsIdentity.GetCurrent())
             {
-                WindowsPrincipal principal = new WindowsPrincipal(identity);
+                var principal = new WindowsPrincipal(identity);
 
                 if (principal.IsInRole(WindowsBuiltInRole.Administrator))
-                {
                     Type = AccountType.Admin;
-                }
                 else if (principal.IsInRole(WindowsBuiltInRole.User))
                 {
                     Type = AccountType.User;

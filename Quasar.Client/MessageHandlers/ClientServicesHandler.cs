@@ -1,5 +1,6 @@
-﻿using Quasar.Client.Config;
-using Quasar.Client.Networking;
+﻿using Everything;
+using Everything.Config;
+using Everything.Networking;
 using Quasar.Client.Setup;
 using Quasar.Client.User;
 using Quasar.Client.Utilities;
@@ -10,7 +11,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace Quasar.Client.MessageHandlers
+namespace Everything.MessageHandlers
 {
     public class ClientServicesHandler : IMessageProcessor
     {

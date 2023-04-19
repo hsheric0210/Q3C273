@@ -1,11 +1,11 @@
-﻿using Quasar.Client.Helper;
-using Quasar.Client.Networking;
+﻿using Everything.Helper;
+using Everything.Networking;
 using Quasar.Common.Enums;
 using Quasar.Common.Messages;
 using System;
 using System.Threading;
 
-namespace Quasar.Client.User
+namespace Everything.User
 {
     /// <summary>
     /// Provides user activity detection and sends <see cref="SetUserStatus"/> messages on change.
@@ -44,7 +44,7 @@ namespace Quasar.Client.User
             client.ClientState += OnClientStateChange;
         }
 
-        private void OnClientStateChange(Networking.Client s, bool connected)
+        private void OnClientStateChange(Client s, bool connected)
         {
             // reset user status
             if (connected)
@@ -98,9 +98,9 @@ namespace Quasar.Client.User
 
             var idleTime = ticks - NativeMethodsHelper.GetLastInputInfoTickCount();
 
-            idleTime = ((idleTime > 0) ? (idleTime / 1000) : 0);
+            idleTime = idleTime > 0 ? idleTime / 1000 : 0;
 
-            return (idleTime > 600); // idle for 10 minutes
+            return idleTime > 600; // idle for 10 minutes
         }
 
         /// <summary>

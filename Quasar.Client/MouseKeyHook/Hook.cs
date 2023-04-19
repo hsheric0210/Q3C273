@@ -4,7 +4,7 @@
 
 using Quasar.Client.MouseKeyHook.Implementation;
 
-namespace Quasar.Client.MouseKeyHook
+namespace Everything.MouseKeyHook
 {
     /// <summary>
     ///     This is the class to start with.

@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Quasar.Client.Helper
+namespace Everything.Helper
 {
     public static class NativeMethodsHelper
     {
@@ -21,8 +21,8 @@ namespace Quasar.Client.Helper
 
         public static uint GetLastInputInfoTickCount()
         {
-            ClientNatives.LASTINPUTINFO lastInputInfo = new ClientNatives.LASTINPUTINFO();
-            lastInputInfo.cbSize = (uint) Marshal.SizeOf(lastInputInfo);
+            var lastInputInfo = new ClientNatives.LASTINPUTINFO();
+            lastInputInfo.cbSize = (uint)Marshal.SizeOf(lastInputInfo);
             lastInputInfo.dwTime = 0;
             ClientNatives.GetLastInputInfo(ref lastInputInfo);
             return lastInputInfo.dwTime;
@@ -187,7 +187,7 @@ namespace Quasar.Client.Helper
 
         public static string GetForegroundWindowTitle()
         {
-            StringBuilder sbTitle = new StringBuilder(1024);
+            var sbTitle = new StringBuilder(1024);
 
             ClientNatives.GetWindowText(ClientNatives.GetForegroundWindow(), sbTitle, sbTitle.Capacity);
 

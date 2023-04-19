@@ -6,11 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Quasar.Client.MouseKeyHook.Implementation;
-using Quasar.Client.MouseKeyHook.WinApi;
+using Everything.MouseKeyHook.Implementation;
+using Everything.MouseKeyHook.WinApi;
 using Quasar.Client.Utilities;
 
-namespace Quasar.Client.MouseKeyHook
+namespace Everything.MouseKeyHook
 {
     /// <summary>
     ///     Provides extended data for the <see cref='KeyListener.KeyPress' /> event.

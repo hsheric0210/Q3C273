@@ -1,15 +1,15 @@
-﻿using Quasar.Client.Helper;
-using Quasar.Client.IpGeoLocation;
-using Quasar.Client.User;
+﻿using Quasar.Client.User;
 using Quasar.Common.Messages;
 using Quasar.Common.Networking;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.NetworkInformation;
-using Quasar.Client.IO;
+using Everything.IpGeoLocation;
+using Everything.IO;
+using Everything.Helper;
 
-namespace Quasar.Client.MessageHandlers
+namespace Everything.MessageHandlers
 {
     public class SystemInformationHandler : IMessageProcessor
     {
