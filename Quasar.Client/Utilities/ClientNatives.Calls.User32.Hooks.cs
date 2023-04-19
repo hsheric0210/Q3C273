@@ -4,7 +4,6 @@
 
 using Quasar.Client.MouseKeyHook.WinApi;
 using System;
-using System.Runtime.InteropServices;
 
 namespace Quasar.Client.Utilities
 {

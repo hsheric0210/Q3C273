@@ -1,12 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Quasar.Client.Helper;
 using Quasar.Client.Recovery.Utilities;
 using Quasar.Common.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization;
 using System.Text;
 
 namespace Quasar.Client.Recovery.Browsers

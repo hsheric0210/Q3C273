@@ -3,7 +3,6 @@
 // See license.txt or https://mit-license.org/
 
 using System.Collections.Generic;
-using Quasar.Client.MouseKeyHook;
 using Quasar.Client.MouseKeyHook.WinApi;
 
 namespace Quasar.Client.MouseKeyHook.Implementation

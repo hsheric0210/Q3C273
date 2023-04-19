@@ -2,7 +2,6 @@
 using Quasar.Client.Extensions;
 using Quasar.Client.Helper;
 using Quasar.Common.Enums;
-using Quasar.Common.Helpers;
 using Quasar.Common.Messages;
 using Quasar.Common.Networking;
 using System;

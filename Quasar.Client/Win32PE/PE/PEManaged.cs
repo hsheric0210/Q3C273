@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-
-namespace Quasar.Client.Win32PE.PE
+﻿namespace Quasar.Client.Win32PE.PE
 {
     public struct ExportFunctionInfo
     {

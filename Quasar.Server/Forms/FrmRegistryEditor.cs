@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 using Quasar.Common.Messages;
 using Quasar.Common.Models;
-using Quasar.Common.Utilities;
 using Quasar.Server.Controls;
 using Quasar.Server.Extensions;
 using Quasar.Server.Helper;

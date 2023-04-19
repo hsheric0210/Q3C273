@@ -5,8 +5,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
-using Quasar.Client.MouseKeyHook.Implementation;
 using Quasar.Client.Utilities;
 
 namespace Quasar.Client.MouseKeyHook.WinApi

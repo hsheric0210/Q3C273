@@ -1,14 +1,6 @@
-﻿using Microsoft.Win32.SafeHandles;
-using Quasar.Client.Utilities;
-using Quasar.Client.Win32PE.Structs;
+﻿using Quasar.Client.Win32PE.Structs;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Quasar.Client.Utilities
 {

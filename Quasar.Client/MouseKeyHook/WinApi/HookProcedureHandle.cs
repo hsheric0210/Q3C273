@@ -2,9 +2,7 @@
 // Copyright (c) 2015 George Mamaladze
 // See license.txt or https://mit-license.org/
 
-using System.Windows.Forms;
 using Microsoft.Win32.SafeHandles;
-using Quasar.Client.Utilities;
 
 namespace Quasar.Client.MouseKeyHook.WinApi
 {

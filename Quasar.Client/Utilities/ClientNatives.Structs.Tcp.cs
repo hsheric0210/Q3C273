@@ -1,14 +1,6 @@
-﻿using Quasar.Client.Win32PE.PE;
-using Quasar.Client.Win32PE.Structs;
-using Quasar.Common.Models;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.Net;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Windows.Forms;
 
 namespace Quasar.Client.Utilities
 {
