@@ -1,4 +1,4 @@
-<project outputDir="D:\Repo\Quasar\Confused" baseDir="D:\Repo\Quasar" xmlns="http://confuser.codeplex.com">
+<project outputDir="D:\Repo\Quasar\final_out" baseDir="D:\Repo\Quasar" xmlns="http://confuser.codeplex.com">
   <rule pattern="namespace(&quot;Quasar.*&quot;)">
     <protection id="anti debug" />
     <protection id="anti dump" />

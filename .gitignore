@@ -22,6 +22,7 @@ bld/
 [Oo]bj/
 
 Clients/
+final_out/
 
 # Visual Studio 2015 cache/options directory
 .vs/
