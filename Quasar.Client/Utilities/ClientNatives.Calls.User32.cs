@@ -15,7 +15,7 @@ namespace Quasar.Client.Utilities
     /// <summary>
     /// Provides access to the Win32 API.
     /// </summary>
-    public static partial class ClientNatives
+    internal static partial class ClientNatives
     {
         //[DllImport("user32.dll")]
         internal delegate bool SetCursorPosFunc(int x, int y);

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Quasar.Client.Utilities
 {
-    internal static class HotkeysNativeMethods
+    internal static partial class ClientNatives
     {
         public delegate int RegisterHotKeyProc(IntPtr hwnd, int id, int fsModifiers, int vk);
         /// <summary>

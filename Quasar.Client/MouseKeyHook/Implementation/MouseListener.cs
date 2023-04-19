@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Quasar.Client.MouseKeyHook.WinApi;
 using Quasar.Client.Utilities;
-using static Quasar.Client.Win32PE.Structs.NativeMethods;
 
 namespace Quasar.Client.MouseKeyHook.Implementation
 {

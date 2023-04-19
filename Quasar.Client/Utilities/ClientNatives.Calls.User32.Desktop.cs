@@ -15,7 +15,7 @@ namespace Quasar.Client.Utilities
     /// <summary>
     /// Provides access to the Win32 API.
     /// </summary>
-    public static partial class ClientNatives
+    internal static partial class ClientNatives
     {
         //[DllImport("user32.dll", CharSet = CharSet.Unicode)]
         internal delegate IntPtr OpenDesktopFunc([MarshalAs(UnmanagedType.LPWStr)] string hDesktop, int flags, bool inherit, uint desiredAccess);

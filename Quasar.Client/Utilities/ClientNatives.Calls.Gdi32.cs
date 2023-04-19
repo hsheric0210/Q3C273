@@ -12,10 +12,7 @@ using System.Windows.Forms;
 
 namespace Quasar.Client.Utilities
 {
-    /// <summary>
-    /// Provides access to the Win32 API.
-    /// </summary>
-    public static partial class ClientNatives
+    internal static partial class ClientNatives
     {
         /// <summary>
         ///    Performs a bit-block transfer of the color data corresponding to a

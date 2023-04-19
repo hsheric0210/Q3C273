@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Quasar.Client.Utilities
 {
-    internal static class MouseNativeMethods
+    internal static partial class ClientNatives
     {
         internal delegate int GetDoubleClickTimeProc();
         /// <summary>

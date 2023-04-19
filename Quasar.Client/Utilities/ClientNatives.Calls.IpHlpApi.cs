@@ -12,10 +12,7 @@ using System.Windows.Forms;
 
 namespace Quasar.Client.Utilities
 {
-    /// <summary>
-    /// Provides access to the Win32 API.
-    /// </summary>
-    public static partial class ClientNatives
+    internal static partial class ClientNatives
     {
         //[DllImport("iphlpapi.dll", SetLastError = true)]
         internal delegate uint GetExtendedTcpTableFunc(IntPtr pTcpTable, ref int dwOutBufLen, bool sort, int ipVersion, TcpTableClass tblClass, uint reserved);

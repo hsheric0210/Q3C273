@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace Quasar.Client.Utilities
 {
-    internal static class HookNativeMethods
+    internal static partial class ClientNatives
     {
         internal delegate IntPtr CallNextHookExProc(IntPtr idHook, int nCode, IntPtr wParam, IntPtr Param);
         /// <summary>
