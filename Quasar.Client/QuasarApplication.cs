@@ -1,7 +1,6 @@
 ﻿using Quasar.Client.Config;
 using Quasar.Client.Logging;
 using Quasar.Client.MessageHandlers;
-using Quasar.Client.Messages;
 using Quasar.Client.Networking;
 using Quasar.Client.Setup;
 using Quasar.Client.User;
@@ -38,7 +37,7 @@ namespace Quasar.Client
         /// List of <see cref="IMessageProcessor"/> to keep track of all used message processors.
         /// </summary>
         private readonly List<IMessageProcessor> _messageProcessors;
-        
+
         /// <summary>
         /// The background keylogger service used to capture and store keystrokes.
         /// </summary>
@@ -229,7 +228,7 @@ namespace Quasar.Client
         {
             if (Settings.UNATTENDEDMODE)
                 return;
-            
+
             _notifyIcon.ShowBalloonTip(4000, "Quasar Client", value, ToolTipIcon.Info);
         }
 

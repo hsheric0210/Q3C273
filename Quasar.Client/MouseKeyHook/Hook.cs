@@ -2,7 +2,8 @@
 // Copyright (c) 2015 George Mamaladze
 // See license.txt or https://mit-license.org/
 
-using Gma.System.MouseKeyHook.Implementation;
+
+using Quasar.Client.MouseKeyHook.Implementation;
 
 namespace Quasar.Client.MouseKeyHook
 {
