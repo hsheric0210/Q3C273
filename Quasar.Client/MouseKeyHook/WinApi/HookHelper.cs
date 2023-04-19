@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Quasar.Client.MouseKeyHook.Implementation;
+using Quasar.Client.Utilities;
 
 namespace Quasar.Client.MouseKeyHook.WinApi
 {

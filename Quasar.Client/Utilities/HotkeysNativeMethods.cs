@@ -1,8 +1,7 @@
-﻿using Quasar.Client.Utilities;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Quasar.Client.MouseKeyHook.WinApi
+namespace Quasar.Client.Utilities
 {
     internal static class HotkeysNativeMethods
     {

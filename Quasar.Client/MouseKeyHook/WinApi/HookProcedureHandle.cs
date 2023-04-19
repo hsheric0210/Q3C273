@@ -4,6 +4,7 @@
 
 using System.Windows.Forms;
 using Microsoft.Win32.SafeHandles;
+using Quasar.Client.Utilities;
 
 namespace Quasar.Client.MouseKeyHook.WinApi
 {
