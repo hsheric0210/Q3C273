@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Q3C273.Server", "Quasar.Server\Q3C273.Server.csproj", "{14CA405B-8BAC-48AB-9FBA-8FB5DF88FD0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Q3C273.Server", "Q3C273.Server\Q3C273.Server.csproj", "{14CA405B-8BAC-48AB-9FBA-8FB5DF88FD0D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Q3C273.Client", "Quasar.Client\Q3C273.Client.csproj", "{9F5CF56A-DDB2-4F40-AB99-2A1DC47588E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Q3C273.Client", "Q3C273.Client\Q3C273.Client.csproj", "{9F5CF56A-DDB2-4F40-AB99-2A1DC47588E1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Q3C273.Shared", "Quasar.Common\Q3C273.Shared.csproj", "{C7C363BA-E5B6-4E18-9224-39BC8DA73172}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Q3C273.Shared", "Q3C273.Shared\Q3C273.Shared.csproj", "{C7C363BA-E5B6-4E18-9224-39BC8DA73172}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Q3C273.Shared.Tests", "Quasar.Common.Tests\Q3C273.Shared.Tests.csproj", "{32A2A734-7429-47E6-A362-E344A19C0D85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Q3C273.Shared.Tests", "Q3C273.Shared.Tests\Q3C273.Shared.Tests.csproj", "{32A2A734-7429-47E6-A362-E344A19C0D85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

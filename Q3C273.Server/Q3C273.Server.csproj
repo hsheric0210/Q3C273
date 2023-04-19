@@ -297,7 +297,7 @@
         </Compile>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Quasar.Common\Q3C273.Shared.csproj" />
+        <ProjectReference Include="..\Q3C273.Shared\Q3C273.Shared.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Mono.Cecil">
