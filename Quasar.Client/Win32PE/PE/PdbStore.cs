@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Quasar.Client.Win32PE.Structs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace WindowsPE
+namespace Quasar.Client.Win32PE.PE
 {
     [ComVisible(true)]
     [Guid("34B66A2A-F694-49A7-A48F-3C7BDFD363C5")]
@@ -26,9 +27,7 @@ namespace WindowsPE
         public void Add(SYMBOL_INFO si)
         {
             if (_cache.ContainsKey(si.Name) == false) // duplicates of "<anonymous-tag>"
-            {
                 _cache.Add(si.Name, si);
-            }
         }
 
         public SYMBOL_INFO this[string key]
@@ -36,9 +35,7 @@ namespace WindowsPE
             get
             {
                 if (_cache.ContainsKey(key) == false)
-                {
-                    return default(SYMBOL_INFO);
-                }
+                    return default;
 
                 return _cache[key];
             }
