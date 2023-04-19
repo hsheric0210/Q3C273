@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Quasar.Client.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -232,13 +233,13 @@ namespace Quasar.Client.Win32PE.Structs
         /*
 enum _POOL_TYPE
 {
-	NonPagedPool,
-	PagedPool,
-	NonPagedPoolMustSucceed,
-	DontUseThisType,
-	NonPagedPoolCacheAligned,
-	PagedPoolCacheAligned,
-	NonPagedPoolCacheAlignedMustS
+    NonPagedPool,
+    PagedPool,
+    NonPagedPoolMustSucceed,
+    DontUseThisType,
+    NonPagedPoolCacheAligned,
+    PagedPoolCacheAligned,
+    NonPagedPoolCacheAlignedMustS
 }
         */
 
@@ -936,7 +937,7 @@ enum _POOL_TYPE
 
         public uint CVSig;                  // Signature of the CV record in the debug directories
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = NativeMethods.MAX_PATH * 3)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = ClientNatives.MAX_PATH * 3)]
         public byte[] CVData;   // Contents of the CV record
         public uint PdbSig;                 // Signature of PDB
         public Guid PdbSig70;               // Signature of PDB (VC 7 and up)
@@ -970,7 +971,7 @@ enum _POOL_TYPE
 
         /*
             _IMAGEHLP_MODULE64 module = _IMAGEHLP_MODULE64.Create();
-            if (NativeMethods.SymGetModuleInfo64(processHandle, (ulong)base_addr.ToInt64(), ref module) == false)
+            if (ClientNatives.SymGetModuleInfo64(processHandle, (ulong)base_addr.ToInt64(), ref module) == false)
             {
                 Console.WriteLine("Unexpected failure from SymGetModuleInfo64().");
                 return;

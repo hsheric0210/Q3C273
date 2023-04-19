@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Quasar.Client.Utilities;
 
-namespace Quasar.Client.MouseKeyHook.WinApi
+namespace Quasar.Client.Utilities
 {
-    internal static partial class KeyboardNativeMethods
+    internal static partial class ClientNatives
     {
         //[DllImport("user32.dll")]
         public delegate int ToAsciiProc(

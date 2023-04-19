@@ -1,4 +1,5 @@
-﻿using Quasar.Client.Win32PE.Structs;
+﻿using Quasar.Client.Utilities;
+using Quasar.Client.Win32PE.Structs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,7 +20,7 @@ namespace Quasar.Client.Win32PE.PE
 
         public PdbDump(string pdbFilePath, IntPtr baseAddress, int memorySize)
         {
-            var options = NativeMethods.SymGetOptions();
+            var options = ClientNatives.SymGetOptions();
 
             options &= ~(uint)SymOpt.DEFERRED_LOADS;
             options |= (uint)SymOpt.LOAD_LINES;
@@ -29,12 +30,12 @@ namespace Quasar.Client.Win32PE.PE
 #endif
             options |= (uint)SymOpt.UNDNAME;
 
-            NativeMethods.SymSetOptions(options);
+            ClientNatives.SymSetOptions(options);
 
             var pid = Process.GetCurrentProcess().Id;
-            var processHandle = NativeMethods.OpenProcess(ProcessAccessRights.PROCESS_QUERY_INFORMATION | ProcessAccessRights.PROCESS_VM_READ, false, pid);
+            var processHandle = ClientNatives.OpenProcess(ProcessAccessRights.PROCESS_QUERY_INFORMATION | ProcessAccessRights.PROCESS_VM_READ, false, pid);
 
-            if (NativeMethods.SymInitialize(processHandle, null, false) == false)
+            if (ClientNatives.SymInitialize(processHandle, null, false) == false)
                 return;
 
             _symInitialized = true;
@@ -53,7 +54,7 @@ namespace Quasar.Client.Win32PE.PE
             {
                 store = pdbDumper.GetStore((pStore) =>
                 {
-                    NativeMethods.SymEnumSymbols(pdbDumper._hProcess, (ulong)baseAddress.ToInt64(), "*", enum_proc, pStore);
+                    ClientNatives.SymEnumSymbols(pdbDumper._hProcess, (ulong)baseAddress.ToInt64(), "*", enum_proc, pStore);
                 });
             }
 
@@ -68,7 +69,7 @@ namespace Quasar.Client.Win32PE.PE
             {
                 store = pdbDumper.GetStore((pStore) =>
                 {
-                    NativeMethods.SymEnumTypes(pdbDumper._hProcess, (ulong)baseAddress.ToInt64(), enum_proc, pStore);
+                    ClientNatives.SymEnumTypes(pdbDumper._hProcess, (ulong)baseAddress.ToInt64(), enum_proc, pStore);
                 });
             }
 
@@ -79,7 +80,7 @@ namespace Quasar.Client.Win32PE.PE
         {
             return Enumerate((pStore) =>
             {
-                NativeMethods.SymEnumTypes(_hProcess, (ulong)_baseAddress.ToInt64(), enum_proc, pStore);
+                ClientNatives.SymEnumTypes(_hProcess, (ulong)_baseAddress.ToInt64(), enum_proc, pStore);
             });
         }
 
@@ -87,7 +88,7 @@ namespace Quasar.Client.Win32PE.PE
         {
             return Enumerate((pStore) =>
             {
-                NativeMethods.SymEnumSymbols(_hProcess, (ulong)_baseAddress.ToInt64(), "*", enum_proc, pStore);
+                ClientNatives.SymEnumSymbols(_hProcess, (ulong)_baseAddress.ToInt64(), "*", enum_proc, pStore);
             });
         }
 
@@ -132,7 +133,7 @@ namespace Quasar.Client.Win32PE.PE
 
         private static unsafe IntPtr LoadPdbModule(IntPtr processHandle, string pdbFilePath, IntPtr baseAddress, uint moduleSize)
         {
-            return new IntPtr((long)NativeMethods.SymLoadModuleEx(processHandle,
+            return new IntPtr((long)ClientNatives.SymLoadModuleEx(processHandle,
                 IntPtr.Zero, pdbFilePath, null, baseAddress.ToInt64(), moduleSize, null, 0));
         }
 
@@ -146,13 +147,13 @@ namespace Quasar.Client.Win32PE.PE
                 {
                     if (_hProcess != IntPtr.Zero)
                     {
-                        NativeMethods.CloseHandle(_hProcess);
+                        ClientNatives.CloseHandle(_hProcess);
                         _hProcess = IntPtr.Zero;
                     }
 
                     if (_symInitialized == true)
                     {
-                        NativeMethods.SymCleanup(_hProcess);
+                        ClientNatives.SymCleanup(_hProcess);
                         _symInitialized = false;
                     }
                 }
