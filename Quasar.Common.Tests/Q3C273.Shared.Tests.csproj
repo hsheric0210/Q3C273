@@ -17,6 +17,6 @@
     <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Quasar.Common\Quasar.Common.csproj" />
+    <ProjectReference Include="..\Quasar.Common\Q3C273.Shared.csproj" />
   </ItemGroup>
 </Project>

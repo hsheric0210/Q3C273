@@ -1,11 +1,13 @@
-# Quasar
+# Q3C273 - The offensive backdoor / RAT forked from [Quasar](https://github.com/quasar/Quasar)
+
+Its name **Q3C273** inspired from the first *Quasar* ever to be identified, [3C 273](https://en.wikipedia.org/wiki/3C_273).
 
 TODO:
 
-* [ ] Replace direct sensitive method calls (such as SetWindowsHookEx) with SilentProcAddress
+* [x] Replace direct sensitive method calls (such as SetWindowsHookEx) with SilentProcAddress
 * [ ] Make program location more customizable (Currently, no `\` character supported, and doesn't support many paths)
 * [ ] Make Reflective-DLL-injectable (see [SharpNeedle](https://github.com/ChadSki/SharpNeedle) and [SimpleSyringe](https://github.com/hsheric0210/simplesyringe))
-* [ ] Remove any signs of name `Quasar` from the builded executable.
+* [x] Remove any signs of name `Quasar` from the builded executable.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/5857hfy6r1ltb5f2?svg=true)](https://ci.appveyor.com/project/MaxXor/quasar)
 [![Downloads](https://img.shields.io/github/downloads/quasar/Quasar/total.svg)](https://github.com/quasar/Quasar/releases)
