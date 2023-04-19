@@ -139,7 +139,7 @@ namespace Quasar.Common.Video.Codecs
 
                         outStream.Write(BitConverter.GetBytes(temp.Length), 0, 4);
                         outStream.Write(temp, 0, temp.Length);
-                        NativeMethods.memcpy(new IntPtr(ptr), scan0, (uint)rawLength);
+                        SharedNatives.memcpy(new IntPtr(ptr), scan0, (uint)rawLength);
                     }
                     return;
                 }
@@ -185,7 +185,7 @@ namespace Quasar.Common.Video.Codecs
 
                         int offset = (y * stride) + (scanArea.X * pixelSize);
 
-                        if (NativeMethods.memcmp(encBuffer + offset, pScan0 + offset, (uint)stride) != 0)
+                        if (SharedNatives.memcmp(encBuffer + offset, pScan0 + offset, (uint)stride) != 0)
                         {
                             index = blocks.Count - 1;
 
@@ -221,12 +221,12 @@ namespace Quasar.Common.Video.Codecs
                             {
                                 int blockOffset = (stride * (cBlock.Y + j)) + (pixelSize * cBlock.X);
 
-                                if (NativeMethods.memcmp(encBuffer + blockOffset, pScan0 + blockOffset, blockStride) != 0)
+                                if (SharedNatives.memcmp(encBuffer + blockOffset, pScan0 + blockOffset, blockStride) != 0)
                                 {
                                     foundChanges = true;
                                 }
 
-                                NativeMethods.memcpy(encBuffer + blockOffset, pScan0 + blockOffset, blockStride);
+                                SharedNatives.memcpy(encBuffer + blockOffset, pScan0 + blockOffset, blockStride);
                                 //copy-changes
                             }
 
@@ -269,7 +269,7 @@ namespace Quasar.Common.Video.Codecs
                         for (int j = 0, offset = 0; j < rect.Height; j++)
                         {
                             int blockOffset = (stride * (rect.Y + j)) + (pixelSize * rect.X);
-                            NativeMethods.memcpy((byte*)tmpData.Scan0.ToPointer() + offset, pScan0 + blockOffset, (uint)blockStride);
+                            SharedNatives.memcpy((byte*)tmpData.Scan0.ToPointer() + offset, pScan0 + blockOffset, (uint)blockStride);
                             //copy-changes
                             offset += blockStride;
                         }
@@ -320,7 +320,7 @@ namespace Quasar.Common.Video.Codecs
 
                 fixed (byte* tempPtr = temp)
                 {
-                    NativeMethods.memcpy(new IntPtr(tempPtr), new IntPtr(codecBuffer.ToInt32() + 4), (uint)dataSize);
+                    SharedNatives.memcpy(new IntPtr(tempPtr), new IntPtr(codecBuffer.ToInt32() + 4), (uint)dataSize);
                 }
 
                 this._decodedBitmap = (Bitmap)Bitmap.FromStream(new MemoryStream(temp));

@@ -11,7 +11,7 @@ namespace Quasar.Client.Extensions
             uint nChars = 260;
             StringBuilder buffer = new StringBuilder((int)nChars);
 
-            var success = NativeMethods.QueryFullProcessImageName(proc.Handle, 0, buffer, ref nChars);
+            var success = ClientNatives.QueryFullProcessImageName(proc.Handle, 0, buffer, ref nChars);
 
             return success ? buffer.ToString() : null;
         }

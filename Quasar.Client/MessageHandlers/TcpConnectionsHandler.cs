@@ -77,32 +77,32 @@ namespace Quasar.Client.MessageHandlers
                     table[i].state = (byte)ConnectionState.Delete_TCB;
                     var ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(table[i]));
                     Marshal.StructureToPtr(table[i], ptr, false);
-                    NativeMethods.SetTcpEntry(ptr);
+                    ClientNatives.SetTcpEntry(ptr);
                     Execute(client, new GetConnections());
                     return;
                 }
             }
         }
 
-        private NativeMethods.MibTcprowOwnerPid[] GetTable()
+        private ClientNatives.MibTcprowOwnerPid[] GetTable()
         {
-            NativeMethods.MibTcprowOwnerPid[] tTable;
+            ClientNatives.MibTcprowOwnerPid[] tTable;
             var afInet = 2;
             var buffSize = 0;
             // retrieve correct pTcpTable size
-            NativeMethods.GetExtendedTcpTable(IntPtr.Zero, ref buffSize, true, afInet, NativeMethods.TcpTableClass.TcpTableOwnerPidAll);
+            ClientNatives.GetExtendedTcpTable(IntPtr.Zero, ref buffSize, true, afInet, ClientNatives.TcpTableClass.TcpTableOwnerPidAll);
             var buffTable = Marshal.AllocHGlobal(buffSize);
             try
             {
-                var ret = NativeMethods.GetExtendedTcpTable(buffTable, ref buffSize, true, afInet, NativeMethods.TcpTableClass.TcpTableOwnerPidAll);
+                var ret = ClientNatives.GetExtendedTcpTable(buffTable, ref buffSize, true, afInet, ClientNatives.TcpTableClass.TcpTableOwnerPidAll);
                 if (ret != 0)
                     return null;
-                var tab = (NativeMethods.MibTcptableOwnerPid)Marshal.PtrToStructure(buffTable, typeof(NativeMethods.MibTcptableOwnerPid));
+                var tab = (ClientNatives.MibTcptableOwnerPid)Marshal.PtrToStructure(buffTable, typeof(ClientNatives.MibTcptableOwnerPid));
                 var rowPtr = (IntPtr)((long)buffTable + Marshal.SizeOf(tab.dwNumEntries));
-                tTable = new NativeMethods.MibTcprowOwnerPid[tab.dwNumEntries];
+                tTable = new ClientNatives.MibTcprowOwnerPid[tab.dwNumEntries];
                 for (var i = 0; i < tab.dwNumEntries; i++)
                 {
-                    var tcpRow = (NativeMethods.MibTcprowOwnerPid)Marshal.PtrToStructure(rowPtr, typeof(NativeMethods.MibTcprowOwnerPid));
+                    var tcpRow = (ClientNatives.MibTcprowOwnerPid)Marshal.PtrToStructure(rowPtr, typeof(ClientNatives.MibTcprowOwnerPid));
                     tTable[i] = tcpRow;
                     rowPtr = (IntPtr)((long)rowPtr + Marshal.SizeOf(tcpRow));
                 }

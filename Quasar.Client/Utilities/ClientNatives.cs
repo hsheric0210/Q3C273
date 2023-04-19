@@ -15,7 +15,7 @@ namespace Quasar.Client.Utilities
     /// <summary>
     /// Provides access to the Win32 API.
     /// </summary>
-    public static class NativeMethods
+    public static class ClientNatives
     {
         // delegates
         //[DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]

@@ -6,7 +6,7 @@ namespace Quasar.Common
     /// <summary>
     /// Provides access to Win32 API and Microsoft C Runtime Library (msvcrt.dll).
     /// </summary>
-    public class NativeMethods
+    public class SharedNatives
     {
         [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern unsafe int memcmp(byte* ptr1, byte* ptr2, uint count);

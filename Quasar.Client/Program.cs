@@ -25,7 +25,7 @@ namespace Quasar.Client
             // Add the event handler for handling non-UI thread exceptions
             AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
 
-            NativeMethods.LoadNatives();
+            ClientNatives.LoadNatives();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new QuasarApplication());

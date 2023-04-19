@@ -295,7 +295,7 @@ namespace Quasar.Client.MessageHandlers
 
                     if (File.Exists(filePath))
                         // delete existing file
-                        NativeMethods.DeleteFile(filePath);
+                        SharedNatives.DeleteFile(filePath);
 
                     _activeTransfers[message.Id] = new FileSplit(filePath, FileAccess.Write);
                     OnReport("File download started");

