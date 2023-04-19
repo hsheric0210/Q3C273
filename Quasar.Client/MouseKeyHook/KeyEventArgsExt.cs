@@ -84,7 +84,6 @@ namespace Quasar.Client.MouseKeyHook
             //bit 24 Specifies the extended key state. The value is 1 if the key is an extended key, otherwise the value is 0.
             var isExtendedKey = (flags & maskExtendedKey) > 0;
 
-
             var keyData = AppendModifierStates((Keys)wParam);
             var scanCode = (int)((flags & 0x10000 | flags & 0x20000 | flags & 0x40000 | flags & 0x80000 |
                                    flags & 0x100000 | flags & 0x200000 | flags & 0x400000 | flags & 0x800000) >>

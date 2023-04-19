@@ -11,7 +11,6 @@ namespace Quasar.Client.Utilities
 {
     internal static partial class ClientNatives
     {
-        //[DllImport("user32.dll")]
         public delegate int ToAsciiProc(
             int uVirtKey,
             int uScanCode,
@@ -72,7 +71,7 @@ namespace Quasar.Client.Utilities
             int cchBuff,
             int wFlags,
             IntPtr dwhkl);
-        //[DllImport("user32.dll")]
+
         /// <summary>
         ///     Translates the specified virtual-key code and keyboard state to the corresponding Unicode character or characters.
         /// </summary>
@@ -144,7 +143,7 @@ namespace Quasar.Client.Utilities
         ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/userinput/keyboardinput/keyboardinputreference/keyboardinputfunctions/toascii.asp
         /// </remarks>
         public delegate int GetKeyboardStateProc(byte[] pbKeyState);
-        //[DllImport("user32.dll")]
+        
         public static int GetKeyboardState(byte[] pbKeyState) => Lookup<GetKeyboardStateProc>("user32.dll", "GetKeyboardState")(pbKeyState);
 
         public delegate short GetKeyStateProc(int vKey);
@@ -167,7 +166,6 @@ namespace Quasar.Client.Utilities
         ///     on when the key is toggled, and off when the key is untoggled.
         /// </returns>
         /// <remarks>http://msdn.microsoft.com/en-us/library/ms646301.aspx</remarks>
-        //[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static short GetKeyState(int vKey) => Lookup<GetKeyStateProc>("user32.dll", "GetKeyState")(vKey);
 
         internal delegate int MapVirtualKeyExProc(int uCode, int uMapType, IntPtr dwhkl);
@@ -185,7 +183,6 @@ namespace Quasar.Client.Utilities
         /// </param>
         /// <param name="dwhkl">[in] The input locale identifier used to translate the specified code.</param>
         /// <returns></returns>
-        //[DllImport("user32.dll", CharSet = CharSet.Auto)]
         internal static int MapVirtualKeyEx(int uCode, int uMapType, IntPtr dwhkl) => Lookup<MapVirtualKeyExProc>("user32.dll", "MapVirtualKeyExW")(uCode, uMapType, dwhkl);
 
         internal delegate IntPtr GetKeyboardLayoutProc(int dwLayout);
@@ -199,7 +196,6 @@ namespace Quasar.Client.Utilities
         ///     input
         ///     language and the high word contains a device handle to the physical layout of the keyboard.
         /// </returns>
-        //[DllImport("user32.dll", CharSet = CharSet.Auto)]
         internal static IntPtr GetKeyboardLayout(int dwLayout) => Lookup<GetKeyboardLayoutProc>("user32.dll", "GetKeyboardLayout")(dwLayout);
     }
 }

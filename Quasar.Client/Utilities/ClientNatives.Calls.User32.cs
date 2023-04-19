@@ -7,11 +7,11 @@ namespace Quasar.Client.Utilities
     /// </summary>
     internal static partial class ClientNatives
     {
-        //[DllImport("user32.dll")]
+        
         internal delegate bool SetCursorPosFunc(int x, int y);
         internal static bool SetCursorPos(int x, int y) => Lookup<SetCursorPosFunc>("user32.dll", "SetCursorPos")(x, y);
 
-        //[DllImport("user32.dll")]
+        
         internal delegate bool SystemParametersInfoFunc(uint uAction, uint uParam, ref IntPtr lpvParam, uint flags);
         internal static bool SystemParametersInfo(uint uAction, uint uParam, ref IntPtr lpvParam, uint flags) => Lookup<SystemParametersInfoFunc>("user32.dll", "SystemParametersInfoW")(uAction, uParam, ref lpvParam, flags);
     }

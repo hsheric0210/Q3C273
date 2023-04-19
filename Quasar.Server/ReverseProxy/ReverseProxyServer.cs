@@ -50,7 +50,6 @@ namespace Quasar.Server.ReverseProxy
             }
         }
 
-
         public Client[] Clients { get; private set; }
 
         //We can also use the Random class but not sure if that will evenly spread the connections

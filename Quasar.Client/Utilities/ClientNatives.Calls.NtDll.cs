@@ -6,11 +6,11 @@ namespace Quasar.Client.Utilities
 {
     internal static partial class ClientNatives
     {
-        //[DllImport("ntdll.dll")]
+
         internal delegate IntPtr NtCurrentTebProc();
         internal static IntPtr NtCurrentTeb() => Lookup<NtCurrentTebProc>("ntdll.dll", "NtCurrentTeb")();
 
-        //[DllImport("ntdll.dll")]
+
         internal delegate NT_STATUS NtQuerySystemInformationProc(
             [In] SYSTEM_INFORMATION_CLASS SystemInformationClass,
             [In] IntPtr SystemInformation,
@@ -22,7 +22,7 @@ namespace Quasar.Client.Utilities
             [In] int SystemInformationLength,
             [Out] out int ReturnLength) => Lookup<NtQuerySystemInformationProc>("ntdll.dll", "NtQuerySystemInformation")(SystemInformationClass, SystemInformation, SystemInformationLength, out ReturnLength);
 
-        //[DllImport("ntdll.dll")]
+
         internal delegate NT_STATUS NtQueryInformationProcessProc(
             [In] IntPtr ProcessHandle,
             [In] PROCESS_INFORMATION_CLASS ProcessInformationClass,
@@ -36,8 +36,6 @@ namespace Quasar.Client.Utilities
             [In] int ProcessInformationLength,
             [Out] out int ReturnLength) => Lookup<NtQueryInformationProcessProc>("ntdll.dll", "NtQueryInformationProcess")(ProcessHandle, ProcessInformationClass, ProcessInformation, ProcessInformationLength, out ReturnLength);
 
-
-        //[DllImport("ntdll.dll")]
         internal delegate NT_STATUS NtQueryObjectProc(
             [In] IntPtr Handle,
             [In] OBJECT_INFORMATION_CLASS ObjectInformationClass,

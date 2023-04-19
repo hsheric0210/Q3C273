@@ -60,7 +60,6 @@ namespace Quasar.Client.MouseKeyHook
             };
         }
 
-
         /// <summary>
         ///     Detects a key or key combination sequence and triggers the corresponding action.
         /// </summary>

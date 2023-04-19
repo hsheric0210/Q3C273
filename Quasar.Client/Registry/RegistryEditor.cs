@@ -30,7 +30,6 @@ namespace Quasar.Client.Registry
             {
                 RegistryKey parent = GetWritableRegistryKey(parentPath);
 
-
                 //Invalid can not open parent
                 if (parent == null)
                 {

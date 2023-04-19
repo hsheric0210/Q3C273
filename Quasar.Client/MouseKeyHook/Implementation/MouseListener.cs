@@ -26,9 +26,9 @@ namespace Quasar.Client.MouseKeyHook.Implementation
         protected MouseListener(Subscribe subscribe)
             : base(subscribe)
         {
-            m_SwapButtonThreshold = NativeMethods.GetSwapButtonThreshold();
-            m_xDragThreshold = NativeMethods.GetXDragThreshold();
-            m_yDragThreshold = NativeMethods.GetYDragThreshold();
+            m_SwapButtonThreshold = ClientNatives.GetSwapButtonThreshold();
+            m_xDragThreshold = ClientNatives.GetXDragThreshold();
+            m_yDragThreshold = ClientNatives.GetYDragThreshold();
             m_IsDragging = false;
 
             m_PreviousPosition = m_UninitialisedPoint;

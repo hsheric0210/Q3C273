@@ -20,7 +20,6 @@ namespace Quasar.Client.Utilities
         /// <remarks>
         ///     http://msdn.microsoft.com/en-us/library/ms646258(VS.85).aspx
         /// </remarks>
-        //[DllImport("user32")]
         internal static int GetDoubleClickTime() => Lookup<GetDoubleClickTimeProc>("user32.dll", "GetDoubleClickTime")();
     }
 }

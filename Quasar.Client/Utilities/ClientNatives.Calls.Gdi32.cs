@@ -22,16 +22,39 @@ namespace Quasar.Client.Utilities
         /// <returns>
         ///    <c>true</c> if the operation succeedes, <c>false</c> otherwise. To get extended error information, call <see cref="System.Runtime.InteropServices.Marshal.GetLastWin32Error"/>.
         /// </returns>
-        //[DllImport("gdi32.dll", EntryPoint = "BitBlt", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal delegate bool BitBltFunc([In] IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight, [In] IntPtr hdcSrc, int nXSrc, int nYSrc, int dwRop);
-        internal static bool BitBlt(IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight, IntPtr hdcSrc, int nXSrc, int nYSrc, int dwRop) => Lookup<BitBltFunc>("gdi32.dll", "BitBlt")(hdc, nXDest, nYDest, nWidth, nHeight, hdcSrc, nXSrc, nYSrc, dwRop);
+        internal delegate bool BitBltFunc(
+            [In] IntPtr hdc,
+            int nXDest,
+            int nYDest,
+            int nWidth,
+            int nHeight,
+            [In] IntPtr hdcSrc,
+            int nXSrc,
+            int nYSrc,
+            int dwRop);
+        internal static bool BitBlt(
+            IntPtr hdc,
+            int nXDest,
+            int nYDest,
+            int nWidth,
+            int nHeight,
+            IntPtr hdcSrc,
+            int nXSrc,
+            int nYSrc,
+            int dwRop) => Lookup<BitBltFunc>("gdi32.dll", "BitBlt")(hdc, nXDest, nYDest, nWidth, nHeight, hdcSrc, nXSrc, nYSrc, dwRop);
 
-        //[DllImport("gdi32.dll", CharSet = CharSet.Unicode)]
-        internal delegate IntPtr CreateDCFunc([MarshalAs(UnmanagedType.LPWStr)] string lpszDriver, [MarshalAs(UnmanagedType.LPWStr)] string lpszDevice, [MarshalAs(UnmanagedType.LPWStr)] string lpszOutput, IntPtr lpInitData);
-        internal static IntPtr CreateDC([MarshalAs(UnmanagedType.LPWStr)] string lpszDriver, [MarshalAs(UnmanagedType.LPWStr)] string lpszDevice, [MarshalAs(UnmanagedType.LPWStr)] string lpszOutput, IntPtr lpInitData) => Lookup<CreateDCFunc>("gdi32.dll", "CreateDCW")(lpszDriver, lpszDevice, lpszOutput, lpInitData);
+        internal delegate IntPtr CreateDCFunc(
+            [MarshalAs(UnmanagedType.LPWStr)] string lpszDriver,
+            [MarshalAs(UnmanagedType.LPWStr)] string lpszDevice,
+            [MarshalAs(UnmanagedType.LPWStr)] string lpszOutput,
+            IntPtr lpInitData);
+        internal static IntPtr CreateDC(
+            [MarshalAs(UnmanagedType.LPWStr)] string lpszDriver,
+            [MarshalAs(UnmanagedType.LPWStr)] string lpszDevice,
+            [MarshalAs(UnmanagedType.LPWStr)] string lpszOutput,
+            IntPtr lpInitData) => Lookup<CreateDCFunc>("gdi32.dll", "CreateDCW")(lpszDriver, lpszDevice, lpszOutput, lpInitData);
 
-        //[DllImport("gdi32.dll")]
         internal delegate bool DeleteDCFunc([In] IntPtr hdc);
         internal static bool DeleteDC(IntPtr hdc) => Lookup<DeleteDCFunc>("gdi32.dll", "DeleteDC")(hdc);
     }

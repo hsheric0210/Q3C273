@@ -59,7 +59,6 @@ namespace Quasar.Client.MouseKeyHook
         /// </remarks>
         event EventHandler<MouseEventExtArgs> MouseUpExt;
 
-
         /// <summary>
         ///     Occurs when the mouse wheel moves.
         /// </summary>

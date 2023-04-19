@@ -357,7 +357,6 @@ namespace Quasar.Server.Controls.HexEditor
             }
         }int _bytesPerLine = 8;
 
-
         /// <summary>
         /// Contains the margin between each
         /// of the entitys

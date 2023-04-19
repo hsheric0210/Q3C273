@@ -28,7 +28,6 @@ namespace Quasar.Server.Controls.HexEditor
         /// </summary>
         bool _isCaretActive;
 
-
         /// <summary>
         /// Tells if the caret is 
         /// currently hidden or 

@@ -7,7 +7,7 @@ namespace Quasar.Client.Utilities
     /// </summary>
     internal static partial class ClientNatives
     {
-        //[DllImport("user32.dll")]
+        
         internal delegate bool GetLastInputInfoFunc(ref LASTINPUTINFO plii);
         internal static bool GetLastInputInfo(ref LASTINPUTINFO plii) => Lookup<GetLastInputInfoFunc>("user32.dll", "GetLastInputInfo")(ref plii);
 

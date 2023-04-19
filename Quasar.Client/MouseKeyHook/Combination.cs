@@ -97,7 +97,6 @@ namespace Quasar.Client.MouseKeyHook
             return With(Keys.Shift);
         }
 
-
         /// <inheritdoc />
         public override string ToString()
         {
