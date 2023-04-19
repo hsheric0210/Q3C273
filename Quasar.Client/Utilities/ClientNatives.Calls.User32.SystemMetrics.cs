@@ -16,7 +16,6 @@ namespace Quasar.Client.Utilities
         private const int SM_CXDOUBLECLK = 36;
         private const int SM_CYDOUBLECLK = 37;
 
-        
         private delegate int GetSystemMetricsProc(int index);
         private static int GetSystemMetrics(int index) => ClientNatives.Lookup<GetSystemMetricsProc>("user32.dll", "GetSystemMetrics")(index);
 

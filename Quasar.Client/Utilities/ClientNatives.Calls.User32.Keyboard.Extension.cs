@@ -6,7 +6,6 @@ using System;
 using System.Text;
 using System.Windows.Forms;
 using Quasar.Client.MouseKeyHook.Implementation;
-using Quasar.Client.Utilities;
 
 namespace Quasar.Client.Utilities
 {

