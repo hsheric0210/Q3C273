@@ -26,7 +26,7 @@ namespace Q3C273.Server.Forms
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            SetCertificate(CertificateHelper.CreateCertificateAuthority("Cavendish Laboratory CA", 8192));
+            SetCertificate(CertificateHelper.CreateCertificateAuthority("Cavendish Laboratory CA", 4096));
         }
 
         private void btnImport_Click(object sender, EventArgs e)

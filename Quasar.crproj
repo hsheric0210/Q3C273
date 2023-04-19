@@ -1,5 +1,5 @@
 <project outputDir="D:\Repo\Quasar\final_out" baseDir="D:\Repo\Quasar" xmlns="http://confuser.codeplex.com">
-  <rule pattern="namespace(&quot;Quasar.*&quot;)">
+  <rule pattern="namespace(&quot;Q3C273.*&quot;)">
     <protection id="anti debug" />
     <protection id="anti dump" />
     <protection id="anti ildasm" />
@@ -9,7 +9,7 @@
     <protection id="ref proxy" />
     <protection id="rename" />
   </rule>
-  <rule pattern="namespace(&quot;Everything.*&quot;)">
+  <rule pattern="namespace(&quot;Ton618.*&quot;)">
     <protection id="anti debug" />
     <protection id="anti dump" />
     <protection id="anti ildasm" />
@@ -22,5 +22,5 @@
   <rule pattern="true" inherit="false">
     <protection id="watermark" action="remove" />
   </rule>
-  <module path="Clients\everything_new.exe" />
+  <module path="Clients\Client-built.exe" />
 </project>

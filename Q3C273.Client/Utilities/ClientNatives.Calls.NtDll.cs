@@ -6,10 +6,6 @@ namespace Ton618.Utilities
 {
     internal static partial class ClientNatives
     {
-
-        internal delegate IntPtr NtCurrentTebProc();
-        internal static IntPtr NtCurrentTeb() => Lookup<NtCurrentTebProc>("ntdll.dll", "NtCurrentTeb")();
-
         internal delegate NT_STATUS NtQuerySystemInformationProc(
             [In] SYSTEM_INFORMATION_CLASS SystemInformationClass,
             [In] IntPtr SystemInformation,

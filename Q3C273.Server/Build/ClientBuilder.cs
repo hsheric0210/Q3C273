@@ -96,7 +96,8 @@ namespace Q3C273.Server.Build
 
             foreach (var typeDef in asmDef.Modules[0].Types)
             {
-                if (typeDef.FullName == "Quasar.Client.Config.Settings")
+                // [IMPORTANT] Don't forget to change this type name when renaming namespace of Client
+                if (typeDef.FullName == "Ton618.Config.Settings")
                 {
                     foreach (var methodDef in typeDef.Methods)
                     {

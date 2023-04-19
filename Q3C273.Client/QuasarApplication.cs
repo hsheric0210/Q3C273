@@ -11,7 +11,6 @@ using System.Windows.Forms;
 using Q3C273.Shared.Helpers;
 using Q3C273.Shared.Messages;
 using Ton618.Networking;
-using Ton618.MessageHandlers;
 using Ton618.Logging;
 using Ton618.Utilities;
 using Ton618.Config;
@@ -105,7 +104,9 @@ namespace Ton618
         {
             // decrypt and verify the settings
             if (!Settings.Initialize())
+            {
                 Environment.Exit(1);
+            }
 
             ApplicationMutex = new SingleInstanceMutex(Settings.MUTEX);
 

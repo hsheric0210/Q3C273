@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using Ton618.Helper;
-using Ton618.Recovery;
 
 namespace Ton618.Recovery.Browsers
 {

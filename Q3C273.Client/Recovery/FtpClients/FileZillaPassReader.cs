@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
-using Ton618.Recovery;
 
 namespace Ton618.Recovery.FtpClients
 {

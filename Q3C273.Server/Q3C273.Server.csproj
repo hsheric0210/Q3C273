@@ -2,7 +2,7 @@
     <PropertyGroup>
         <TargetFramework>net472</TargetFramework>
         <OutputType>WinExe</OutputType>
-        <AssemblyName>Quasar</AssemblyName>
+        <AssemblyName>Q3C273</AssemblyName>
         <UseWindowsForms>true</UseWindowsForms>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
@@ -10,7 +10,7 @@
         <StartupObject>Q3C273.Server.Program</StartupObject>
     </PropertyGroup>
     <PropertyGroup>
-        <ApplicationIcon>Images\Icons\Quasar_Server.ico</ApplicationIcon>
+        <ApplicationIcon>Images\Icons\3C_273.ico</ApplicationIcon>
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>

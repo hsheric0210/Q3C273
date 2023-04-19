@@ -6,6 +6,13 @@ namespace Ton618.Win32PE.Structs
 {
     public class EnvironmentBlockInfo
     {
+        // Do not replace this with dynamic call.
+        [DllImport("kernel32.dll", EntryPoint = "VirtualAlloc")]
+        private static extern IntPtr VirtualAllocExplicit(IntPtr lpAddress, UIntPtr dwSize, AllocationType flAllocationType, MemoryProtection flProtection);
+
+        [DllImport("ntdll.dll", CallingConvention = CallingConvention.StdCall)]
+        private static extern IntPtr NtCurrentTeb();
+
         private readonly static byte[] _x64TebBytes =
         {
             0x40, 0x57, // push rdi
@@ -29,7 +36,7 @@ namespace Ton618.Win32PE.Structs
 
             var codeBytes = _x64TebBytes;
 
-            _codePointer = ClientNatives.VirtualAlloc(IntPtr.Zero, new UIntPtr((uint)codeBytes.Length),
+            _codePointer = VirtualAllocExplicit(IntPtr.Zero, new UIntPtr((uint)codeBytes.Length),
                 AllocationType.COMMIT | AllocationType.RESERVE,
                 MemoryProtection.EXECUTE_READWRITE
             );
@@ -51,7 +58,7 @@ namespace Ton618.Win32PE.Structs
             }
             else
             {
-                return ClientNatives.NtCurrentTeb();
+                return NtCurrentTeb();
             }
         }
 

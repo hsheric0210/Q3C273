@@ -4,6 +4,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Ton618.Config
 {
@@ -104,7 +105,7 @@ namespace Ton618.Config
                     Convert.FromBase64String(SERVERSIGNATURE));
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return false;
             }

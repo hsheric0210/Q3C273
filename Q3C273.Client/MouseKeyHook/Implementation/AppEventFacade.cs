@@ -2,8 +2,6 @@
 // Copyright (c) 2015 George Mamaladze
 // See license.txt or https://mit-license.org/
 
-using Ton618.MouseKeyHook.Implementation;
-
 namespace Ton618.MouseKeyHook.Implementation
 {
     internal class AppEventFacade : EventFacade
