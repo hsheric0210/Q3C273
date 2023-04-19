@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace Quasar.Client.Messages
+namespace Quasar.Client.MessageHandlers
 {
     public class ShutdownHandler : IMessageProcessor
     {
@@ -27,7 +27,7 @@ namespace Quasar.Client.Messages
         {
             try
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo();
+                var startInfo = new ProcessStartInfo();
                 switch (message.Action)
                 {
                     case ShutdownAction.Shutdown:

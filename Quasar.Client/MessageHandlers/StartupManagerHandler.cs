@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Quasar.Client.Messages
+namespace Quasar.Client.MessageHandlers
 {
     public class StartupManagerHandler : IMessageProcessor
     {
@@ -40,7 +40,7 @@ namespace Quasar.Client.Messages
         {
             try
             {
-                List<Common.Models.StartupItem> startupItems = new List<Common.Models.StartupItem>();
+                var startupItems = new List<Common.Models.StartupItem>();
 
                 using (var key = RegistryKeyHelper.OpenReadonlySubKey(RegistryHive.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"))
                 {
@@ -174,11 +174,9 @@ namespace Quasar.Client.Messages
                         break;
                     case StartupType.StartMenu:
                         if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Startup)))
-                        {
                             Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Startup));
-                        }
 
-                        string lnkPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup),
+                        var lnkPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup),
                             message.StartupItem.Name + ".url");
 
                         using (var writer = new StreamWriter(lnkPath, false))
@@ -247,7 +245,7 @@ namespace Quasar.Client.Messages
                         }
                         break;
                     case StartupType.StartMenu:
-                        string startupItemPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), message.StartupItem.Name);
+                        var startupItemPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), message.StartupItem.Name);
 
                         if (!File.Exists(startupItemPath))
                             throw new IOException("File does not exist");

@@ -10,7 +10,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace Quasar.Client.Messages
+namespace Quasar.Client.MessageHandlers
 {
     public class ClientServicesHandler : IMessageProcessor
     {
@@ -82,7 +82,7 @@ namespace Quasar.Client.Messages
             var userAccount = new UserAccount();
             if (userAccount.Type != AccountType.Admin)
             {
-                ProcessStartInfo processStartInfo = new ProcessStartInfo
+                var processStartInfo = new ProcessStartInfo
                 {
                     FileName = "cmd",
                     Verb = "runas",
@@ -98,7 +98,7 @@ namespace Quasar.Client.Messages
                 }
                 catch
                 {
-                    client.Send(new SetStatus {Message = "User refused the elevation request."});
+                    client.Send(new SetStatus { Message = "User refused the elevation request." });
                     _application.ApplicationMutex = new SingleInstanceMutex(Settings.MUTEX);  // re-grab the mutex
                     return;
                 }

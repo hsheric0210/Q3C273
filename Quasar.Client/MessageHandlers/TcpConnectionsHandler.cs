@@ -6,7 +6,7 @@ using Quasar.Common.Networking;
 using System;
 using System.Runtime.InteropServices;
 
-namespace Quasar.Client.Messages
+namespace Quasar.Client.MessageHandlers
 {
     public class TcpConnectionsHandler : IMessageProcessor
     {
@@ -34,7 +34,7 @@ namespace Quasar.Client.Messages
 
             var connections = new TcpConnection[table.Length];
 
-            for (int i = 0; i < table.Length; i++)
+            for (var i = 0; i < table.Length; i++)
             {
                 string processName;
                 try
@@ -74,7 +74,7 @@ namespace Quasar.Client.Messages
                     message.RemotePort == table[i].RemotePort)
                 {
                     // it will close the connection only if client run as admin
-                    table[i].state = (byte) ConnectionState.Delete_TCB;
+                    table[i].state = (byte)ConnectionState.Delete_TCB;
                     var ptr = Marshal.AllocCoTaskMem(Marshal.SizeOf(table[i]));
                     Marshal.StructureToPtr(table[i], ptr, false);
                     NativeMethods.SetTcpEntry(ptr);

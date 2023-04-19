@@ -6,7 +6,7 @@ using Quasar.Common.Models;
 using Quasar.Common.Networking;
 using System;
 
-namespace Quasar.Client.Messages
+namespace Quasar.Client.MessageHandlers
 {
     public class RegistryHandler : IMessageProcessor
     {
@@ -54,10 +54,10 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, DoLoadRegistryKey message)
         {
-            GetRegistryKeysResponse responsePacket = new GetRegistryKeysResponse();
+            var responsePacket = new GetRegistryKeysResponse();
             try
             {
-                RegistrySeeker seeker = new RegistrySeeker();
+                var seeker = new RegistrySeeker();
                 seeker.BeginSeeking(message.RootKeyName);
 
                 responsePacket.Matches = seeker.Matches;
@@ -75,13 +75,13 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, DoCreateRegistryKey message)
         {
-            GetCreateRegistryKeyResponse responsePacket = new GetCreateRegistryKeyResponse();
+            var responsePacket = new GetCreateRegistryKeyResponse();
             string errorMsg;
-            string newKeyName = "";
+            var newKeyName = "";
 
             try
             {
-                responsePacket.IsError = !(RegistryEditor.CreateRegistryKey(message.ParentPath, out newKeyName, out errorMsg));
+                responsePacket.IsError = !RegistryEditor.CreateRegistryKey(message.ParentPath, out newKeyName, out errorMsg);
             }
             catch (Exception ex)
             {
@@ -103,11 +103,11 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, DoDeleteRegistryKey message)
         {
-            GetDeleteRegistryKeyResponse responsePacket = new GetDeleteRegistryKeyResponse();
+            var responsePacket = new GetDeleteRegistryKeyResponse();
             string errorMsg;
             try
             {
-                responsePacket.IsError = !(RegistryEditor.DeleteRegistryKey(message.KeyName, message.ParentPath, out errorMsg));
+                responsePacket.IsError = !RegistryEditor.DeleteRegistryKey(message.KeyName, message.ParentPath, out errorMsg);
             }
             catch (Exception ex)
             {
@@ -123,11 +123,11 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, DoRenameRegistryKey message)
         {
-            GetRenameRegistryKeyResponse responsePacket = new GetRenameRegistryKeyResponse();
+            var responsePacket = new GetRenameRegistryKeyResponse();
             string errorMsg;
             try
             {
-                responsePacket.IsError = !(RegistryEditor.RenameRegistryKey(message.OldKeyName, message.NewKeyName, message.ParentPath, out errorMsg));
+                responsePacket.IsError = !RegistryEditor.RenameRegistryKey(message.OldKeyName, message.NewKeyName, message.ParentPath, out errorMsg);
             }
             catch (Exception ex)
             {
@@ -145,12 +145,12 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, DoCreateRegistryValue message)
         {
-            GetCreateRegistryValueResponse responsePacket = new GetCreateRegistryValueResponse();
+            var responsePacket = new GetCreateRegistryValueResponse();
             string errorMsg;
-            string newKeyName = "";
+            var newKeyName = "";
             try
             {
-                responsePacket.IsError = !(RegistryEditor.CreateRegistryValue(message.KeyPath, message.Kind, out newKeyName, out errorMsg));
+                responsePacket.IsError = !RegistryEditor.CreateRegistryValue(message.KeyPath, message.Kind, out newKeyName, out errorMsg);
             }
             catch (Exception ex)
             {
@@ -166,11 +166,11 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, DoDeleteRegistryValue message)
         {
-            GetDeleteRegistryValueResponse responsePacket = new GetDeleteRegistryValueResponse();
+            var responsePacket = new GetDeleteRegistryValueResponse();
             string errorMsg;
             try
             {
-                responsePacket.IsError = !(RegistryEditor.DeleteRegistryValue(message.KeyPath, message.ValueName, out errorMsg));
+                responsePacket.IsError = !RegistryEditor.DeleteRegistryValue(message.KeyPath, message.ValueName, out errorMsg);
             }
             catch (Exception ex)
             {
@@ -186,11 +186,11 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, DoRenameRegistryValue message)
         {
-            GetRenameRegistryValueResponse responsePacket = new GetRenameRegistryValueResponse();
+            var responsePacket = new GetRenameRegistryValueResponse();
             string errorMsg;
             try
             {
-                responsePacket.IsError = !(RegistryEditor.RenameRegistryValue(message.OldValueName, message.NewValueName, message.KeyPath, out errorMsg));
+                responsePacket.IsError = !RegistryEditor.RenameRegistryValue(message.OldValueName, message.NewValueName, message.KeyPath, out errorMsg);
             }
             catch (Exception ex)
             {
@@ -207,11 +207,11 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, DoChangeRegistryValue message)
         {
-            GetChangeRegistryValueResponse responsePacket = new GetChangeRegistryValueResponse();
+            var responsePacket = new GetChangeRegistryValueResponse();
             string errorMsg;
             try
             {
-                responsePacket.IsError = !(RegistryEditor.ChangeRegistryValue(message.Value, message.KeyPath, out errorMsg));
+                responsePacket.IsError = !RegistryEditor.ChangeRegistryValue(message.Value, message.KeyPath, out errorMsg);
             }
             catch (Exception ex)
             {
@@ -221,7 +221,7 @@ namespace Quasar.Client.Messages
             responsePacket.ErrorMsg = errorMsg;
             responsePacket.KeyPath = message.KeyPath;
             responsePacket.Value = message.Value;
-            
+
             client.Send(responsePacket);
         }
     }

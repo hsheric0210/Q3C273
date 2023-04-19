@@ -14,7 +14,7 @@ using System.Linq;
 using System.Security;
 using System.Threading;
 
-namespace Quasar.Client.Messages
+namespace Quasar.Client.MessageHandlers
 {
     public class FileManagerHandler : NotificationMessageProcessor, IDisposable
     {
@@ -114,8 +114,8 @@ namespace Quasar.Client.Messages
                 return;
             }
 
-            Drive[] drives = new Drive[driveInfos.Length];
-            for (int i = 0; i < drives.Length; i++)
+            var drives = new Drive[driveInfos.Length];
+            for (var i = 0; i < drives.Length; i++)
             {
                 try
                 {
@@ -140,7 +140,7 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, GetDirectory message)
         {
-            bool isError = false;
+            var isError = false;
             string statusMessage = null;
 
             Action<string> onError = (msg) =>
@@ -151,15 +151,15 @@ namespace Quasar.Client.Messages
 
             try
             {
-                DirectoryInfo dicInfo = new DirectoryInfo(message.RemotePath);
+                var dicInfo = new DirectoryInfo(message.RemotePath);
 
-                FileInfo[] files = dicInfo.GetFiles();
-                DirectoryInfo[] directories = dicInfo.GetDirectories();
+                var files = dicInfo.GetFiles();
+                var directories = dicInfo.GetDirectories();
 
-                FileSystemEntry[] items = new FileSystemEntry[files.Length + directories.Length];
+                var items = new FileSystemEntry[files.Length + directories.Length];
 
-                int offset = 0;
-                for (int i = 0; i < directories.Length; i++, offset++)
+                var offset = 0;
+                for (var i = 0; i < directories.Length; i++, offset++)
                 {
                     items[i] = new FileSystemEntry
                     {
@@ -170,7 +170,7 @@ namespace Quasar.Client.Messages
                     };
                 }
 
-                for (int i = 0; i < files.Length; i++)
+                for (var i = 0; i < files.Length; i++)
                 {
                     items[i + offset] = new FileSystemEntry
                     {
@@ -287,19 +287,15 @@ namespace Quasar.Client.Messages
             {
                 if (message.Chunk.Offset == 0)
                 {
-                    string filePath = message.FilePath;
+                    var filePath = message.FilePath;
 
                     if (string.IsNullOrEmpty(filePath))
-                    {
                         // generate new temporary file path if empty
                         filePath = FileHelper.GetTempFilePath(".exe");
-                    }
 
                     if (File.Exists(filePath))
-                    {
                         // delete existing file
                         NativeMethods.DeleteFile(filePath);
-                    }
 
                     _activeTransfers[message.Id] = new FileSplit(filePath, FileAccess.Write);
                     OnReport("File download started");
@@ -334,7 +330,7 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, DoPathDelete message)
         {
-            bool isError = false;
+            var isError = false;
             string statusMessage = null;
 
             Action<string> onError = (msg) =>
@@ -396,7 +392,7 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, DoPathRename message)
         {
-            bool isError = false;
+            var isError = false;
             string statusMessage = null;
 
             Action<string> onError = (msg) =>

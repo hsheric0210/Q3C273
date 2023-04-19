@@ -1,5 +1,6 @@
 ﻿using Quasar.Client.Config;
 using Quasar.Client.Logging;
+using Quasar.Client.MessageHandlers;
 using Quasar.Client.Messages;
 using Quasar.Client.Networking;
 using Quasar.Client.Setup;

@@ -4,7 +4,7 @@ using Quasar.Common.Messages;
 using Quasar.Common.Networking;
 using System;
 
-namespace Quasar.Client.Messages
+namespace Quasar.Client.MessageHandlers
 {
     /// <summary>
     /// Handles messages for the interaction with the remote shell.
@@ -40,9 +40,7 @@ namespace Quasar.Client.Messages
         {
             // close shell on client disconnection
             if (!connected)
-            {
                 _shell?.Dispose();
-            }
         }
 
         /// <inheritdoc />
@@ -64,10 +62,12 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, DoShellExecute message)
         {
-            string input = message.Command;
+            var input = message.Command;
 
-            if (_shell == null && input == "exit") return;
-            if (_shell == null) _shell = new Shell(_client);
+            if (_shell == null && input == "exit")
+                return;
+            if (_shell == null)
+                _shell = new Shell(_client);
 
             if (input == "exit")
                 _shell.Dispose();
@@ -87,9 +87,7 @@ namespace Quasar.Client.Messages
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 _shell?.Dispose();
-            }
         }
     }
 }

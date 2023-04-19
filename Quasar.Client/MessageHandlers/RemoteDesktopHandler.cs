@@ -10,7 +10,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
 
-namespace Quasar.Client.Messages
+namespace Quasar.Client.MessageHandlers
 {
     public class RemoteDesktopHandler : NotificationMessageProcessor, IDisposable
     {
@@ -46,7 +46,7 @@ namespace Quasar.Client.Messages
         {
             // TODO: Switch to streaming mode without request-response once switched from windows forms
             // TODO: Capture mouse in frames: https://stackoverflow.com/questions/6750056/how-to-capture-the-screen-and-mouse-pointer-using-windows-apis
-            var monitorBounds = ScreenHelper.GetBounds((message.DisplayIndex));
+            var monitorBounds = ScreenHelper.GetBounds(message.DisplayIndex);
             var resolution = new Resolution { Height = monitorBounds.Height, Width = monitorBounds.Width };
 
             if (_streamCodec == null)
@@ -74,9 +74,10 @@ namespace Quasar.Client.Messages
                 desktopData = desktop.LockBits(new Rectangle(0, 0, desktop.Width, desktop.Height),
                     ImageLockMode.ReadWrite, desktop.PixelFormat);
 
-                using (MemoryStream stream = new MemoryStream())
+                using (var stream = new MemoryStream())
                 {
-                    if (_streamCodec == null) throw new Exception("StreamCodec can not be null.");
+                    if (_streamCodec == null)
+                        throw new Exception("StreamCodec can not be null.");
                     _streamCodec.CodeImage(desktopData.Scan0,
                         new Rectangle(0, 0, desktop.Width, desktop.Height),
                         new Size(desktop.Width, desktop.Height),
@@ -128,10 +129,10 @@ namespace Quasar.Client.Messages
         {
             try
             {
-                Screen[] allScreens = Screen.AllScreens;
-                int offsetX = allScreens[message.MonitorIndex].Bounds.X;
-                int offsetY = allScreens[message.MonitorIndex].Bounds.Y;
-                Point p = new Point(message.X + offsetX, message.Y + offsetY);
+                var allScreens = Screen.AllScreens;
+                var offsetX = allScreens[message.MonitorIndex].Bounds.X;
+                var offsetY = allScreens[message.MonitorIndex].Bounds.Y;
+                var p = new Point(message.X + offsetX, message.Y + offsetY);
 
                 // Disable screensaver if active before input
                 switch (message.Action)
@@ -182,7 +183,7 @@ namespace Quasar.Client.Messages
 
         private void Execute(ISender client, GetMonitors message)
         {
-            client.Send(new GetMonitorsResponse {Number = Screen.AllScreens.Length});
+            client.Send(new GetMonitorsResponse { Number = Screen.AllScreens.Length });
         }
 
         /// <summary>
@@ -197,9 +198,7 @@ namespace Quasar.Client.Messages
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 _streamCodec?.Dispose();
-            }
         }
     }
 }
