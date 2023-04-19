@@ -2,7 +2,7 @@
     <PropertyGroup>
         <TargetFramework>net472</TargetFramework>
         <OutputType>WinExe</OutputType>
-        <AssemblyName>RhynAT</AssemblyName>
+        <AssemblyName>Ton618</AssemblyName>
         <UseWindowsForms>true</UseWindowsForms>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <Platforms>AnyCPU</Platforms>
@@ -25,7 +25,7 @@
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>
-        <RootNamespace>Everything</RootNamespace>
+        <RootNamespace>Ton618</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="System.Management" />
