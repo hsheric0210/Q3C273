@@ -8,7 +8,7 @@ namespace Quasar.Client.Utilities
     {
         //[DllImport("ntdll.dll")]
         internal delegate IntPtr NtCurrentTebProc();
-        internal static IntPtr NtCurrentTeb() => ClientNatives.Lookup<NtCurrentTebProc>("ntdll.dll", "NtCurrentTeb")();
+        internal static IntPtr NtCurrentTeb() => Lookup<NtCurrentTebProc>("ntdll.dll", "NtCurrentTeb")();
 
         //[DllImport("ntdll.dll")]
         internal delegate NT_STATUS NtQuerySystemInformationProc(
@@ -20,7 +20,7 @@ namespace Quasar.Client.Utilities
             [In] SYSTEM_INFORMATION_CLASS SystemInformationClass,
             [In] IntPtr SystemInformation,
             [In] int SystemInformationLength,
-            [Out] out int ReturnLength) => ClientNatives.Lookup<NtQuerySystemInformationProc>("ntdll.dll", "NtQuerySystemInformation")(SystemInformationClass, SystemInformation, SystemInformationLength, out ReturnLength);
+            [Out] out int ReturnLength) => Lookup<NtQuerySystemInformationProc>("ntdll.dll", "NtQuerySystemInformation")(SystemInformationClass, SystemInformation, SystemInformationLength, out ReturnLength);
 
         //[DllImport("ntdll.dll")]
         internal delegate NT_STATUS NtQueryInformationProcessProc(
@@ -34,7 +34,7 @@ namespace Quasar.Client.Utilities
             [In] PROCESS_INFORMATION_CLASS ProcessInformationClass,
             [In] IntPtr ProcessInformation,
             [In] int ProcessInformationLength,
-            [Out] out int ReturnLength) => ClientNatives.Lookup<NtQueryInformationProcessProc>("ntdll.dll", "NtQueryInformationProcess")(ProcessHandle, ProcessInformationClass, ProcessInformation, ProcessInformationLength, out ReturnLength);
+            [Out] out int ReturnLength) => Lookup<NtQueryInformationProcessProc>("ntdll.dll", "NtQueryInformationProcess")(ProcessHandle, ProcessInformationClass, ProcessInformation, ProcessInformationLength, out ReturnLength);
 
 
         //[DllImport("ntdll.dll")]
@@ -49,6 +49,6 @@ namespace Quasar.Client.Utilities
             [In] OBJECT_INFORMATION_CLASS ObjectInformationClass,
             [In] IntPtr ObjectInformation,
             [In] int ObjectInformationLength,
-            [Out] out int ReturnLength) => ClientNatives.Lookup<NtQueryObjectProc>("ntdll.dll", "NtQueryObject")(Handle, ObjectInformationClass, ObjectInformation, ObjectInformationLength, out ReturnLength);
+            [Out] out int ReturnLength) => Lookup<NtQueryObjectProc>("ntdll.dll", "NtQueryObject")(Handle, ObjectInformationClass, ObjectInformation, ObjectInformationLength, out ReturnLength);
     }
 }

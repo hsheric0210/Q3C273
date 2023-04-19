@@ -41,6 +41,6 @@ namespace Quasar.Client.Utilities
         /// <returns>The return value is the identifier of the thread that created the window. </returns>
         //[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         internal delegate int GetWindowThreadProcessIdProc(IntPtr handle, out int processId);
-        internal static int GetWindowThreadProcessId(IntPtr handle, out int processId) => ClientNatives.Lookup<GetWindowThreadProcessIdProc>("user32.dll", "GetWindowThreadProcessId")(handle, out processId);
+        internal static int GetWindowThreadProcessId(IntPtr handle, out int processId) => Lookup<GetWindowThreadProcessIdProc>("user32.dll", "GetWindowThreadProcessId")(handle, out processId);
     }
 }

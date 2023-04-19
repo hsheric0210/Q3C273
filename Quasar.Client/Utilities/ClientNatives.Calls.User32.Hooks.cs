@@ -23,7 +23,7 @@ namespace Quasar.Client.Utilities
         ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
         /// </remarks>
         //[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        internal static IntPtr CallNextHookEx(IntPtr idHook, int nCode, IntPtr wParam, IntPtr lParam) => ClientNatives.Lookup<CallNextHookExProc>("user32.dll", "CallNextHookEx")(idHook, nCode, wParam, lParam);
+        internal static IntPtr CallNextHookEx(IntPtr idHook, int nCode, IntPtr wParam, IntPtr lParam) => Lookup<CallNextHookExProc>("user32.dll", "CallNextHookEx")(idHook, nCode, wParam, lParam);
 
         internal delegate HookProcedureHandle SetWindowsHookExProc(int idHook, HookProcedure lpfn, IntPtr hMod, uint dwThreadId);
         /// <summary>
@@ -57,7 +57,7 @@ namespace Quasar.Client.Utilities
         ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
         /// </remarks>
         //[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        internal static HookProcedureHandle SetWindowsHookEx(int idHook, HookProcedure lpfn, IntPtr hMod, uint dwThreadId) => ClientNatives.Lookup<SetWindowsHookExProc>("user32.dll", "SetWindowsHookExW")(idHook, lpfn, hMod, dwThreadId);
+        internal static HookProcedureHandle SetWindowsHookEx(int idHook, HookProcedure lpfn, IntPtr hMod, uint dwThreadId) => Lookup<SetWindowsHookExProc>("user32.dll", "SetWindowsHookExW")(idHook, lpfn, hMod, dwThreadId);
 
         internal delegate int UnhookWindowsHookExProc(IntPtr idHook);
         /// <summary>
@@ -76,6 +76,6 @@ namespace Quasar.Client.Utilities
         ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
         /// </remarks>
         //[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        internal static int UnhookWindowsHookEx(IntPtr idHook) => ClientNatives.Lookup<UnhookWindowsHookExProc>("user32.dll", "UnhookWindowsHookEx")(idHook);
+        internal static int UnhookWindowsHookEx(IntPtr idHook) => Lookup<UnhookWindowsHookExProc>("user32.dll", "UnhookWindowsHookEx")(idHook);
     }
 }

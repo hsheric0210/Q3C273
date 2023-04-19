@@ -51,9 +51,9 @@ namespace Quasar.Client.Networking
         {
             this._hosts = hostsManager;
             this._random = new SafeRandom();
-            base.ClientState += OnClientState;
-            base.ClientRead += OnClientRead;
-            base.ClientFail += OnClientFail;
+            ClientState += OnClientState;
+            ClientRead += OnClientRead;
+            ClientFail += OnClientFail;
             this._tokenSource = new CancellationTokenSource();
             this._token = _tokenSource.Token;
         }
@@ -72,7 +72,7 @@ namespace Quasar.Client.Networking
                     {
                         Host host = _hosts.GetNextHost();
 
-                        base.Connect(host.IpAddress, host.Port);
+                        Connect(host.IpAddress, host.Port);
                     }
                     catch { } // Try indefinitely even if exception occurs
                 }

