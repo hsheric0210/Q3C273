@@ -4,7 +4,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace Gma.System.MouseKeyHook.WinApi
+namespace Quasar.Client.MouseKeyHook.WinApi
 {
     /// <summary>
     ///     The Point structure defines the X- and Y- coordinates of a point.
@@ -48,16 +48,18 @@ namespace Gma.System.MouseKeyHook.WinApi
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(Point)) return false;
-            return Equals((Point) obj);
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (obj.GetType() != typeof(Point))
+                return false;
+            return Equals((Point)obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return (X * 397) ^ Y;
+                return X * 397 ^ Y;
             }
         }
     }

@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Gma.System.MouseKeyHook.WinApi;
+using Quasar.Client.MouseKeyHook.WinApi;
 
-namespace Gma.System.MouseKeyHook.Implementation
+namespace Quasar.Client.MouseKeyHook.Implementation
 {
     /// <summary>
     ///     Contains a snapshot of a keyboard state at certain moment and provides methods
@@ -51,10 +51,14 @@ namespace Gma.System.MouseKeyHook.Implementation
         /// <returns><b>true</b> if key was down, <b>false</b> - if key was up.</returns>
         public bool IsDown(Keys key)
         {
-            if ((int)key < 256) return IsDownRaw(key);
-            if (key == Keys.Alt) return IsDownRaw(Keys.LMenu) || IsDownRaw(Keys.RMenu);
-            if (key == Keys.Shift) return IsDownRaw(Keys.LShiftKey) || IsDownRaw(Keys.RShiftKey);
-            if (key == Keys.Control) return IsDownRaw(Keys.LControlKey) || IsDownRaw(Keys.RControlKey);
+            if ((int)key < 256)
+                return IsDownRaw(key);
+            if (key == Keys.Alt)
+                return IsDownRaw(Keys.LMenu) || IsDownRaw(Keys.RMenu);
+            if (key == Keys.Shift)
+                return IsDownRaw(Keys.LShiftKey) || IsDownRaw(Keys.RShiftKey);
+            if (key == Keys.Control)
+                return IsDownRaw(Keys.LControlKey) || IsDownRaw(Keys.RControlKey);
             return false;
         }
 
@@ -93,7 +97,7 @@ namespace Gma.System.MouseKeyHook.Implementation
 
         private byte GetKeyState(Keys key)
         {
-            var virtualKeyCode = (int) key;
+            var virtualKeyCode = (int)key;
             if (virtualKeyCode < 0 || virtualKeyCode > 255)
                 throw new ArgumentOutOfRangeException("key", key, "The value must be between 0 and 255.");
             return m_KeyboardStateNative[virtualKeyCode];

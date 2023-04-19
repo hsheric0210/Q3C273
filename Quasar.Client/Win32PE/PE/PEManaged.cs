@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace WindowsPE
+namespace Quasar.Client.Win32PE.PE
 {
     public struct ExportFunctionInfo
     {

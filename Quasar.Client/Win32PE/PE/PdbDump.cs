@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Quasar.Client.Win32PE.Structs;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace WindowsPE
+namespace Quasar.Client.Win32PE.PE
 {
     // mridgers/pdbdump.c
     // https://gist.github.com/mridgers/2968595
@@ -20,7 +21,7 @@ namespace WindowsPE
 
         public PdbDump(string pdbFilePath, IntPtr baseAddress, int memorySize)
         {
-            uint options = NativeMethods.SymGetOptions();
+            var options = NativeMethods.SymGetOptions();
 
             options &= ~(uint)SymOpt.DEFERRED_LOADS;
             options |= (uint)SymOpt.LOAD_LINES;
@@ -32,13 +33,11 @@ namespace WindowsPE
 
             NativeMethods.SymSetOptions(options);
 
-            int pid = Process.GetCurrentProcess().Id;
-            IntPtr processHandle = NativeMethods.OpenProcess(ProcessAccessRights.PROCESS_QUERY_INFORMATION | ProcessAccessRights.PROCESS_VM_READ, false, pid);
+            var pid = Process.GetCurrentProcess().Id;
+            var processHandle = NativeMethods.OpenProcess(ProcessAccessRights.PROCESS_QUERY_INFORMATION | ProcessAccessRights.PROCESS_VM_READ, false, pid);
 
             if (NativeMethods.SymInitialize(processHandle, null, false) == false)
-            {
                 return;
-            }
 
             _symInitialized = true;
 
@@ -52,7 +51,7 @@ namespace WindowsPE
         {
             PdbStore store = null;
 
-            using (PdbDump pdbDumper = new PdbDump(pdbFilePath, baseAddress, memorySize))
+            using (var pdbDumper = new PdbDump(pdbFilePath, baseAddress, memorySize))
             {
                 store = pdbDumper.GetStore((pStore) =>
                 {
@@ -67,7 +66,7 @@ namespace WindowsPE
         {
             PdbStore store = null;
 
-            using (PdbDump pdbDumper = new PdbDump(pdbFilePath, baseAddress, memorySize))
+            using (var pdbDumper = new PdbDump(pdbFilePath, baseAddress, memorySize))
             {
                 store = pdbDumper.GetStore((pStore) =>
                 {
@@ -96,8 +95,8 @@ namespace WindowsPE
 
         private IEnumerable<SYMBOL_INFO> Enumerate(Action<IntPtr> action)
         {
-            PdbStore store = GetStore(action);
-            foreach (SYMBOL_INFO si in store.Enumerate())
+            var store = GetStore(action);
+            foreach (var si in store.Enumerate())
             {
                 yield return si;
             }
@@ -105,9 +104,9 @@ namespace WindowsPE
 
         private PdbStore GetStore(Action<IntPtr> action)
         {
-            PdbStore store = new PdbStore();
+            var store = new PdbStore();
 
-            IntPtr pStore = Marshal.AllocHGlobal(16); // 16 == sizeof(VARIANT)
+            var pStore = Marshal.AllocHGlobal(16); // 16 == sizeof(VARIANT)
             Marshal.GetNativeVariantForObject(store, pStore);
 
             action(pStore);
@@ -117,9 +116,9 @@ namespace WindowsPE
 
         private static unsafe bool enum_proc(IntPtr pinfo, uint size, IntPtr pUserContext)
         {
-            SYMBOL_INFO info = SYMBOL_INFO.Create(pinfo);
+            var info = SYMBOL_INFO.Create(pinfo);
 
-            PdbStore pdbStore = (PdbStore)Marshal.GetObjectForNativeVariant(pUserContext);
+            var pdbStore = (PdbStore)Marshal.GetObjectForNativeVariant(pUserContext);
             pdbStore.Add(info);
 
             return true;

@@ -4,9 +4,9 @@
 
 using System;
 using System.Windows.Forms;
-using Gma.System.MouseKeyHook.WinApi;
+using Quasar.Client.MouseKeyHook.WinApi;
 
-namespace Gma.System.MouseKeyHook.Implementation
+namespace Quasar.Client.MouseKeyHook.Implementation
 {
     internal class GlobalMouseListener : MouseListener
     {

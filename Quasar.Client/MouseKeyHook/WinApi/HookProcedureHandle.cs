@@ -5,7 +5,7 @@
 using System.Windows.Forms;
 using Microsoft.Win32.SafeHandles;
 
-namespace Gma.System.MouseKeyHook.WinApi
+namespace Quasar.Client.MouseKeyHook.WinApi
 {
     internal class HookProcedureHandle : SafeHandleZeroOrMinusOneIsInvalid
     {
@@ -27,7 +27,7 @@ namespace Gma.System.MouseKeyHook.WinApi
             var ret = HookNativeMethods.UnhookWindowsHookEx(handle);
             if (ret != 0)
             {
-                base.Dispose();
+                Dispose();
                 return true;
             }
             else

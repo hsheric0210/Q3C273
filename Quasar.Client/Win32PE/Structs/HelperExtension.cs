@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace KernelStructOffset
+namespace Quasar.Client.Win32PE.Structs
 {
     public static class HelperExtension
     {
@@ -11,19 +11,19 @@ namespace KernelStructOffset
         {
             if (IntPtr.Size == 4)
             {
-                int* ptrInt = (int*)ptr.ToPointer();
+                var ptrInt = (int*)ptr.ToPointer();
                 return new IntPtr(*ptrInt);
             }
             else
             {
-                long* ptrLong = (long*)ptr.ToPointer();
+                var ptrLong = (long*)ptr.ToPointer();
                 return new IntPtr(*ptrLong);
             }
         }
 
         public unsafe static void WriteValue<T>(this IntPtr ptr, T value) where T : unmanaged
         {
-            T* pValue = (T*)ptr.ToPointer();
+            var pValue = (T*)ptr.ToPointer();
             *pValue = value;
         }
     }

@@ -2,7 +2,7 @@
 // Copyright (c) 2015 George Mamaladze
 // See license.txt or https://mit-license.org/
 
-namespace Gma.System.MouseKeyHook.WinApi
+namespace Quasar.Client.MouseKeyHook.WinApi
 {
     internal static class HookIds
     {

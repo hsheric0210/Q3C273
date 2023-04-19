@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Gma.System.MouseKeyHook
+namespace Quasar.Client.MouseKeyHook
 {
     /// <summary>
     ///     Provides keyboard and mouse events.

@@ -4,7 +4,7 @@
 
 using System.Linq;
 
-namespace Gma.System.MouseKeyHook
+namespace Quasar.Client.MouseKeyHook
 {
     /// <summary>
     ///     Describes key or key combination sequences. e.g. Control+Z,Z

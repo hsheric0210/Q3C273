@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Gma.System.MouseKeyHook.WinApi
+namespace Quasar.Client.MouseKeyHook.WinApi
 {
     internal static class HotkeysNativeMethods
     {

@@ -4,14 +4,14 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace WindowsPE
+namespace Quasar.Client.Win32PE.PE
 {
     public class BufferPtr : IDisposable
     {
         readonly byte[] _buffer;
         GCHandle _pinHandle;
 
-        public byte [] Buffer
+        public byte[] Buffer
         {
             get { return _buffer; }
         }
@@ -26,10 +26,10 @@ namespace WindowsPE
             _buffer = new byte[size];
             _pinHandle = GCHandle.Alloc(_buffer, GCHandleType.Pinned);
         }
-        
+
         public IntPtr GetPtr(int offset)
         {
-            IntPtr ptr = _pinHandle.AddrOfPinnedObject();
+            var ptr = _pinHandle.AddrOfPinnedObject();
             return ptr + offset;
         }
 
@@ -44,9 +44,7 @@ namespace WindowsPE
         public static void Clear(this BufferPtr buffer)
         {
             if (buffer == null)
-            {
                 return;
-            }
 
             buffer.Dispose();
         }

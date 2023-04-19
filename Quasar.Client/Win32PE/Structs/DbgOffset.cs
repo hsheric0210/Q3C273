@@ -1,14 +1,12 @@
-﻿using KernelStructOffset;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using WindowsPE;
 
-namespace KernelStructOffset
+namespace Quasar.Client.Win32PE.Structs
 {
     public class DbgOffset
     {
@@ -28,23 +26,19 @@ namespace KernelStructOffset
 
         public static DbgOffset Get(string typeName, string moduleName, int pid)
         {
-            return Get(typeName, moduleName, (pid == 0) ? null : pid.ToString());
+            return Get(typeName, moduleName, pid == 0 ? null : pid.ToString());
         }
 
         public static DbgOffset Get(string typeName, string moduleName, string targetExePath)
         {
             if (_cache.ContainsKey(typeName) == true)
-            {
                 return _cache[typeName];
-            }
 
-            List<StructFieldInfo> list = GetList(typeName, moduleName, targetExePath);
+            var list = GetList(typeName, moduleName, targetExePath);
             if (list == null)
-            {
                 return null;
-            }
 
-            DbgOffset instance = new DbgOffset(list);
+            var instance = new DbgOffset(list);
             _cache.Add(typeName, instance);
 
             return _cache[typeName];
@@ -66,9 +60,7 @@ namespace KernelStructOffset
         public IntPtr GetPointer(IntPtr baseAddress, string fieldName)
         {
             if (_fieldDict.ContainsKey(fieldName) == false)
-            {
                 return IntPtr.Zero;
-            }
 
             return baseAddress + _fieldDict[fieldName].Offset;
         }
@@ -78,11 +70,9 @@ namespace KernelStructOffset
             value = default;
 
             if (_fieldDict.ContainsKey(fieldName) == false)
-            {
                 return false;
-            }
 
-            IntPtr address = baseAddress + _fieldDict[fieldName].Offset;
+            var address = baseAddress + _fieldDict[fieldName].Offset;
             value = (T)Marshal.PtrToStructure(address, typeof(T));
 
             return true;
@@ -93,9 +83,7 @@ namespace KernelStructOffset
             get
             {
                 if (_fieldDict.ContainsKey(fieldName) == false)
-                {
                     return -1;
-                }
 
                 return _fieldDict[fieldName].Offset;
             }
@@ -103,9 +91,9 @@ namespace KernelStructOffset
 
         private static Dictionary<string, StructFieldInfo> ListToDict(List<StructFieldInfo> list)
         {
-            Dictionary<string, StructFieldInfo> dict = new Dictionary<string, StructFieldInfo>();
+            var dict = new Dictionary<string, StructFieldInfo>();
 
-            foreach (StructFieldInfo item in list)
+            foreach (var item in list)
             {
                 dict.Add(item.Name, item);
             }
@@ -117,19 +105,19 @@ namespace KernelStructOffset
         {
             UnpackDisplayStructApp();
 
-            ProcessStartInfo psi = new ProcessStartInfo()
+            var psi = new ProcessStartInfo()
             {
                 FileName = "DisplayStruct.exe",
                 UseShellExecute = false,
                 WorkingDirectory = Path.GetDirectoryName(typeof(DbgOffset).Assembly.Location),
-                Arguments = $"{typeName} {moduleName}" + ((string.IsNullOrEmpty(pidOrPath) == true) ? "" : $" \"{pidOrPath}\""),
+                Arguments = $"{typeName} {moduleName}" + (string.IsNullOrEmpty(pidOrPath) == true ? "" : $" \"{pidOrPath}\""),
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
                 LoadUserProfile = false,
             };
 
-            Process child = Process.Start(psi);
-            string text = child.StandardOutput.ReadToEnd();
+            var child = Process.Start(psi);
+            var text = child.StandardOutput.ReadToEnd();
 
             child.WaitForExit();
 
@@ -138,32 +126,26 @@ namespace KernelStructOffset
 
         private static List<StructFieldInfo> ParseOffset(string text)
         {
-            List<StructFieldInfo> list = new List<StructFieldInfo>();
-            StringReader sr = new StringReader(text);
+            var list = new List<StructFieldInfo>();
+            var sr = new StringReader(text);
 
             while (true)
             {
-                string line = sr.ReadLine();
+                var line = sr.ReadLine();
                 if (line == null)
-                {
                     break;
-                }
 
-                int offset = ReadOffset(line, out int offsetEndPos);
+                var offset = ReadOffset(line, out var offsetEndPos);
                 if (offsetEndPos == -1 || offset == -1)
-                {
                     continue;
-                }
 
-                string name = ReadFieldName(line, offsetEndPos, out int nameEndPos);
+                var name = ReadFieldName(line, offsetEndPos, out var nameEndPos);
                 if (string.IsNullOrEmpty(name) == true || nameEndPos == -1)
-                {
                     continue;
-                }
 
-                string type = line.Substring(nameEndPos).Trim();
+                var type = line.Substring(nameEndPos).Trim();
 
-                StructFieldInfo sfi = new StructFieldInfo(offset, name, type);
+                var sfi = new StructFieldInfo(offset, name, type);
                 list.Add(sfi);
             }
 
@@ -174,11 +156,9 @@ namespace KernelStructOffset
         {
             nameEndPos = line.IndexOf(":", offsetEndPos);
             if (nameEndPos == -1)
-            {
                 return null;
-            }
 
-            string result = line.Substring(offsetEndPos, nameEndPos - offsetEndPos).Trim();
+            var result = line.Substring(offsetEndPos, nameEndPos - offsetEndPos).Trim();
             nameEndPos += 1;
 
             return result;
@@ -188,21 +168,17 @@ namespace KernelStructOffset
         {
             pos = -1;
 
-            string offsetMark = "+0x";
-            int offSetStartPos = line.IndexOf(offsetMark);
+            var offsetMark = "+0x";
+            var offSetStartPos = line.IndexOf(offsetMark);
             if (offSetStartPos == -1)
-            {
                 return -1;
-            }
 
-            int offsetEndPos = line.IndexOf(" ", offSetStartPos);
+            var offsetEndPos = line.IndexOf(" ", offSetStartPos);
             if (offsetEndPos == -1)
-            {
                 return -1;
-            }
 
             offSetStartPos += offsetMark.Length;
-            string offset = line.Substring(offSetStartPos, offsetEndPos - offSetStartPos);
+            var offset = line.Substring(offSetStartPos, offsetEndPos - offSetStartPos);
             pos = offsetEndPos + 1;
 
             try
@@ -225,21 +201,19 @@ namespace KernelStructOffset
         private static void UnpackDisplayStructAppFromRes(string fileName)
         {
             if (File.Exists(fileName) == true)
-            {
                 return;
-            }
 
-            string dirPath = Path.GetDirectoryName(typeof(DbgOffset).Assembly.Location);
-            string filePath = Path.Combine(dirPath, fileName);
+            var dirPath = Path.GetDirectoryName(typeof(DbgOffset).Assembly.Location);
+            var filePath = Path.Combine(dirPath, fileName);
 
-            Type type = typeof(StructFieldInfo);
+            var type = typeof(StructFieldInfo);
 
-            using (Stream manifestResourceStream =
+            using (var manifestResourceStream =
                 type.Assembly.GetManifestResourceStream($@"{type.Namespace}.files.{fileName}"))
             {
-                using (BinaryReader br = new BinaryReader(manifestResourceStream))
+                using (var br = new BinaryReader(manifestResourceStream))
                 {
-                    byte[] buf = new byte[br.BaseStream.Length];
+                    var buf = new byte[br.BaseStream.Length];
                     br.Read(buf, 0, buf.Length);
                     File.WriteAllBytes(filePath, buf);
                 }

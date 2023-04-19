@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Gma.System.MouseKeyHook.Implementation
+namespace Quasar.Client.MouseKeyHook.Implementation
 {
     internal class Chord : IEnumerable<Keys>
     {
@@ -51,24 +51,28 @@ namespace Gma.System.MouseKeyHook.Implementation
 
         protected bool Equals(Chord other)
         {
-            if (_keys.Length != other._keys.Length) return false;
+            if (_keys.Length != other._keys.Length)
+                return false;
             return _keys.SequenceEqual(other._keys);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((Chord) obj);
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != GetType())
+                return false;
+            return Equals((Chord)obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return (_keys.Length + 13) ^
-                       ((_keys.Length != 0 ? (int) _keys[0] ^ (int) _keys[_keys.Length - 1] : 0) * 397);
+                return _keys.Length + 13 ^
+                       (_keys.Length != 0 ? (int)_keys[0] ^ (int)_keys[_keys.Length - 1] : 0) * 397;
             }
         }
     }

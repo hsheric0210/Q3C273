@@ -5,7 +5,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace Gma.System.MouseKeyHook
+namespace Quasar.Client.MouseKeyHook
 {
     /// <summary>
     ///     Provides keyboard events
@@ -37,12 +37,12 @@ namespace Gma.System.MouseKeyHook
         /// </remarks>
         event KeyPressEventHandler KeyPress;
 
-	    /// <summary>
-	    ///     Occurs when a key is pressed, includes the keystroke characters if any
-	    /// </summary>
-		event EventHandler<KeyDownTxtEventArgs> KeyDownTxt;
+        /// <summary>
+        ///     Occurs when a key is pressed, includes the keystroke characters if any
+        /// </summary>
+        event EventHandler<KeyDownTxtEventArgs> KeyDownTxt;
 
-	    /// <summary>
+        /// <summary>
         ///     Occurs when a key is released.
         /// </summary>
         event KeyEventHandler KeyUp;

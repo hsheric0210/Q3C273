@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Gma.System.MouseKeyHook
+namespace Quasar.Client.MouseKeyHook
 {
     /// <summary>
     ///     Describes a sequence of generic objects.
@@ -54,17 +54,21 @@ namespace Gma.System.MouseKeyHook
         /// <inheritdoc />
         protected bool Equals(SequenceBase<T> other)
         {
-            if (_elements.Length != other._elements.Length) return false;
+            if (_elements.Length != other._elements.Length)
+                return false;
             return _elements.SequenceEqual(other._elements);
         }
 
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((SequenceBase<T>) obj);
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != GetType())
+                return false;
+            return Equals((SequenceBase<T>)obj);
         }
 
         /// <inheritdoc />
@@ -72,10 +76,10 @@ namespace Gma.System.MouseKeyHook
         {
             unchecked
             {
-                return (_elements.Length + 13) ^
-                       ((_elements.Length != 0
+                return _elements.Length + 13 ^
+                       (_elements.Length != 0
                             ? _elements[0].GetHashCode() ^ _elements[_elements.Length - 1].GetHashCode()
-                            : 0) * 397);
+                            : 0) * 397;
             }
         }
     }

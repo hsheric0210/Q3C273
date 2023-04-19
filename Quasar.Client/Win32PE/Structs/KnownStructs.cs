@@ -9,7 +9,7 @@ using System.Text;
 #if _KSOBUILD
 namespace KernelStructOffset
 #else
-namespace WindowsPE
+namespace Quasar.Client.Win32PE.Structs
 #endif
 {
     [Flags]
@@ -73,26 +73,26 @@ namespace WindowsPE
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public char[] e_magic;       // Magic number
-        public UInt16 e_cblp;    // Bytes on last page of file
-        public UInt16 e_cp;      // Pages in file
-        public UInt16 e_crlc;    // Relocations
-        public UInt16 e_cparhdr;     // Size of header in paragraphs
-        public UInt16 e_minalloc;    // Minimum extra paragraphs needed
-        public UInt16 e_maxalloc;    // Maximum extra paragraphs needed
-        public UInt16 e_ss;      // Initial (relative) SS value
-        public UInt16 e_sp;      // Initial SP value
-        public UInt16 e_csum;    // Checksum
-        public UInt16 e_ip;      // Initial IP value
-        public UInt16 e_cs;      // Initial (relative) CS value
-        public UInt16 e_lfarlc;      // File address of relocation table
-        public UInt16 e_ovno;    // Overlay number
+        public ushort e_cblp;    // Bytes on last page of file
+        public ushort e_cp;      // Pages in file
+        public ushort e_crlc;    // Relocations
+        public ushort e_cparhdr;     // Size of header in paragraphs
+        public ushort e_minalloc;    // Minimum extra paragraphs needed
+        public ushort e_maxalloc;    // Maximum extra paragraphs needed
+        public ushort e_ss;      // Initial (relative) SS value
+        public ushort e_sp;      // Initial SP value
+        public ushort e_csum;    // Checksum
+        public ushort e_ip;      // Initial IP value
+        public ushort e_cs;      // Initial (relative) CS value
+        public ushort e_lfarlc;      // File address of relocation table
+        public ushort e_ovno;    // Overlay number
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-        public UInt16[] e_res1;    // Reserved words
-        public UInt16 e_oemid;       // OEM identifier (for e_oeminfo)
-        public UInt16 e_oeminfo;     // OEM information; e_oemid specific
+        public ushort[] e_res1;    // Reserved words
+        public ushort e_oemid;       // OEM identifier (for e_oeminfo)
+        public ushort e_oeminfo;     // OEM information; e_oemid specific
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
-        public UInt16[] e_res2;    // Reserved words
-        public Int32 e_lfanew;      // File address of new exe header
+        public ushort[] e_res2;    // Reserved words
+        public int e_lfanew;      // File address of new exe header
 
         private string Magic
         {
@@ -108,13 +108,13 @@ namespace WindowsPE
     [StructLayout(LayoutKind.Sequential)]
     public struct IMAGE_FILE_HEADER
     {
-        public UInt16 Machine;
-        public UInt16 NumberOfSections;
-        public UInt32 TimeDateStamp;
-        public UInt32 PointerToSymbolTable;
-        public UInt32 NumberOfSymbols;
-        public UInt16 SizeOfOptionalHeader;
-        public UInt16 Characteristics;
+        public ushort Machine;
+        public ushort NumberOfSections;
+        public uint TimeDateStamp;
+        public uint PointerToSymbolTable;
+        public uint NumberOfSymbols;
+        public ushort SizeOfOptionalHeader;
+        public ushort Characteristics;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -125,12 +125,12 @@ namespace WindowsPE
 
         public int Pid
         {
-            get { return this.UniqueProcess.ToInt32(); }
+            get { return UniqueProcess.ToInt32(); }
         }
 
         public int Tid
         {
-            get { return this.UniqueThread.ToInt32(); }
+            get { return UniqueThread.ToInt32(); }
         }
     }
 
@@ -142,15 +142,15 @@ namespace WindowsPE
 
         internal unsafe IntPtr Unlink()
         {
-            _LIST_ENTRY* pNext = (_LIST_ENTRY*)Flink.ToPointer();
-            _LIST_ENTRY* pPrev = (_LIST_ENTRY*)Blink.ToPointer();
+            var pNext = (_LIST_ENTRY*)Flink.ToPointer();
+            var pPrev = (_LIST_ENTRY*)Blink.ToPointer();
 
-            IntPtr thisLink = pNext->Blink;
+            var thisLink = pNext->Blink;
 
             pNext->Blink = Blink;
             pPrev->Flink = Flink;
 
-            _LIST_ENTRY* thisItem = (_LIST_ENTRY*)thisLink.ToPointer();
+            var thisItem = (_LIST_ENTRY*)thisLink.ToPointer();
 
             thisItem->Blink = IntPtr.Zero;
             thisItem->Flink = IntPtr.Zero;
@@ -161,14 +161,12 @@ namespace WindowsPE
         internal unsafe void LinkTo(IntPtr hiddenModuleLink)
         {
             if (hiddenModuleLink == IntPtr.Zero)
-            {
                 return;
-            }
 
-            _LIST_ENTRY* nextItem = (_LIST_ENTRY*)Flink.ToPointer();
-            _LIST_ENTRY* thisItem = (_LIST_ENTRY*)nextItem->Blink.ToPointer();
+            var nextItem = (_LIST_ENTRY*)Flink.ToPointer();
+            var thisItem = (_LIST_ENTRY*)nextItem->Blink.ToPointer();
 
-            _LIST_ENTRY* newItem = (_LIST_ENTRY*)hiddenModuleLink.ToPointer();
+            var newItem = (_LIST_ENTRY*)hiddenModuleLink.ToPointer();
             newItem->Flink = Flink;
             newItem->Blink = new IntPtr(thisItem);
 
@@ -263,9 +261,7 @@ enum _POOL_TYPE
         public string GetText()
         {
             if (Buffer == IntPtr.Zero || MaximumLength == 0)
-            {
                 return "";
-            }
 
             return Marshal.PtrToStringUni(Buffer, Length / 2);
         }
@@ -293,7 +289,7 @@ enum _POOL_TYPE
 
         public static _TEB Create(IntPtr tebAddress)
         {
-            _TEB teb = (_TEB)Marshal.PtrToStructure(tebAddress, typeof(_TEB));
+            var teb = (_TEB)Marshal.PtrToStructure(tebAddress, typeof(_TEB));
             return teb;
         }
     }
@@ -328,7 +324,7 @@ enum _POOL_TYPE
 
         public static _PEB Create(IntPtr pebAddress)
         {
-            _PEB peb = (_PEB)Marshal.PtrToStructure(pebAddress, typeof(_PEB));
+            var peb = (_PEB)Marshal.PtrToStructure(pebAddress, typeof(_PEB));
             return peb;
         }
 
@@ -368,26 +364,22 @@ enum _POOL_TYPE
 
         public static _PEB_LDR_DATA Create(IntPtr ldrAddress)
         {
-            _PEB_LDR_DATA ldrData = (_PEB_LDR_DATA)Marshal.PtrToStructure(ldrAddress, typeof(_PEB_LDR_DATA));
+            var ldrData = (_PEB_LDR_DATA)Marshal.PtrToStructure(ldrAddress, typeof(_PEB_LDR_DATA));
             return ldrData;
         }
 
         public IEnumerable<_LDR_DATA_TABLE_ENTRY> EnumerateLoadOrderModules()
         {
-            IntPtr startLink = InLoadOrderModuleList.Flink;
-            _LDR_DATA_TABLE_ENTRY item = _LDR_DATA_TABLE_ENTRY.CreateFromLoadOrder(startLink);
+            var startLink = InLoadOrderModuleList.Flink;
+            var item = _LDR_DATA_TABLE_ENTRY.CreateFromLoadOrder(startLink);
 
             while (true)
             {
                 if (item.DllBase != IntPtr.Zero)
-                {
                     yield return item;
-                }
 
                 if (item.InLoadOrderLinks.Flink == startLink)
-                {
                     break;
-                }
 
                 item = _LDR_DATA_TABLE_ENTRY.CreateFromLoadOrder(item.InLoadOrderLinks.Flink);
             }
@@ -395,20 +387,16 @@ enum _POOL_TYPE
 
         public IEnumerable<_LDR_DATA_TABLE_ENTRY> EnumerateMemoryOrderModules()
         {
-            IntPtr startLink = InMemoryOrderModuleList.Flink;
-            _LDR_DATA_TABLE_ENTRY item = _LDR_DATA_TABLE_ENTRY.CreateFromMemoryOrder(startLink);
+            var startLink = InMemoryOrderModuleList.Flink;
+            var item = _LDR_DATA_TABLE_ENTRY.CreateFromMemoryOrder(startLink);
 
             while (true)
             {
                 if (item.DllBase != IntPtr.Zero)
-                {
                     yield return item;
-                }
 
                 if (item.InMemoryOrderLinks.Flink == startLink)
-                {
                     break;
-                }
 
                 item = _LDR_DATA_TABLE_ENTRY.CreateFromMemoryOrder(item.InMemoryOrderLinks.Flink);
             }
@@ -421,13 +409,11 @@ enum _POOL_TYPE
 
         public _LDR_DATA_TABLE_ENTRY Find(string dllFileName, bool memoryOrder)
         {
-            foreach (_LDR_DATA_TABLE_ENTRY entry in
-                (memoryOrder == true) ? EnumerateMemoryOrderModules() : EnumerateLoadOrderModules())
+            foreach (var entry in
+                memoryOrder == true ? EnumerateMemoryOrderModules() : EnumerateLoadOrderModules())
             {
                 if (entry.FullDllName.GetText().EndsWith(dllFileName, StringComparison.OrdinalIgnoreCase) == true)
-                {
                     return entry;
-                }
             }
 
             return default;
@@ -435,7 +421,7 @@ enum _POOL_TYPE
 
         public unsafe void UnhideDLL(DllOrderLink hiddenModuleLink)
         {
-            _LDR_DATA_TABLE_ENTRY dllLink = EnumerateMemoryOrderModules().First();
+            var dllLink = EnumerateMemoryOrderModules().First();
 
             dllLink.InMemoryOrderLinks.LinkTo(hiddenModuleLink.MemoryOrderLink);
             dllLink.InLoadOrderLinks.LinkTo(hiddenModuleLink.LoadOrderLink);
@@ -443,14 +429,12 @@ enum _POOL_TYPE
 
         public unsafe DllOrderLink HideDLL(string fileName)
         {
-            _LDR_DATA_TABLE_ENTRY dllLink = Find(fileName);
+            var dllLink = Find(fileName);
 
             if (dllLink.DllBase == IntPtr.Zero)
-            {
                 return null;
-            }
 
-            DllOrderLink orderLink = new DllOrderLink()
+            var orderLink = new DllOrderLink()
             {
                 MemoryOrderLink = dllLink.InMemoryOrderLinks.Unlink(),
                 LoadOrderLink = dllLink.InLoadOrderLinks.Unlink(),
@@ -488,9 +472,9 @@ enum _POOL_TYPE
 
         public static _LDR_DATA_TABLE_ENTRY CreateFromMemoryOrder(IntPtr memoryOrderLink)
         {
-            IntPtr head = memoryOrderLink - Marshal.SizeOf(typeof(_LIST_ENTRY));
+            var head = memoryOrderLink - Marshal.SizeOf(typeof(_LIST_ENTRY));
 
-            _LDR_DATA_TABLE_ENTRY entry = (_LDR_DATA_TABLE_ENTRY)Marshal.PtrToStructure(
+            var entry = (_LDR_DATA_TABLE_ENTRY)Marshal.PtrToStructure(
                 head, typeof(_LDR_DATA_TABLE_ENTRY));
 
             return entry;
@@ -498,9 +482,9 @@ enum _POOL_TYPE
 
         public static _LDR_DATA_TABLE_ENTRY CreateFromLoadOrder(IntPtr loadOrderLink)
         {
-            IntPtr head = loadOrderLink;
+            var head = loadOrderLink;
 
-            _LDR_DATA_TABLE_ENTRY entry = (_LDR_DATA_TABLE_ENTRY)Marshal.PtrToStructure(
+            var entry = (_LDR_DATA_TABLE_ENTRY)Marshal.PtrToStructure(
                 head, typeof(_LDR_DATA_TABLE_ENTRY));
 
             return entry;
@@ -510,8 +494,8 @@ enum _POOL_TYPE
     [StructLayout(LayoutKind.Sequential)]
     public struct IMAGE_DATA_DIRECTORY
     {
-        public UInt32 VirtualAddress;
-        public UInt32 Size;
+        public uint VirtualAddress;
+        public uint Size;
     }
 
     [StructLayout(LayoutKind.Explicit)]
@@ -810,19 +794,19 @@ enum _POOL_TYPE
 
         internal unsafe CodeViewRSDS GetCodeViewHeader(IntPtr codeViewPtr)
         {
-            CodeView_Header dir = (CodeView_Header)Marshal.PtrToStructure(codeViewPtr, typeof(CodeView_Header));
+            var dir = (CodeView_Header)Marshal.PtrToStructure(codeViewPtr, typeof(CodeView_Header));
 
             switch (dir.Signature)
             {
                 case (uint)CodeViewSignature.RSDS:
-                    _CodeViewRSDS item = (_CodeViewRSDS)Marshal.PtrToStructure(codeViewPtr, typeof(_CodeViewRSDS));
+                    var item = (_CodeViewRSDS)Marshal.PtrToStructure(codeViewPtr, typeof(_CodeViewRSDS));
                     CodeViewRSDS rsds;
                     rsds.CvSignature = item.CvSignature;
                     rsds.Signature = item.Signature;
                     rsds.Age = item.Age;
 
-                    int rsdsSize = Marshal.SizeOf(item);
-                    IntPtr fileNamePtr = codeViewPtr + rsdsSize;
+                    var rsdsSize = Marshal.SizeOf(item);
+                    var fileNamePtr = codeViewPtr + rsdsSize;
                     rsds.PdbFileName = Marshal.PtrToStringAnsi(fileNamePtr);
                     return rsds;
 
@@ -886,14 +870,14 @@ enum _POOL_TYPE
 
         public string GetName()
         {
-            string name = Encoding.ASCII.GetString(this.Name).Trim('\0');
+            var name = Encoding.ASCII.GetString(Name).Trim('\0');
             return name;
         }
 
         public override string ToString()
         {
-            int startAddress = VirtualAddress;
-            int endAddress = startAddress + PhysicalAddressOrVirtualSize;
+            var startAddress = VirtualAddress;
+            var endAddress = startAddress + PhysicalAddressOrVirtualSize;
 
             return $"{GetName()}: 0x{startAddress.ToString("x")} ~ 0x{endAddress.ToString("x")}";
         }
@@ -985,7 +969,7 @@ enum _POOL_TYPE
 
         internal static _IMAGEHLP_MODULE64 Create()
         {
-            _IMAGEHLP_MODULE64 mod = new _IMAGEHLP_MODULE64();
+            var mod = new _IMAGEHLP_MODULE64();
             mod.SizeOfStruct = (uint)Marshal.SizeOf(mod);
             return mod;
         }
@@ -1048,7 +1032,7 @@ enum _POOL_TYPE
 
         public static SYMBOL_INFO Create(IntPtr baseAddress)
         {
-            _SYMBOL_INFO info = (_SYMBOL_INFO)Marshal.PtrToStructure(baseAddress, typeof(_SYMBOL_INFO));
+            var info = (_SYMBOL_INFO)Marshal.PtrToStructure(baseAddress, typeof(_SYMBOL_INFO));
 
             SYMBOL_INFO si;
             si.SizeOfStruct = info.SizeOfStruct;
@@ -1067,7 +1051,7 @@ enum _POOL_TYPE
             si.NameLen = info.NameLen;
             si.MaxNameLen = info.MaxNameLen;
 
-            int offset = Marshal.OffsetOf(typeof(_SYMBOL_INFO), nameof(info.Name)).ToInt32();
+            var offset = Marshal.OffsetOf(typeof(_SYMBOL_INFO), nameof(info.Name)).ToInt32();
             si.Name = Marshal.PtrToStringAuto(baseAddress + offset, (int)info.NameLen).Trim('\0');
 
             return si;
@@ -1092,7 +1076,7 @@ enum _POOL_TYPE
 
         public int GetItemSize()
         {
-            return (Is64bit == true) ? sizeof(long) : sizeof(int);
+            return Is64bit == true ? sizeof(long) : sizeof(int);
         }
 
         public override string ToString()
@@ -1119,7 +1103,7 @@ enum _POOL_TYPE
 
         public int RuntimeVersion
         {
-            get { return this.MajorRuntimeVersion << 16 | this.MinorRuntimeVersion; }
+            get { return MajorRuntimeVersion << 16 | MinorRuntimeVersion; }
         }
     }
 }

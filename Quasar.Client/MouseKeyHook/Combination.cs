@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Gma.System.MouseKeyHook.Implementation;
+using Quasar.Client.MouseKeyHook.Implementation;
 
-namespace Gma.System.MouseKeyHook
+namespace Quasar.Client.MouseKeyHook
 {
     /// <summary>
     ///     Used to represent a key combination as frequently used in application as shortcuts.
@@ -57,7 +57,7 @@ namespace Gma.System.MouseKeyHook
         /// <param name="key"></param>
         public static Combination TriggeredBy(Keys key)
         {
-            return new Combination(key, (IEnumerable<Keys>) new Chord(Enumerable.Empty<Keys>()));
+            return new Combination(key, (IEnumerable<Keys>)new Chord(Enumerable.Empty<Keys>()));
         }
 
         /// <summary>
@@ -130,17 +130,20 @@ namespace Gma.System.MouseKeyHook
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((Combination) obj);
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != GetType())
+                return false;
+            return Equals((Combination)obj);
         }
 
         /// <inheritdoc />
         public override int GetHashCode()
         {
             return Chord.GetHashCode() ^
-                   (int) TriggerKey;
+                   (int)TriggerKey;
         }
     }
 }

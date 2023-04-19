@@ -4,7 +4,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace Gma.System.MouseKeyHook.WinApi
+namespace Quasar.Client.MouseKeyHook.WinApi
 {
     /// <summary>
     ///     The KeyboardHookStruct structure contains information about a low-level keyboard input event.

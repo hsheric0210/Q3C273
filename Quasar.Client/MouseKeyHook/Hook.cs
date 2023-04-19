@@ -4,7 +4,7 @@
 
 using Gma.System.MouseKeyHook.Implementation;
 
-namespace Gma.System.MouseKeyHook
+namespace Quasar.Client.MouseKeyHook
 {
     /// <summary>
     ///     This is the class to start with.

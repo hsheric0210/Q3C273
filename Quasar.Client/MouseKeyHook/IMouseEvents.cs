@@ -5,7 +5,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace Gma.System.MouseKeyHook
+namespace Quasar.Client.MouseKeyHook
 {
     /// <summary>
     ///     Provides all mouse events.

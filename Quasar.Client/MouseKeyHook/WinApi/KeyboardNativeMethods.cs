@@ -6,9 +6,9 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using Gma.System.MouseKeyHook.Implementation;
+using Quasar.Client.MouseKeyHook.Implementation;
 
-namespace Gma.System.MouseKeyHook.WinApi
+namespace Quasar.Client.MouseKeyHook.WinApi
 {
     internal static class KeyboardNativeMethods
     {
@@ -54,7 +54,7 @@ namespace Gma.System.MouseKeyHook.WinApi
         internal static void TryGetCharFromKeyboardState(int virtualKeyCode, int fuState, out char[] chars)
         {
             var dwhkl = GetActiveKeyboard();
-            var scanCode = MapVirtualKeyEx(virtualKeyCode, (int) MapType.MAPVK_VK_TO_VSC, dwhkl);
+            var scanCode = MapVirtualKeyEx(virtualKeyCode, (int)MapType.MAPVK_VK_TO_VSC, dwhkl);
             TryGetCharFromKeyboardState(virtualKeyCode, scanCode, fuState, dwhkl, out chars);
         }
 
@@ -91,10 +91,10 @@ namespace Gma.System.MouseKeyHook.WinApi
             var isDead = false;
 
             if (keyboardState.IsDown(Keys.ShiftKey))
-                currentKeyboardState[(byte) Keys.ShiftKey] = 0x80;
+                currentKeyboardState[(byte)Keys.ShiftKey] = 0x80;
 
             if (keyboardState.IsToggled(Keys.CapsLock))
-                currentKeyboardState[(byte) Keys.CapsLock] = 0x01;
+                currentKeyboardState[(byte)Keys.CapsLock] = 0x01;
 
             var relevantChars = ToUnicodeEx(virtualKeyCode, scanCode, currentKeyboardState, pwszBuff, pwszBuff.Capacity,
                 fuState, dwhkl);
@@ -112,14 +112,18 @@ namespace Gma.System.MouseKeyHook.WinApi
                     break;
 
                 case 1:
-                    if (pwszBuff.Length > 0) chars = new[] {pwszBuff[0]};
-                    else chars = null;
+                    if (pwszBuff.Length > 0)
+                        chars = new[] { pwszBuff[0] };
+                    else
+                        chars = null;
                     break;
 
                 // Two or more (only two of them is relevant)
                 default:
-                    if (pwszBuff.Length > 1) chars = new[] {pwszBuff[0], pwszBuff[1]};
-                    else chars = new[] {pwszBuff[0]};
+                    if (pwszBuff.Length > 1)
+                        chars = new[] { pwszBuff[0], pwszBuff[1] };
+                    else
+                        chars = new[] { pwszBuff[0] };
                     break;
             }
 
@@ -139,7 +143,7 @@ namespace Gma.System.MouseKeyHook.WinApi
             lastScanCode = scanCode;
             lastVirtualKeyCode = virtualKeyCode;
             lastIsDead = isDead;
-            lastKeyState = (byte[]) currentKeyboardState.Clone();
+            lastKeyState = (byte[])currentKeyboardState.Clone();
         }
 
 
@@ -268,7 +272,7 @@ namespace Gma.System.MouseKeyHook.WinApi
         public static extern int ToUnicodeEx(int wVirtKey,
             int wScanCode,
             byte[] lpKeyState,
-            [Out] [MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder pwszBuff,
+            [Out][MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder pwszBuff,
             int cchBuff,
             int wFlags,
             IntPtr dwhkl);

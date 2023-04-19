@@ -5,9 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Gma.System.MouseKeyHook.Implementation;
+using Quasar.Client.MouseKeyHook.Implementation;
 
-namespace Gma.System.MouseKeyHook
+namespace Quasar.Client.MouseKeyHook
 {
     /// <summary>
     ///     Extension methods to detect key combinations
@@ -49,8 +49,10 @@ namespace Gma.System.MouseKeyHook
                 foreach (var current in element)
                 {
                     var matches = current.Key.Chord.All(state.IsDown);
-                    if (!matches) continue;
-                    if (maxLength > current.Key.ChordLength) continue;
+                    if (!matches)
+                        continue;
+                    if (maxLength > current.Key.ChordLength)
+                        continue;
                     maxLength = current.Key.ChordLength;
                     action = current.Value;
                 }
@@ -91,8 +93,10 @@ namespace Gma.System.MouseKeyHook
             var wrapMap = actBySeq.SelectMany(p => p.Key).Select(c => new KeyValuePair<Combination, Action>(c, () =>
             {
                 buffer.Enqueue(c);
-                if (buffer.Count > max) buffer.Dequeue();
-                if (buffer.Count < min) return;
+                if (buffer.Count > max)
+                    buffer.Dequeue();
+                if (buffer.Count < min)
+                    return;
                 //Invoke action corresponding to the longest matching sequence
                 actBySeq
                     .Where(pair => endsWith(buffer, pair.Key))
@@ -102,7 +106,7 @@ namespace Gma.System.MouseKeyHook
                     ?.Invoke();
             }));
 
-            OnCombination(source, wrapMap, buffer.Clear);
+            source.OnCombination(wrapMap, buffer.Clear);
         }
     }
 }

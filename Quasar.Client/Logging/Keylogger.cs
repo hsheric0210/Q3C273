@@ -1,7 +1,7 @@
-﻿using Gma.System.MouseKeyHook;
-using Quasar.Client.Config;
+﻿using Quasar.Client.Config;
 using Quasar.Client.Extensions;
 using Quasar.Client.Helper;
+using Quasar.Client.MouseKeyHook;
 using Quasar.Common.Cryptography;
 using Quasar.Common.Helpers;
 using System;

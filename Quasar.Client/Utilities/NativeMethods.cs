@@ -1,4 +1,5 @@
-﻿using KernelStructOffset;
+﻿using Quasar.Client.Win32PE.PE;
+using Quasar.Client.Win32PE.Structs;
 using Quasar.Common.Models;
 using System;
 using System.Collections;
@@ -8,7 +9,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using WindowsPE;
 
 namespace Quasar.Client.Utilities
 {

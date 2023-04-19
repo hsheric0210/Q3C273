@@ -5,38 +5,38 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace WindowsPE
+namespace Quasar.Client.Win32PE.PE
 {
     public static class ExtensionHelper
     {
         public static ushort PeekUInt16(this BinaryReader reader)
         {
-            long oldPosition = reader.BaseStream.Position;
-            ushort result = reader.ReadUInt16();
+            var oldPosition = reader.BaseStream.Position;
+            var result = reader.ReadUInt16();
             reader.BaseStream.Position = oldPosition;
 
             return result;
         }
 
-        public unsafe static T Read<T>(this BinaryReader reader) where T: new()
+        public unsafe static T Read<T>(this BinaryReader reader) where T : new()
         {
-            T obj = new T();
-            int typeSize = Marshal.SizeOf(obj);
+            var obj = new T();
+            var typeSize = Marshal.SizeOf(obj);
 
-            byte[] buffer = new byte[typeSize];
+            var buffer = new byte[typeSize];
             reader.Read(buffer, 0, typeSize);
 
-            fixed (byte *p = buffer)
+            fixed (byte* p = buffer)
             {
-                IntPtr ptr = new IntPtr(p);
-                T objSectionHeader = (T)Marshal.PtrToStructure(ptr, typeof(T));
+                var ptr = new IntPtr(p);
+                var objSectionHeader = (T)Marshal.PtrToStructure(ptr, typeof(T));
                 return objSectionHeader;
             }
         }
 
         public static ushort ReadUInt16(this UnmanagedMemoryStream reader)
         {
-            byte[] buf = new byte[4];
+            var buf = new byte[4];
             reader.Read(buf, 0, 4);
 
             return BitConverter.ToUInt16(buf, 0);
@@ -44,7 +44,7 @@ namespace WindowsPE
 
         public static int ReadInt32(this UnmanagedMemoryStream reader)
         {
-            byte[] buf = new byte[4];
+            var buf = new byte[4];
             reader.Read(buf, 0, 4);
 
             return BitConverter.ToInt32(buf, 0);
@@ -52,7 +52,7 @@ namespace WindowsPE
 
         public static uint ReadUInt32(this UnmanagedMemoryStream reader)
         {
-            byte[] buf = new byte[4];
+            var buf = new byte[4];
             reader.Read(buf, 0, 4);
 
             return BitConverter.ToUInt32(buf, 0);
@@ -60,7 +60,7 @@ namespace WindowsPE
 
         public static byte ReadByte(this IntPtr addresss, ref int offset)
         {
-            byte result = Marshal.ReadByte(addresss, offset);
+            var result = Marshal.ReadByte(addresss, offset);
             offset += 1;
             return result;
         }
@@ -70,11 +70,11 @@ namespace WindowsPE
             return Marshal.ReadByte(ptr, position);
         }
 
-        public static unsafe byte [] ReadBytes(this IntPtr ptr, int length)
+        public static unsafe byte[] ReadBytes(this IntPtr ptr, int length)
         {
-            UnmanagedMemoryStream ums = new UnmanagedMemoryStream((byte*)ptr.ToPointer(), length);
+            var ums = new UnmanagedMemoryStream((byte*)ptr.ToPointer(), length);
 
-            byte[] buf = new byte[length];
+            var buf = new byte[length];
             ums.Read(buf, 0, length);
 
             return buf;
@@ -82,7 +82,7 @@ namespace WindowsPE
 
         public static unsafe ushort ReadUInt16ByIndex(this IntPtr ptr, int index)
         {
-            UnmanagedMemoryStream ums = new UnmanagedMemoryStream((byte*)ptr.ToPointer(), (index + 1) * sizeof(ushort))
+            var ums = new UnmanagedMemoryStream((byte*)ptr.ToPointer(), (index + 1) * sizeof(ushort))
             {
                 Position = index * sizeof(ushort),
             };
@@ -92,7 +92,7 @@ namespace WindowsPE
 
         public static unsafe uint ReadUInt32ByIndex(this IntPtr ptr, int index)
         {
-            UnmanagedMemoryStream ums = new UnmanagedMemoryStream((byte*)ptr.ToPointer(), (index + 1) * sizeof(uint))
+            var ums = new UnmanagedMemoryStream((byte*)ptr.ToPointer(), (index + 1) * sizeof(uint))
             {
                 Position = index * sizeof(uint),
             };
@@ -102,7 +102,7 @@ namespace WindowsPE
 
         public static unsafe IntPtr ReadPtr(this IntPtr addresss)
         {
-            return ReadPtr(addresss, 0);
+            return addresss.ReadPtr(0);
         }
 
         public static IntPtr ReadPtr(this IntPtr ptr, int offset)
@@ -112,7 +112,7 @@ namespace WindowsPE
 
         public static unsafe IntPtr ReadPtr(this IntPtr addresss, ref int offset)
         {
-            IntPtr target = addresss + offset;
+            var target = addresss + offset;
             offset += IntPtr.Size;
 
             return Marshal.ReadIntPtr(target, 0);
@@ -145,7 +145,7 @@ namespace WindowsPE
 
         public static uint ReadUInt32(this IntPtr addresss, ref int offset)
         {
-            uint result = (uint)Marshal.ReadInt32(addresss, offset);
+            var result = (uint)Marshal.ReadInt32(addresss, offset);
             offset += 4;
             return result;
         }
@@ -165,9 +165,9 @@ namespace WindowsPE
             Marshal.WriteByte(ptr, offset, value);
         }
 
-        public static unsafe void WriteBytes(this IntPtr ptr, byte [] buf)
+        public static unsafe void WriteBytes(this IntPtr ptr, byte[] buf)
         {
-            UnmanagedMemoryStream ums = new UnmanagedMemoryStream((byte*)ptr.ToPointer(), buf.Length, buf.Length, FileAccess.Write);
+            var ums = new UnmanagedMemoryStream((byte*)ptr.ToPointer(), buf.Length, buf.Length, FileAccess.Write);
             ums.Write(buf, 0, buf.Length);
         }
 
@@ -183,27 +183,27 @@ namespace WindowsPE
 
         public static short ReadInt16(this IntPtr addresss, ref int offset)
         {
-            short result = Marshal.ReadInt16(addresss, offset);
+            var result = Marshal.ReadInt16(addresss, offset);
             offset += 2;
             return result;
         }
 
         public static ushort ReadUInt16(this IntPtr addresss, ref int offset)
         {
-            ushort result = (ushort)Marshal.ReadInt16(addresss, offset);
+            var result = (ushort)Marshal.ReadInt16(addresss, offset);
             offset += 2;
             return result;
         }
 
         public static IntPtr Add(this IntPtr address, IntPtr offset)
         {
-            long newPtr = address.ToInt64() + offset.ToInt64();
+            var newPtr = address.ToInt64() + offset.ToInt64();
             return new IntPtr(newPtr);
         }
 
         public static IntPtr Add(this IntPtr address, uint offset)
         {
-            long newPtr = address.ToInt64() + offset;
+            var newPtr = address.ToInt64() + offset;
             return new IntPtr(newPtr);
         }
 

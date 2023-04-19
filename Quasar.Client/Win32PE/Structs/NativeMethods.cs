@@ -10,7 +10,7 @@ using System.Text;
 #if _KSOBUILD
 namespace KernelStructOffset
 #else
-namespace WindowsPE
+namespace Quasar.Client.Win32PE.Structs
 #endif
 {
     public enum DebugNotifySession
@@ -87,7 +87,7 @@ namespace WindowsPE
         THREAD_QUERY_INFORMATION = 0x00000040,
 
         // Vista or later
-        THREAD_ALL_ACCESS = (uint)0xFFFF | NativeFileAccess.SYNCHRONIZE | NativeFileAccess.STANDARD_RIGHTS_REQUIRED,
+        THREAD_ALL_ACCESS = 0xFFFF | NativeFileAccess.SYNCHRONIZE | NativeFileAccess.STANDARD_RIGHTS_REQUIRED,
         // XP or below
         // THREAD_ALL_ACCESS = (uint)0x3FF | NativeFileAccess.SYNCHRONIZE | NativeFileAccess.STANDARD_RIGHTS_REQUIRED,
     }
@@ -131,26 +131,26 @@ namespace WindowsPE
 #pragma warning restore CA2217 // Do not mark enums with FlagsAttribute
     {
         FILE_SPECIAL = 0,
-        FILE_APPEND_DATA = (0x0004), // file
-        FILE_READ_DATA = (0x0001), // file & pipe
-        FILE_WRITE_DATA = (0x0002), // file & pipe
-        FILE_READ_EA = (0x0008), // file & directory
-        FILE_WRITE_EA = (0x0010), // file & directory
-        FILE_READ_ATTRIBUTES = (0x0080), // all
-        FILE_WRITE_ATTRIBUTES = (0x0100), // all
+        FILE_APPEND_DATA = 0x0004, // file
+        FILE_READ_DATA = 0x0001, // file & pipe
+        FILE_WRITE_DATA = 0x0002, // file & pipe
+        FILE_READ_EA = 0x0008, // file & directory
+        FILE_WRITE_EA = 0x0010, // file & directory
+        FILE_READ_ATTRIBUTES = 0x0080, // all
+        FILE_WRITE_ATTRIBUTES = 0x0100, // all
         DELETE = 0x00010000,
-        READ_CONTROL = (0x00020000),
-        WRITE_DAC = (0x00040000),
-        WRITE_OWNER = (0x00080000),
-        SYNCHRONIZE = (0x00100000),
-        STANDARD_RIGHTS_REQUIRED = (0x000F0000),
-        STANDARD_RIGHTS_READ = (READ_CONTROL),
-        STANDARD_RIGHTS_WRITE = (READ_CONTROL),
-        STANDARD_RIGHTS_EXECUTE = (READ_CONTROL),
-        STANDARD_RIGHTS_ALL = (0x001F0000),
-        SPECIFIC_RIGHTS_ALL = (0x0000FFFF),
-        FILE_GENERIC_READ = (STANDARD_RIGHTS_READ | FILE_READ_DATA | FILE_READ_ATTRIBUTES | FILE_READ_EA | SYNCHRONIZE),
-        FILE_GENERIC_WRITE = (STANDARD_RIGHTS_WRITE | FILE_WRITE_DATA | FILE_WRITE_ATTRIBUTES | FILE_WRITE_EA | FILE_APPEND_DATA | SYNCHRONIZE),
+        READ_CONTROL = 0x00020000,
+        WRITE_DAC = 0x00040000,
+        WRITE_OWNER = 0x00080000,
+        SYNCHRONIZE = 0x00100000,
+        STANDARD_RIGHTS_REQUIRED = 0x000F0000,
+        STANDARD_RIGHTS_READ = READ_CONTROL,
+        STANDARD_RIGHTS_WRITE = READ_CONTROL,
+        STANDARD_RIGHTS_EXECUTE = READ_CONTROL,
+        STANDARD_RIGHTS_ALL = 0x001F0000,
+        SPECIFIC_RIGHTS_ALL = 0x0000FFFF,
+        FILE_GENERIC_READ = STANDARD_RIGHTS_READ | FILE_READ_DATA | FILE_READ_ATTRIBUTES | FILE_READ_EA | SYNCHRONIZE,
+        FILE_GENERIC_WRITE = STANDARD_RIGHTS_WRITE | FILE_WRITE_DATA | FILE_WRITE_ATTRIBUTES | FILE_WRITE_EA | FILE_APPEND_DATA | SYNCHRONIZE,
         SPECIAL = 0
     }
 
@@ -328,7 +328,7 @@ namespace WindowsPE
         {
             lock (m_sbSysMsg)
             {
-                int ret = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,
+                var ret = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,
                                         IntPtr.Zero,
                                         dwMessageId,
                                         CultureInfo.CurrentCulture.LCID,
@@ -336,7 +336,8 @@ namespace WindowsPE
                                         m_sbSysMsg.Capacity - 1,
                                         IntPtr.Zero);
 
-                if (ret > 0) return m_sbSysMsg.ToString(0, ret);
+                if (ret > 0)
+                    return m_sbSysMsg.ToString(0, ret);
                 return null;
             }
         }
@@ -397,7 +398,7 @@ namespace WindowsPE
             MemoryProtection flProtect);
 
         [DllImport("kernel32")]
-        internal static extern bool VirtualFree(IntPtr lpAddress, UInt32 dwSize, UInt32 dwFreeType);
+        internal static extern bool VirtualFree(IntPtr lpAddress, uint dwSize, uint dwFreeType);
 
         [DllImport("ntdll.dll")]
         internal static extern IntPtr NtCurrentTeb();

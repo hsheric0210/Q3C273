@@ -11,7 +11,7 @@ using System.Threading;
 #if _KSOBUILD
 namespace KernelStructOffset
 #else
-namespace WindowsPE
+namespace Quasar.Client.Win32PE.Structs
 #endif
 {
     [StructLayout(LayoutKind.Sequential)]
@@ -40,19 +40,17 @@ namespace WindowsPE
 
         public override bool Equals(object obj)
         {
-            StructFieldInfo target = (StructFieldInfo)obj;
+            var target = (StructFieldInfo)obj;
 
-            if (target.Name == this.Name)
-            {
+            if (target.Name == Name)
                 return true;
-            }
 
             return false;
         }
 
         public override int GetHashCode()
         {
-            return this.Name?.GetHashCode() ?? 0;
+            return Name?.GetHashCode() ?? 0;
         }
 
     }
@@ -71,24 +69,22 @@ namespace WindowsPE
         public uint Age;
         public string PdbFileName;
 
-        public static bool operator == (CodeViewRSDS t1, CodeViewRSDS t2)
+        public static bool operator ==(CodeViewRSDS t1, CodeViewRSDS t2)
         {
             return t1.Equals(t2);
         }
 
-        public static bool operator != (CodeViewRSDS t1, CodeViewRSDS t2)
+        public static bool operator !=(CodeViewRSDS t1, CodeViewRSDS t2)
         {
             return !t1.Equals(t2);
         }
 
         public override bool Equals(object obj)
         {
-            CodeViewRSDS target = (CodeViewRSDS)obj;
+            var target = (CodeViewRSDS)obj;
 
-            if (target.Signature == this.Signature && target.Age == this.Age)
-            {
+            if (target.Signature == Signature && target.Age == Age)
                 return true;
-            }
 
             return false;
         }
@@ -102,9 +98,9 @@ namespace WindowsPE
         {
             get
             {
-                string fileName = Path.GetFileName(PdbFileName);
+                var fileName = Path.GetFileName(PdbFileName);
 
-                string uid = Signature.ToString("N") + Age;
+                var uid = Signature.ToString("N") + Age;
                 return Path.Combine(fileName, uid, fileName);
             }
         }
@@ -113,9 +109,9 @@ namespace WindowsPE
         {
             get
             {
-                string fileName = Path.GetFileName(PdbFileName);
+                var fileName = Path.GetFileName(PdbFileName);
 
-                string uid = Signature.ToString("N") + Age;
+                var uid = Signature.ToString("N") + Age;
                 return $"{fileName}/{uid}/{fileName}";
             }
         }
@@ -173,17 +169,15 @@ namespace WindowsPE
 
         public override int GetHashCode()
         {
-            return this.ObjectPointer.GetHashCode();
+            return ObjectPointer.GetHashCode();
         }
 
         public override bool Equals(object obj)
         {
-            _SYSTEM_HANDLE_TABLE_ENTRY_INFO target = (_SYSTEM_HANDLE_TABLE_ENTRY_INFO)obj;
+            var target = (_SYSTEM_HANDLE_TABLE_ENTRY_INFO)obj;
 
-            if (target.ObjectPointer == this.ObjectPointer)
-            {
+            if (target.ObjectPointer == ObjectPointer)
                 return true;
-            }
 
             return false;
         }
@@ -222,19 +216,17 @@ namespace WindowsPE
 
         public static string GetName(IntPtr handleValue, int ownerPid, out string handleTypeName)
         {
-            IntPtr handle = handleValue;
-            IntPtr dupHandle = IntPtr.Zero;
+            var handle = handleValue;
+            var dupHandle = IntPtr.Zero;
             handleTypeName = "";
 
             try
             {
-                int addAccessRights = 0;
+                var addAccessRights = 0;
                 dupHandle = DuplicateHandle(ownerPid, handle, addAccessRights);
 
                 if (dupHandle == IntPtr.Zero)
-                {
                     return "";
-                }
 
                 handleTypeName = GetHandleType(dupHandle);
 
@@ -253,25 +245,25 @@ namespace WindowsPE
                         break;
                 }
 
-                string devicePath = "";
+                var devicePath = "";
 
                 switch (handleTypeName)
                 {
                     case "Process":
-                        {
-                            string processName = GetProcessName(dupHandle);
-                            int processId = NativeMethods.GetProcessId(dupHandle);
+                    {
+                        var processName = GetProcessName(dupHandle);
+                        var processId = NativeMethods.GetProcessId(dupHandle);
 
-                            return $"{processName}({processId})";
-                        }
+                        return $"{processName}({processId})";
+                    }
 
                     case "Thread":
-                        {
-                            string processName = GetProcessName(ownerPid);
-                            int threadId = NativeMethods.GetThreadId(dupHandle);
+                    {
+                        var processName = GetProcessName(ownerPid);
+                        var threadId = NativeMethods.GetThreadId(dupHandle);
 
-                            return $"{processName}({ownerPid}): {threadId}";
-                        }
+                        return $"{processName}({ownerPid}): {threadId}";
+                    }
 
                     case "Directory":
                     case "ALPC Port":
@@ -287,15 +279,11 @@ namespace WindowsPE
                         devicePath = GetObjectNameFromHandle(dupHandle);
 
                         if (string.IsNullOrEmpty(devicePath) == true)
-                        {
                             return "";
-                        }
 
                         string dosPath;
                         if (ConvertDevicePathToDosPath(devicePath, out dosPath))
-                        {
                             return dosPath;
-                        }
 
                         return devicePath;
                 }
@@ -303,9 +291,7 @@ namespace WindowsPE
             finally
             {
                 if (dupHandle != IntPtr.Zero)
-                {
                     NativeMethods.CloseHandle(dupHandle);
-                }
             }
 
             return "";
@@ -313,7 +299,7 @@ namespace WindowsPE
 
         private static string GetProcessName(int ownerPid)
         {
-            IntPtr processHandle = IntPtr.Zero;
+            var processHandle = IntPtr.Zero;
 
             try
             {
@@ -321,40 +307,32 @@ namespace WindowsPE
                     ProcessAccessRights.PROCESS_QUERY_INFORMATION | ProcessAccessRights.PROCESS_VM_READ, false, ownerPid);
 
                 if (processHandle == IntPtr.Zero)
-                {
                     return "";
-                }
 
                 return GetProcessName(processHandle);
             }
             finally
             {
                 if (processHandle != IntPtr.Zero)
-                {
                     NativeMethods.CloseHandle(processHandle);
-                }
             }
         }
 
         private static string GetProcessName(IntPtr processHandle)
         {
             if (processHandle == IntPtr.Zero)
-            {
                 return "";
-            }
 
-            StringBuilder sb = new StringBuilder(4096);
-            uint getResult = NativeMethods.GetModuleFileNameEx(processHandle, IntPtr.Zero, sb, sb.Capacity);
+            var sb = new StringBuilder(4096);
+            var getResult = NativeMethods.GetModuleFileNameEx(processHandle, IntPtr.Zero, sb, sb.Capacity);
             if (getResult == 0)
-            {
                 return "";
-            }
 
             try
             {
                 return Path.GetFileName(sb.ToString());
             }
-            catch (System.ArgumentException)
+            catch (ArgumentException)
             {
                 return "";
             }
@@ -363,11 +341,11 @@ namespace WindowsPE
         private static bool ConvertDevicePathToDosPath(string devicePath, out string dosPath)
         {
             EnsureDeviceMap();
-            int i = devicePath.Length;
+            var i = devicePath.Length;
 
             while (i > 0 && (i = devicePath.LastIndexOf('\\', i - 1)) != -1)
             {
-                if (_deviceMap.TryGetValue(devicePath.Substring(0, i), out string drive))
+                if (_deviceMap.TryGetValue(devicePath.Substring(0, i), out var drive))
                 {
                     dosPath = string.Concat(drive, devicePath.Substring(i));
                     return dosPath.Length != 0;
@@ -382,21 +360,21 @@ namespace WindowsPE
         {
             if (_deviceMap == null)
             {
-                Dictionary<string, string> localDeviceMap = BuildDeviceMap();
-                Interlocked.CompareExchange<Dictionary<string, string>>(ref _deviceMap, localDeviceMap, null);
+                var localDeviceMap = BuildDeviceMap();
+                Interlocked.CompareExchange(ref _deviceMap, localDeviceMap, null);
             }
         }
 
         private static Dictionary<string, string> BuildDeviceMap()
         {
-            string[] logicalDrives = Environment.GetLogicalDrives();
+            var logicalDrives = Environment.GetLogicalDrives();
 
-            Dictionary<string, string> localDeviceMap = new Dictionary<string, string>(logicalDrives.Length);
-            StringBuilder lpTargetPath = new StringBuilder(MAX_PATH);
+            var localDeviceMap = new Dictionary<string, string>(logicalDrives.Length);
+            var lpTargetPath = new StringBuilder(MAX_PATH);
 
-            foreach (string drive in logicalDrives)
+            foreach (var drive in logicalDrives)
             {
-                string lpDeviceName = drive.Substring(0, 2);
+                var lpDeviceName = drive.Substring(0, 2);
                 NativeMethods.QueryDosDevice(lpDeviceName, lpTargetPath, MAX_PATH);
                 localDeviceMap.Add(NormalizeDeviceName(lpTargetPath.ToString()), lpDeviceName);
             }
@@ -409,7 +387,7 @@ namespace WindowsPE
         {
             if (string.Compare(deviceName, 0, networkDevicePrefix, 0, networkDevicePrefix.Length, StringComparison.InvariantCulture) == 0)
             {
-                string shareName = deviceName.Substring(deviceName.IndexOf('\\', networkDevicePrefix.Length) + 1);
+                var shareName = deviceName.Substring(deviceName.IndexOf('\\', networkDevicePrefix.Length) + 1);
                 return string.Concat(networkDevicePrefix, shareName);
             }
             return deviceName;
@@ -417,7 +395,7 @@ namespace WindowsPE
 
         private static string GetObjectNameFromHandle(IntPtr handle)
         {
-            using (FileNameFromHandleState f = new FileNameFromHandleState(handle))
+            using (var f = new FileNameFromHandleState(handle))
             {
                 ThreadPool.QueueUserWorkItem(GetObjectNameFromHandleFunc, f);
                 f.WaitOne(16);
@@ -427,19 +405,19 @@ namespace WindowsPE
 
         private static void GetObjectNameFromHandleFunc(object obj)
         {
-            FileNameFromHandleState state = obj as FileNameFromHandleState;
+            var state = obj as FileNameFromHandleState;
 
-            int guessSize = 1024;
+            var guessSize = 1024;
             NT_STATUS ret;
 
-            IntPtr ptr = Marshal.AllocHGlobal(guessSize);
+            var ptr = Marshal.AllocHGlobal(guessSize);
 
             try
             {
                 while (true)
                 {
                     ret = NativeMethods.NtQueryObject(state.Handle,
-                        OBJECT_INFORMATION_CLASS.ObjectNameInformation, ptr, guessSize, out int requiredSize);
+                        OBJECT_INFORMATION_CLASS.ObjectNameInformation, ptr, guessSize, out var requiredSize);
 
                     if (ret == NT_STATUS.STATUS_INFO_LENGTH_MISMATCH)
                     {
@@ -451,7 +429,7 @@ namespace WindowsPE
 
                     if (ret == NT_STATUS.STATUS_SUCCESS)
                     {
-                        OBJECT_NAME_INFORMATION oti = (OBJECT_NAME_INFORMATION)Marshal.PtrToStructure(ptr, typeof(OBJECT_NAME_INFORMATION));
+                        var oti = (OBJECT_NAME_INFORMATION)Marshal.PtrToStructure(ptr, typeof(OBJECT_NAME_INFORMATION));
                         state.FileName = oti.Name.GetText();
                         return;
                     }
@@ -462,9 +440,7 @@ namespace WindowsPE
             finally
             {
                 if (ptr != IntPtr.Zero)
-                {
                     Marshal.FreeHGlobal(ptr);
-                }
 
                 state.Set();
             }
@@ -472,17 +448,17 @@ namespace WindowsPE
 
         private static string GetHandleType(IntPtr handle)
         {
-            int guessSize = 1024;
+            var guessSize = 1024;
             NT_STATUS ret;
 
-            IntPtr ptr = Marshal.AllocHGlobal(guessSize);
+            var ptr = Marshal.AllocHGlobal(guessSize);
 
             try
             {
                 while (true)
                 {
                     ret = NativeMethods.NtQueryObject(handle,
-                        OBJECT_INFORMATION_CLASS.ObjectTypeInformation, ptr, guessSize, out int requiredSize);
+                        OBJECT_INFORMATION_CLASS.ObjectTypeInformation, ptr, guessSize, out var requiredSize);
 
                     if (ret == NT_STATUS.STATUS_INFO_LENGTH_MISMATCH)
                     {
@@ -494,7 +470,7 @@ namespace WindowsPE
 
                     if (ret == NT_STATUS.STATUS_SUCCESS)
                     {
-                        OBJECT_TYPE_INFORMATION oti = (OBJECT_TYPE_INFORMATION)Marshal.PtrToStructure(ptr, typeof(OBJECT_TYPE_INFORMATION));
+                        var oti = (OBJECT_TYPE_INFORMATION)Marshal.PtrToStructure(ptr, typeof(OBJECT_TYPE_INFORMATION));
                         return oti.Name.GetText();
                     }
 
@@ -504,9 +480,7 @@ namespace WindowsPE
             finally
             {
                 if (ptr != IntPtr.Zero)
-                {
                     Marshal.FreeHGlobal(ptr);
-                }
             }
 
             return "(unknown)";
@@ -514,35 +488,29 @@ namespace WindowsPE
 
         private static IntPtr DuplicateHandle(int ownerPid, IntPtr targetHandle, int addAccessRights)
         {
-            IntPtr currentProcess = NativeMethods.GetCurrentProcess();
+            var currentProcess = NativeMethods.GetCurrentProcess();
 
-            IntPtr targetProcessHandle = IntPtr.Zero;
-            IntPtr duplicatedHandle = IntPtr.Zero;
+            var targetProcessHandle = IntPtr.Zero;
+            var duplicatedHandle = IntPtr.Zero;
 
             try
             {
                 targetProcessHandle = NativeMethods.OpenProcess(ProcessAccessRights.PROCESS_DUP_HANDLE, false, ownerPid);
                 if (targetProcessHandle == IntPtr.Zero)
-                {
                     return IntPtr.Zero;
-                }
 
-                bool dupResult = NativeMethods.DuplicateHandle(targetProcessHandle, targetHandle, currentProcess,
-                    out duplicatedHandle, (int)addAccessRights, false,
-                     (addAccessRights == 0) ? DuplicateHandleOptions.DUPLICATE_SAME_ACCESS : 0);
+                var dupResult = NativeMethods.DuplicateHandle(targetProcessHandle, targetHandle, currentProcess,
+                    out duplicatedHandle, addAccessRights, false,
+                     addAccessRights == 0 ? DuplicateHandleOptions.DUPLICATE_SAME_ACCESS : 0);
                 if (dupResult == true)
-                {
                     return duplicatedHandle;
-                }
 
                 return IntPtr.Zero;
             }
             finally
             {
                 if (targetProcessHandle != IntPtr.Zero)
-                {
                     NativeMethods.CloseHandle(targetProcessHandle);
-                }
             }
         }
 
@@ -589,7 +557,7 @@ namespace WindowsPE
             public FileNameFromHandleState(IntPtr handle)
             {
                 _mr = new ManualResetEvent(false);
-                this._handle = handle;
+                _handle = handle;
             }
 
             public bool WaitOne(int wait)
@@ -600,9 +568,7 @@ namespace WindowsPE
             public void Set()
             {
                 if (_mr == null)
-                {
                     return;
-                }
 
                 _mr.Set();
             }
@@ -629,17 +595,15 @@ namespace WindowsPE
 
         public override int GetHashCode()
         {
-            return this.ObjectPointer.GetHashCode();
+            return ObjectPointer.GetHashCode();
         }
 
         public override bool Equals(object obj)
         {
-            _SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX target = (_SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX)obj;
+            var target = (_SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX)obj;
 
-            if (target.ObjectPointer == this.ObjectPointer)
-            {
+            if (target.ObjectPointer == ObjectPointer)
                 return true;
-            }
 
             return false;
         }

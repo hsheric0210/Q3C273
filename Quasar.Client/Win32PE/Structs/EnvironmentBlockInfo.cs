@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using WindowsPE;
 
-namespace KernelStructOffset
+namespace Quasar.Client.Win32PE.Structs
 {
     public class EnvironmentBlockInfo
     {
@@ -22,17 +21,15 @@ namespace KernelStructOffset
         static IntPtr _codePointer;
         static GetTebDelegate _getTebDelg;
 
-        [UnmanagedFunctionPointerAttribute(CallingConvention.Cdecl)]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate long GetTebDelegate();
 
         static EnvironmentBlockInfo()
         {
             if (IntPtr.Size != 8)
-            {
                 return;
-            }
 
-            byte[] codeBytes = _x64TebBytes;
+            var codeBytes = _x64TebBytes;
 
             _codePointer = NativeMethods.VirtualAlloc(IntPtr.Zero, new UIntPtr((uint)codeBytes.Length),
                 AllocationType.COMMIT | AllocationType.RESERVE,
@@ -50,9 +47,7 @@ namespace KernelStructOffset
             if (IntPtr.Size == 8)
             {
                 if (_getTebDelg == null)
-                {
                     throw new ObjectDisposedException("GetTebAddress");
-                }
 
                 return new IntPtr(_getTebDelg());
             }
@@ -65,13 +60,13 @@ namespace KernelStructOffset
         public static IntPtr GetPebAddress(out IntPtr tebAddress)
         {
             tebAddress = GetTebAddress();
-            _TEB teb = _TEB.Create(tebAddress);
+            var teb = _TEB.Create(tebAddress);
             return teb.ProcessEnvironmentBlock;
         }
 
         public static _PEB GetPeb()
         {
-            IntPtr pebAddress = EnvironmentBlockInfo.GetPebAddress(out _);
+            var pebAddress = GetPebAddress(out _);
             return GetPeb(pebAddress);
         }
 

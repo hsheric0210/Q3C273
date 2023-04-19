@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Gma.System.MouseKeyHook.WinApi
+namespace Quasar.Client.MouseKeyHook.WinApi
 {
     /// <summary>
     ///     The CallWndProc hook procedure is an application-defined or library-defined callback

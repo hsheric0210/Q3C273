@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Quasar.Client.Win32PE.Structs;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace WindowsPE
+namespace Quasar.Client.Win32PE.PE
 {
     public class PEImage
     {
@@ -55,9 +56,7 @@ namespace WindowsPE
             // PE 헤더임을 확인 (IMAGE_NT_SIGNATURE == 0x00004550)
             // if (signature[0] == 0x50 && signature[1] == 0x45 && signature[2] == 0 && signature[3] == 0)
             if (signature == 0x00004550)
-            {
                 return true;
-            }
 
             return false;
         }
@@ -75,9 +74,7 @@ namespace WindowsPE
             get
             {
                 if (_is64BitHeader == true)
-                {
                     return _optionalHeader64.CLRRuntimeHeader;
-                }
                 else
                 {
                     return _optionalHeader32.CLRRuntimeHeader;
@@ -90,9 +87,7 @@ namespace WindowsPE
             get
             {
                 if (_is64BitHeader == true)
-                {
                     return _optionalHeader64.ExportTable;
-                }
                 else
                 {
                     return _optionalHeader32.ExportTable;
@@ -105,9 +100,7 @@ namespace WindowsPE
             get
             {
                 if (_is64BitHeader == true)
-                {
                     return _optionalHeader64.Debug;
-                }
                 else
                 {
                     return _optionalHeader32.Debug;
@@ -122,21 +115,19 @@ namespace WindowsPE
 
         public IEnumerable<VTableFixups> EnumerateVTableFixups()
         {
-            IMAGE_COR20_HEADER corHeader = GetClrDirectoryHeader();
-            VTableFixups[] vtfs = Reads<VTableFixups>(corHeader.VTableFixups.VirtualAddress, corHeader.VTableFixups.Size);
+            var corHeader = GetClrDirectoryHeader();
+            var vtfs = Reads<VTableFixups>(corHeader.VTableFixups.VirtualAddress, corHeader.VTableFixups.Size);
             return vtfs;
         }
 
         public ExportFunctionInfo GetExportFunction(string functionName)
         {
-            ExportFunctionInfo[] functions = GetExportFunctions();
+            var functions = GetExportFunctions();
 
-            for (int i = 0; i < functions?.Length; i++)
+            for (var i = 0; i < functions?.Length; i++)
             {
                 if (functions[i].Name == functionName)
-                {
                     return functions[i];
-                }
             }
 
             return default;
@@ -149,19 +140,19 @@ namespace WindowsPE
 
         public unsafe byte[] ReadBytes(uint rvaAddress, int nBytes)
         {
-            byte[] byteBuffer = new byte[nBytes];
+            var byteBuffer = new byte[nBytes];
 
-            IMAGE_SECTION_HEADER section = GetSection((int)rvaAddress);
-            GetSafeBuffer(0, (uint)section.EndAddress, out BufferPtr buffer);
+            var section = GetSection((int)rvaAddress);
+            GetSafeBuffer(0, section.EndAddress, out var buffer);
 
             try
             {
-                IntPtr bytePos = GetSafeBuffer(buffer, rvaAddress);
-                int maxRead = Math.Min((int)(rvaAddress + nBytes), (int)section.EndAddress);
+                var bytePos = GetSafeBuffer(buffer, rvaAddress);
+                var maxRead = Math.Min((int)(rvaAddress + nBytes), (int)section.EndAddress);
 
-                for (int i = (int)rvaAddress; i < maxRead; i++)
+                for (var i = (int)rvaAddress; i < maxRead; i++)
                 {
-                    int pos = (int)(i - rvaAddress);
+                    var pos = (int)(i - rvaAddress);
                     byteBuffer[pos] = bytePos.ReadByte(pos);
                 }
             }
@@ -175,12 +166,12 @@ namespace WindowsPE
 
         public unsafe T Read<T>(uint rvaAddress) where T : struct
         {
-            IMAGE_SECTION_HEADER section = GetSection((int)rvaAddress);
-            GetSafeBuffer(0, (uint)section.VirtualAddress + (uint)section.SizeOfRawData, out BufferPtr buffer);
+            var section = GetSection((int)rvaAddress);
+            GetSafeBuffer(0, (uint)section.VirtualAddress + (uint)section.SizeOfRawData, out var buffer);
 
             try
             {
-                IntPtr bytePos = GetSafeBuffer(buffer, rvaAddress);
+                var bytePos = GetSafeBuffer(buffer, rvaAddress);
                 return (T)Marshal.PtrToStructure(bytePos, typeof(T));
             }
             finally
@@ -189,21 +180,21 @@ namespace WindowsPE
             }
         }
 
-        public unsafe T [] Reads<T>(uint rvaAddress, uint totalSize) where T : struct
+        public unsafe T[] Reads<T>(uint rvaAddress, uint totalSize) where T : struct
         {
-            IMAGE_SECTION_HEADER section = GetSection((int)rvaAddress);
-            GetSafeBuffer(0, (uint)section.VirtualAddress + (uint)section.SizeOfRawData, out BufferPtr buffer);
+            var section = GetSection((int)rvaAddress);
+            GetSafeBuffer(0, (uint)section.VirtualAddress + (uint)section.SizeOfRawData, out var buffer);
 
-            List<T> list = new List<T>();
+            var list = new List<T>();
 
-            uint entrySize = (uint)Marshal.SizeOf(default(T));
-            uint count = totalSize / entrySize;
+            var entrySize = (uint)Marshal.SizeOf(default(T));
+            var count = totalSize / entrySize;
 
             try
             {
                 for (uint i = 0; i < count; i++)
                 {
-                    IntPtr bytePos = GetSafeBuffer(buffer, rvaAddress + (i * entrySize));
+                    var bytePos = GetSafeBuffer(buffer, rvaAddress + i * entrySize);
                     list.Add((T)Marshal.PtrToStructure(bytePos, typeof(T)));
                 }
             }
@@ -218,14 +209,10 @@ namespace WindowsPE
         public IMAGE_COR20_HEADER GetClrDirectoryHeader()
         {
             if (CLRRuntimeHeaderDirectory.VirtualAddress == 0)
-            {
                 return default;
-            }
 
             if (_corHeader == null)
-            {
                 _corHeader = Read<IMAGE_COR20_HEADER>(CLRRuntimeHeaderDirectory.VirtualAddress);
-            }
 
             return _corHeader.Value;
         }
@@ -233,28 +220,26 @@ namespace WindowsPE
         public unsafe ExportFunctionInfo[] GetExportFunctions()
         {
             if (ExportDirectory.VirtualAddress == 0)
-            {
                 return null;
-            }
 
-            IMAGE_SECTION_HEADER section = GetSection((int)ExportDirectory.VirtualAddress);
+            var section = GetSection((int)ExportDirectory.VirtualAddress);
 
-            GetSafeBuffer(0, (uint)section.VirtualAddress + (uint)section.SizeOfRawData, out BufferPtr buffer);
-            List<ExportFunctionInfo> list = new List<ExportFunctionInfo>();
+            GetSafeBuffer(0, (uint)section.VirtualAddress + (uint)section.SizeOfRawData, out var buffer);
+            var list = new List<ExportFunctionInfo>();
 
             try
             {
-                IntPtr exportDirPos = GetSafeBuffer(buffer, ExportDirectory.VirtualAddress);
-                IMAGE_EXPORT_DIRECTORY dir = (IMAGE_EXPORT_DIRECTORY)Marshal.PtrToStructure(exportDirPos, typeof(IMAGE_EXPORT_DIRECTORY));
+                var exportDirPos = GetSafeBuffer(buffer, ExportDirectory.VirtualAddress);
+                var dir = (IMAGE_EXPORT_DIRECTORY)Marshal.PtrToStructure(exportDirPos, typeof(IMAGE_EXPORT_DIRECTORY));
 
-                IntPtr nameListPtr = GetSafeBuffer(buffer, dir.AddressOfNames);
-                UnmanagedMemoryStream ums = new UnmanagedMemoryStream((byte*)nameListPtr.ToPointer(), dir.NumberOfNames * sizeof(int));
-                BinaryReader br = new BinaryReader(ums);
+                var nameListPtr = GetSafeBuffer(buffer, dir.AddressOfNames);
+                var ums = new UnmanagedMemoryStream((byte*)nameListPtr.ToPointer(), dir.NumberOfNames * sizeof(int));
+                var br = new BinaryReader(ums);
 
-                for (int i = 0; i < dir.NumberOfNames; i++)
+                for (var i = 0; i < dir.NumberOfNames; i++)
                 {
-                    uint namePos = br.ReadUInt32();
-                    IntPtr namePtr = GetSafeBuffer(buffer, namePos);
+                    var namePos = br.ReadUInt32();
+                    var namePtr = GetSafeBuffer(buffer, namePos);
 
                     ExportFunctionInfo efi;
                     efi.Name = Marshal.PtrToStringAnsi(namePtr);
@@ -277,14 +262,12 @@ namespace WindowsPE
 
         public IEnumerable<CodeViewRSDS> EnumerateCodeViewDebugInfo()
         {
-            foreach (IMAGE_DEBUG_DIRECTORY debugDir in EnumerateDebugDir())
+            foreach (var debugDir in EnumerateDebugDir())
             {
                 if (debugDir.Type != (uint)DebugDirectoryType.IMAGE_DEBUG_TYPE_CODEVIEW)
-                {
                     continue;
-                }
 
-                IntPtr debugDirPtr = GetSafeBuffer(debugDir.AddressOfRawData, debugDir.SizeOfData, out BufferPtr buffer);
+                var debugDirPtr = GetSafeBuffer(debugDir.AddressOfRawData, debugDir.SizeOfData, out var buffer);
 
                 try
                 {
@@ -303,14 +286,14 @@ namespace WindowsPE
 
             if (_readFromFile == true)
             {
-                int startAddress = Rva2Raw((int)rva);
-                int endAddress = startAddress + (int)size;
+                var startAddress = Rva2Raw((int)rva);
+                var endAddress = startAddress + (int)size;
 
                 buffer = new BufferPtr(endAddress);
 
-                using (FileStream fs = new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var fs = new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    BinaryReader br = new BinaryReader(fs);
+                    var br = new BinaryReader(fs);
                     br.Read(buffer.Buffer, 0, buffer.Length);
                 }
             }
@@ -328,12 +311,10 @@ namespace WindowsPE
             IntPtr ptr;
 
             if (_bufferCached != null)
-            {
                 ptr = buffer.GetPtr((int)rva);
-            }
             else if (buffer != null)
             {
-                int startAddress = Rva2Raw((int)rva);
+                var startAddress = Rva2Raw((int)rva);
                 ptr = buffer.GetPtr(startAddress);
             }
             else
@@ -347,22 +328,20 @@ namespace WindowsPE
         public IEnumerable<IMAGE_DEBUG_DIRECTORY> EnumerateDebugDir()
         {
             if (Debug.VirtualAddress == 0)
-            {
                 yield break;
-            }
 
-            IntPtr debugDirPtr = GetSafeBuffer(Debug.VirtualAddress, Debug.Size, out BufferPtr buffer);
+            var debugDirPtr = GetSafeBuffer(Debug.VirtualAddress, Debug.Size, out var buffer);
 
             try
             {
-                IMAGE_DEBUG_DIRECTORY safeObj = new IMAGE_DEBUG_DIRECTORY();
-                int sizeOfDir = Marshal.SizeOf(safeObj);
+                var safeObj = new IMAGE_DEBUG_DIRECTORY();
+                var sizeOfDir = Marshal.SizeOf(safeObj);
 
-                int count = (int)Debug.Size / sizeOfDir;
+                var count = (int)Debug.Size / sizeOfDir;
 
-                for (int i = 0; i < count; i++)
+                for (var i = 0; i < count; i++)
                 {
-                    IMAGE_DEBUG_DIRECTORY dir = (IMAGE_DEBUG_DIRECTORY)Marshal.PtrToStructure(debugDirPtr, typeof(IMAGE_DEBUG_DIRECTORY));
+                    var dir = (IMAGE_DEBUG_DIRECTORY)Marshal.PtrToStructure(debugDirPtr, typeof(IMAGE_DEBUG_DIRECTORY));
                     yield return dir;
 
                     debugDirPtr += sizeOfDir;
@@ -376,23 +355,21 @@ namespace WindowsPE
 
         private int Rva2Raw(int virtualAddress)
         {
-            IMAGE_SECTION_HEADER section = GetSection(virtualAddress);
+            var section = GetSection(virtualAddress);
             return virtualAddress - section.VirtualAddress + section.PointerToRawData;
         }
 
         private IMAGE_SECTION_HEADER GetSection(int virtualAddress)
         {
-            for (int i = 0; i < _sections.Length; i++)
+            for (var i = 0; i < _sections.Length; i++)
             {
-                IMAGE_SECTION_HEADER section = _sections[i];
+                var section = _sections[i];
 
-                int startAddr = section.VirtualAddress;
-                int endAddr = section.VirtualAddress + section.PhysicalAddressOrVirtualSize;
+                var startAddr = section.VirtualAddress;
+                var endAddr = section.VirtualAddress + section.PhysicalAddressOrVirtualSize;
 
                 if (startAddr <= virtualAddress && virtualAddress <= endAddr)
-                {
                     return section;
-                }
             }
 
             return default;
@@ -400,15 +377,13 @@ namespace WindowsPE
 
         unsafe static PEImage ReadPEHeader(BinaryReader br)
         {
-            PEImage image = new PEImage();
+            var image = new PEImage();
 
             // IMAGE_DOS_HEADER 를 읽어들이고,
-            IMAGE_DOS_HEADER dosHeader = br.Read<IMAGE_DOS_HEADER>();
+            var dosHeader = br.Read<IMAGE_DOS_HEADER>();
             {
                 if (dosHeader.IsValid == false)
-                {
                     return null;
-                }
 
                 image._dosHeader = dosHeader;
             }
@@ -417,13 +392,11 @@ namespace WindowsPE
             {
                 br.BaseStream.Position = dosHeader.e_lfanew;
                 if (IsValidNTHeaders(br.ReadInt32()) == false)
-                {
                     return null;
-                }
             }
 
             // IMAGE_NT_HEADERS - IMAGE_FILE_HEADER를 읽어들임
-            IMAGE_FILE_HEADER ntFileHeader = br.Read<IMAGE_FILE_HEADER>();
+            var ntFileHeader = br.Read<IMAGE_FILE_HEADER>();
             image._fileHeader = ntFileHeader;
 
             /*
@@ -433,11 +406,9 @@ namespace WindowsPE
             따라서 64비트 이미지로 매핑되었음을 판단하려면 Magic 필드로 판단해야 함.
             */
 
-            ushort magic = br.PeekUInt16();
+            var magic = br.PeekUInt16();
             if (magic == (ushort)MagicType.IMAGE_NT_OPTIONAL_HDR64_MAGIC)
-            {
                 image._is64BitHeader = true;
-            }
 
             // ushort optionalHeaderSize = ntFileHeader.SizeOfOptionalHeader;
             // optionalHeaderSize
@@ -445,20 +416,18 @@ namespace WindowsPE
             // 64bit PE == 0xF0(240)bytes
 
             if (image._is64BitHeader == false)
-            {
                 image._optionalHeader32 = br.Read<IMAGE_OPTIONAL_HEADER32>();
-            }
             else
             {
                 image._optionalHeader64 = br.Read<IMAGE_OPTIONAL_HEADER64>();
             }
 
             {
-                List<IMAGE_SECTION_HEADER> sections = new List<IMAGE_SECTION_HEADER>();
+                var sections = new List<IMAGE_SECTION_HEADER>();
 
-                for (int i = 0; i < image._fileHeader.NumberOfSections; i++)
+                for (var i = 0; i < image._fileHeader.NumberOfSections; i++)
                 {
-                    IMAGE_SECTION_HEADER sectionHeader = br.Read<IMAGE_SECTION_HEADER>();
+                    var sectionHeader = br.Read<IMAGE_SECTION_HEADER>();
                     sections.Add(sectionHeader);
                 }
 
@@ -474,7 +443,7 @@ namespace WindowsPE
             {
                 if (pm.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase) == true)
                 {
-                    PEImage image = ReadFromMemory(pm.BaseAddress, pm.ModuleMemorySize);
+                    var image = ReadFromMemory(pm.BaseAddress, pm.ModuleMemorySize);
                     image._filePath = pm.FileName;
                     image._readFromFile = false;
                     image._baseAddress = pm.BaseAddress;
@@ -488,14 +457,14 @@ namespace WindowsPE
 
         public unsafe static PEImage ReadFromMemory(IntPtr baseAddress, int memorySize)
         {
-            UnmanagedMemoryStream ums = new UnmanagedMemoryStream((byte*)baseAddress.ToPointer(), memorySize);
+            var ums = new UnmanagedMemoryStream((byte*)baseAddress.ToPointer(), memorySize);
             return ReadFromMemory(ums, baseAddress, memorySize);
         }
 
         public unsafe static PEImage ReadFromMemory(byte[] buffer, IntPtr baseAddress, int memorySize)
         {
-            MemoryStream ms = new MemoryStream(buffer);
-            PEImage image = ReadFromMemory(ms, baseAddress, memorySize);
+            var ms = new MemoryStream(buffer);
+            var image = ReadFromMemory(ms, baseAddress, memorySize);
             image._bufferCached = buffer;
 
             return image;
@@ -503,13 +472,11 @@ namespace WindowsPE
 
         public unsafe static PEImage ReadFromMemory(Stream stream, IntPtr baseAddress, int memorySize)
         {
-            BinaryReader br = new BinaryReader(stream);
+            var br = new BinaryReader(stream);
 
-            PEImage image = ReadPEHeader(br);
+            var image = ReadPEHeader(br);
             if (image == null)
-            {
                 return null;
-            }
 
             image._readFromFile = false;
             image._baseAddress = baseAddress;
@@ -520,18 +487,16 @@ namespace WindowsPE
 
         public unsafe static PEImage ReadFromFile(string filePath)
         {
-            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                BinaryReader br = new BinaryReader(fs);
-                PEImage image = ReadPEHeader(br);
+                var br = new BinaryReader(fs);
+                var image = ReadPEHeader(br);
                 if (image == null)
-                {
                     return null;
-                }
 
                 image._readFromFile = true;
                 image._filePath = filePath;
-                image._baseAddress = new IntPtr((image._is64BitHeader == true) ? (long)image._optionalHeader64.ImageBase
+                image._baseAddress = new IntPtr(image._is64BitHeader == true ? (long)image._optionalHeader64.ImageBase
                                         : image._optionalHeader32.ImageBase);
 
                 return image;
@@ -540,7 +505,7 @@ namespace WindowsPE
 
         public static string DownloadPdb(string modulePath, byte[] buffer, IntPtr baseOffset, int imageSize, string rootPathToSave)
         {
-            PEImage pe = PEImage.ReadFromMemory(buffer, baseOffset, imageSize);
+            var pe = ReadFromMemory(buffer, baseOffset, imageSize);
 
             if (pe == null)
             {
@@ -553,24 +518,20 @@ namespace WindowsPE
 
         public string DownloadPdb(string modulePath, string rootPathToSave)
         {
-            Uri baseUri = new Uri("https://msdl.microsoft.com/download/symbols/");
-            string pdbDownloadedPath = string.Empty;
+            var baseUri = new Uri("https://msdl.microsoft.com/download/symbols/");
+            var pdbDownloadedPath = string.Empty;
 
-            foreach (CodeViewRSDS codeView in EnumerateCodeViewDebugInfo())
+            foreach (var codeView in EnumerateCodeViewDebugInfo())
             {
                 if (string.IsNullOrEmpty(codeView.PdbFileName) == true)
-                {
                     continue;
-                }
 
-                string pdbFileName = codeView.PdbFileName;
+                var pdbFileName = codeView.PdbFileName;
                 if (Path.IsPathRooted(codeView.PdbFileName) == true)
-                {
                     pdbFileName = Path.GetFileName(codeView.PdbFileName);
-                }
 
-                string localPath = Path.Combine(rootPathToSave, pdbFileName);
-                string localFolder = Path.GetDirectoryName(localPath);
+                var localPath = Path.Combine(rootPathToSave, pdbFileName);
+                var localFolder = Path.GetDirectoryName(localPath);
 
                 if (Directory.Exists(localFolder) == false)
                 {
@@ -588,24 +549,20 @@ namespace WindowsPE
                 if (File.Exists(localPath) == true)
                 {
                     if (Path.GetExtension(localPath).Equals(".pdb", StringComparison.OrdinalIgnoreCase) == true)
-                    {
                         pdbDownloadedPath = localPath;
-                    }
 
                     continue;
                 }
 
                 if (CopyPdbFromLocal(modulePath, codeView.PdbFileName, localPath) == true)
-                {
                     continue;
-                }
 
-                Uri target = new Uri(baseUri, codeView.PdbUriPath);
-                Uri pdbLocation = GetPdbLocation(target);
+                var target = new Uri(baseUri, codeView.PdbUriPath);
+                var pdbLocation = GetPdbLocation(target);
 
                 if (pdbLocation == null)
                 {
-                    string underscorePath = ProbeWithUnderscore(target.AbsoluteUri);
+                    var underscorePath = ProbeWithUnderscore(target.AbsoluteUri);
                     pdbLocation = GetPdbLocation(new Uri(underscorePath));
                 }
 
@@ -614,9 +571,7 @@ namespace WindowsPE
                     DownloadPdbFile(pdbLocation, localPath);
 
                     if (Path.GetExtension(localPath).Equals(".pdb", StringComparison.OrdinalIgnoreCase) == true)
-                    {
                         pdbDownloadedPath = localPath;
-                    }
                 }
                 else
                 {
@@ -636,12 +591,12 @@ namespace WindowsPE
 
         private static Uri GetPdbLocation(Uri target)
         {
-            System.Net.HttpWebRequest req = System.Net.WebRequest.Create(target) as System.Net.HttpWebRequest;
+            var req = System.Net.WebRequest.Create(target) as System.Net.HttpWebRequest;
             req.Method = "HEAD";
 
             try
             {
-                using (System.Net.HttpWebResponse resp = req.GetResponse() as System.Net.HttpWebResponse)
+                using (var resp = req.GetResponse() as System.Net.HttpWebResponse)
                 {
                     return resp.ResponseUri;
                 }
@@ -660,8 +615,8 @@ namespace WindowsPE
                 return File.Exists(localTargetPath);
             }
 
-            string fileName = Path.GetFileName(pdbFileName);
-            string pdbPath = Path.Combine(Environment.CurrentDirectory, fileName);
+            var fileName = Path.GetFileName(pdbFileName);
+            var pdbPath = Path.Combine(Environment.CurrentDirectory, fileName);
 
             if (File.Exists(pdbPath) == true)
             {
@@ -681,19 +636,19 @@ namespace WindowsPE
 
         private static void DownloadPdbFile(Uri target, string pathToSave)
         {
-            System.Net.HttpWebRequest req = System.Net.WebRequest.Create(target) as System.Net.HttpWebRequest;
+            var req = System.Net.WebRequest.Create(target) as System.Net.HttpWebRequest;
 
-            using (System.Net.HttpWebResponse resp = req.GetResponse() as System.Net.HttpWebResponse)
-            using (FileStream fs = new FileStream(pathToSave, FileMode.CreateNew, FileAccess.Write, FileShare.None))
-            using (BinaryWriter bw = new BinaryWriter(fs))
+            using (var resp = req.GetResponse() as System.Net.HttpWebResponse)
+            using (var fs = new FileStream(pathToSave, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+            using (var bw = new BinaryWriter(fs))
             {
-                BinaryReader reader = new BinaryReader(resp.GetResponseStream());
-                long contentLength = resp.ContentLength;
+                var reader = new BinaryReader(resp.GetResponseStream());
+                var contentLength = resp.ContentLength;
 
                 while (contentLength > 0)
                 {
-                    byte[] buffer = new byte[4096];
-                    int readBytes = reader.Read(buffer, 0, buffer.Length);
+                    var buffer = new byte[4096];
+                    var readBytes = reader.Read(buffer, 0, buffer.Length);
                     bw.Write(buffer, 0, readBytes);
 
                     contentLength -= readBytes;

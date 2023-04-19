@@ -4,7 +4,7 @@
 
 using System.Windows.Forms;
 
-namespace Gma.System.MouseKeyHook.Implementation
+namespace Quasar.Client.MouseKeyHook.Implementation
 {
     internal class ButtonSet
     {

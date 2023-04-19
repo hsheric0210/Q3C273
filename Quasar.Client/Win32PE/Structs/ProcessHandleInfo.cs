@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using WindowsPE;
 
-namespace KernelStructOffset
+namespace Quasar.Client.Win32PE.Structs
 {
     /// <summary>
     /// Supported since Windows 8/2012
@@ -29,9 +28,7 @@ namespace KernelStructOffset
         public void Dispose()
         {
             if (_ptr == IntPtr.Zero)
-            {
                 return;
-            }
 
             Marshal.FreeHGlobal(_ptr);
             _ptr = IntPtr.Zero;
@@ -42,9 +39,7 @@ namespace KernelStructOffset
             get
             {
                 if (_ptr == IntPtr.Zero)
-                {
                     return default;
-                }
 
                 unsafe
                 {
@@ -57,16 +52,16 @@ namespace KernelStructOffset
 
                     if (IntPtr.Size == 8)
                     {
-                        IntPtr handleTable = new IntPtr(_ptr.ToInt64() + _handleOffset);
+                        var handleTable = new IntPtr(_ptr.ToInt64() + _handleOffset);
                         entryPtr = new IntPtr(handleTable.ToInt64() + sizeof(_PROCESS_HANDLE_TABLE_ENTRY_INFO) * index);
                     }
                     else
                     {
-                        IntPtr handleTable = new IntPtr(_ptr.ToInt32() + _handleOffset);
+                        var handleTable = new IntPtr(_ptr.ToInt32() + _handleOffset);
                         entryPtr = new IntPtr(handleTable.ToInt32() + sizeof(_PROCESS_HANDLE_TABLE_ENTRY_INFO) * index);
                     }
 
-                    _PROCESS_HANDLE_TABLE_ENTRY_INFO entry =
+                    var entry =
                         (_PROCESS_HANDLE_TABLE_ENTRY_INFO)Marshal.PtrToStructure(entryPtr, typeof(_PROCESS_HANDLE_TABLE_ENTRY_INFO));
                     return entry;
                 }
@@ -75,20 +70,18 @@ namespace KernelStructOffset
 
         private void Initialize(int pid)
         {
-            int guessSize = 4096;
+            var guessSize = 4096;
             NT_STATUS ret;
 
-            IntPtr ptr = Marshal.AllocHGlobal(guessSize);
-            IntPtr processHandle = NativeMethods.OpenProcess(
+            var ptr = Marshal.AllocHGlobal(guessSize);
+            var processHandle = NativeMethods.OpenProcess(
                 ProcessAccessRights.PROCESS_QUERY_INFORMATION | ProcessAccessRights.PROCESS_DUP_HANDLE, false, pid);
             if (processHandle == IntPtr.Zero)
-            {
                 return;
-            }
 
             while (true)
             {
-                ret = NativeMethods.NtQueryInformationProcess(processHandle, PROCESS_INFORMATION_CLASS.ProcessHandleInformation, ptr, guessSize, out int requiredSize);
+                ret = NativeMethods.NtQueryInformationProcess(processHandle, PROCESS_INFORMATION_CLASS.ProcessHandleInformation, ptr, guessSize, out var requiredSize);
 
                 if (ret == NT_STATUS.STATUS_INFO_LENGTH_MISMATCH)
                 {
@@ -111,7 +104,7 @@ namespace KernelStructOffset
                     _handleCount = Marshal.ReadIntPtr(ptr).ToInt32();
 
 #pragma warning disable IDE0059 // Unnecessary assignment of a value
-                    _PROCESS_HANDLE_SNAPSHOT_INFORMATION dummy = new _PROCESS_HANDLE_SNAPSHOT_INFORMATION();
+                    var dummy = new _PROCESS_HANDLE_SNAPSHOT_INFORMATION();
 #pragma warning restore IDE0059 // Unnecessary assignment of a value
                     _handleOffset = Marshal.OffsetOf(typeof(_PROCESS_HANDLE_SNAPSHOT_INFORMATION), nameof(dummy.Handles)).ToInt32();
                     _ptr = ptr;

@@ -5,9 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Gma.System.MouseKeyHook.Implementation;
+using Quasar.Client.MouseKeyHook.Implementation;
 
-namespace Gma.System.MouseKeyHook.HotKeys
+namespace Quasar.Client.MouseKeyHook.HotKeys
 {
     /// <summary>
     ///     An immutable set of Hot Keys that provides an event for when the set is activated.
@@ -252,9 +252,7 @@ namespace Gma.System.MouseKeyHook.HotKeys
         {
             //If the keys are activated still then keep invoking the event
             if (HotKeysActivated)
-            {
                 InvokeHotKeyHandler(OnHotKeysDownHold); //Call the duration event
-            }
 
             //indicates the key's state is current false but the key is now down
             else if (m_hotkeystate.ContainsKey(k) && !m_hotkeystate[k])
