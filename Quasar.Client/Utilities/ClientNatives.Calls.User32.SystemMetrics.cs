@@ -2,7 +2,7 @@
 // Copyright (c) 2015 George Mamaladze
 // See license.txt or https://mit-license.org/
 
-namespace Quasar.Client.Utilities
+namespace Everything.Utilities
 {
     // Because it is a P/Invoke method, 'GetSystemMetrics(int)'
     // should be defined in a class named NativeMethods, SafeNativeMethods,

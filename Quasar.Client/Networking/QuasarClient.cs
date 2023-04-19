@@ -2,7 +2,7 @@
 using Everything.Helper;
 using Everything.IO;
 using Everything.IpGeoLocation;
-using Quasar.Client.User;
+using Everything.User;
 using Quasar.Common.DNS;
 using Quasar.Common.Helpers;
 using Quasar.Common.Messages;

@@ -5,7 +5,7 @@
 using System;
 using System.Windows.Forms;
 using Everything.MouseKeyHook.WinApi;
-using Quasar.Client.Utilities;
+using Everything.Utilities;
 
 namespace Everything.MouseKeyHook.Implementation
 {

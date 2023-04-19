@@ -1,5 +1,5 @@
 ﻿using Everything.Networking;
-using Quasar.Client.Setup;
+using Everything.Setup;
 using Quasar.Common;
 using Quasar.Common.Enums;
 using Quasar.Common.Helpers;

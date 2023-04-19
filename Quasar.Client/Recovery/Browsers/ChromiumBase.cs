@@ -1,6 +1,6 @@
 ﻿using Everything.Recovery;
 using Everything.Recovery.Utilities;
-using Quasar.Client.Recovery.Browsers;
+using Everything.Recovery.Browsers;
 using Quasar.Common.Models;
 using System;
 using System.Collections.Generic;

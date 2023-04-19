@@ -1,4 +1,4 @@
-﻿using Quasar.Client.User;
+﻿using Everything.User;
 using Quasar.Common.Messages;
 using Quasar.Common.Networking;
 using System;

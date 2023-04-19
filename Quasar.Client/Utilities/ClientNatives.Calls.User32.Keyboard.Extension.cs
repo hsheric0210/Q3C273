@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using Everything.MouseKeyHook.Implementation;
 
-namespace Quasar.Client.Utilities
+namespace Everything.Utilities
 {
     internal static partial class ClientNatives
     {

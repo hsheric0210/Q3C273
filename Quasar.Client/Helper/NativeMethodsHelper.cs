@@ -1,4 +1,4 @@
-﻿using Quasar.Client.Utilities;
+﻿using Everything.Utilities;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Quasar.Client.Properties {
+namespace Everything.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

@@ -2,7 +2,7 @@
 using System.Net;
 using System.Runtime.InteropServices;
 
-namespace Quasar.Client.Utilities
+namespace Everything.Utilities
 {
     /// <summary>
     /// Provides access to the Win32 API.

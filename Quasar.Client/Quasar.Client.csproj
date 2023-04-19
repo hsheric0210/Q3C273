@@ -21,7 +21,7 @@
   <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
-  <StartupObject>Quasar.Client.Program</StartupObject>
+  <StartupObject>Everything.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
   <ApplicationManifest>app.manifest</ApplicationManifest>

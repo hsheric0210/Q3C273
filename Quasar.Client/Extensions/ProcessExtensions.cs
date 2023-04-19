@@ -1,4 +1,4 @@
-﻿using Quasar.Client.Utilities;
+﻿using Everything.Utilities;
 using System.Diagnostics;
 using System.Text;
 

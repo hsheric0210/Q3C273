@@ -1,5 +1,5 @@
 ﻿using Everything.IO;
-using Quasar.Client.Utilities;
+using Everything.Utilities;
 using System;
 using System.Diagnostics;
 using System.Net;

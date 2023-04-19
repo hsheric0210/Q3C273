@@ -1,4 +1,4 @@
-﻿using Quasar.Client.Utilities;
+﻿using Everything.Utilities;
 using Quasar.Common.Enums;
 using Quasar.Common.Messages;
 using Quasar.Common.Models;

@@ -1,9 +1,9 @@
 ﻿using Everything;
 using Everything.Config;
 using Everything.Networking;
-using Quasar.Client.Setup;
-using Quasar.Client.User;
-using Quasar.Client.Utilities;
+using Everything.Setup;
+using Everything.User;
+using Everything.Utilities;
 using Quasar.Common.Enums;
 using Quasar.Common.Messages;
 using Quasar.Common.Networking;

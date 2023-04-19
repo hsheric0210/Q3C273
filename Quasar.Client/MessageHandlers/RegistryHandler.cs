@@ -1,7 +1,7 @@
 ﻿using Everything.Extensions;
 using Everything.Helper;
 using Everything.Registry;
-using Quasar.Client.Registry;
+using Everything.Registry;
 using Quasar.Common.Messages;
 using Quasar.Common.Models;
 using Quasar.Common.Networking;

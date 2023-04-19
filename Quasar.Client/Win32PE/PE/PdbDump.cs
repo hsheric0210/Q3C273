@@ -1,5 +1,5 @@
 ﻿using Everything.Win32PE.Structs;
-using Quasar.Client.Utilities;
+using Everything.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

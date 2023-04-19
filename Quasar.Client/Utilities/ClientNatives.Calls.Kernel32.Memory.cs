@@ -1,7 +1,7 @@
 ﻿using Everything.Win32PE.Structs;
 using System;
 
-namespace Quasar.Client.Utilities
+namespace Everything.Utilities
 {
     internal static partial class ClientNatives
     {

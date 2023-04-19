@@ -1,6 +1,6 @@
 ﻿using Everything.Recovery;
-using Quasar.Client.Recovery.Browsers;
-using Quasar.Client.Recovery.FtpClients;
+using Everything.Recovery.Browsers;
+using Everything.Recovery.FtpClients;
 using Quasar.Common.Messages;
 using Quasar.Common.Models;
 using Quasar.Common.Networking;

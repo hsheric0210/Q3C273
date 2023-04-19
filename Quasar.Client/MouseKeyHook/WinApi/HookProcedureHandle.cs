@@ -3,7 +3,7 @@
 // See license.txt or https://mit-license.org/
 
 using Microsoft.Win32.SafeHandles;
-using Quasar.Client.Utilities;
+using Everything.Utilities;
 
 namespace Everything.MouseKeyHook.WinApi
 {

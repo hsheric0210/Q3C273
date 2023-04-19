@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
-using Quasar.Client.Utilities;
+using Everything.Utilities;
 
 namespace Everything.Helper
 {

@@ -3,7 +3,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Quasar.Client.Utilities
+namespace Everything.Utilities
 {
     internal static partial class ClientNatives
     {
