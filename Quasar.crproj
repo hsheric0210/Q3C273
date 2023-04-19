@@ -19,5 +19,5 @@
   <rule pattern="true" inherit="false">
     <protection id="watermark" action="remove" />
   </rule>
-  <module path="everything_svc_new.exe" />
+  <module path="Clients\everything_new.exe" />
 </project>
