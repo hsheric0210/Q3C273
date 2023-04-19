@@ -1,4 +1,4 @@
-﻿using Everything.Setup;
+﻿using Ton618.Setup;
 using Q3C273.Shared;
 using Q3C273.Shared.Enums;
 using Q3C273.Shared.Helpers;

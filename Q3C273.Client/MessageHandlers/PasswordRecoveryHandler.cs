@@ -1,5 +1,5 @@
-﻿using Everything.Recovery.Browsers;
-using Everything.Recovery.FtpClients;
+﻿using Ton618.Recovery.Browsers;
+using Ton618.Recovery.FtpClients;
 using Q3C273.Shared.Messages;
 using Q3C273.Shared.Models;
 using Q3C273.Shared.Networking;

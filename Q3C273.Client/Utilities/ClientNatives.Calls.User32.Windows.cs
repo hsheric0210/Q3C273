@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Everything.Utilities
+namespace Ton618.Utilities
 {
     /// <summary>
     /// Provides access to the Win32 API.

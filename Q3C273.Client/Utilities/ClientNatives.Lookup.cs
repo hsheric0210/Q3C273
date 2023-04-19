@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using Ton618.Win32PE.PE;
 using Ton618.Win32PE.Structs;
 
-namespace Everything.Utilities
+namespace Ton618.Utilities
 {
     /// <summary>
     /// Provides access to the Win32 API.

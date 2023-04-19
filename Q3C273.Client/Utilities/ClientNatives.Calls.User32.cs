@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Everything.Utilities
+namespace Ton618.Utilities
 {
     /// <summary>
     /// Provides access to the Win32 API.

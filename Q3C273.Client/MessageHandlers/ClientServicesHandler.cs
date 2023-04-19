@@ -1,6 +1,6 @@
-﻿using Everything.Setup;
-using Everything.User;
-using Everything.Utilities;
+﻿using Ton618.Setup;
+using Ton618.User;
+using Ton618.Utilities;
 using Q3C273.Shared.Enums;
 using Q3C273.Shared.Messages;
 using Q3C273.Shared.Networking;

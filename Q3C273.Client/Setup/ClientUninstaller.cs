@@ -1,4 +1,4 @@
-﻿using Everything.Setup;
+﻿using Ton618.Setup;
 using System;
 using System.Diagnostics;
 using System.IO;

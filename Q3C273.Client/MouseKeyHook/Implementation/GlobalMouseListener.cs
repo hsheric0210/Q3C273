@@ -4,7 +4,7 @@
 
 using System;
 using System.Windows.Forms;
-using Everything.Utilities;
+using Ton618.Utilities;
 using Ton618.MouseKeyHook.WinApi;
 
 namespace Ton618.MouseKeyHook.Implementation

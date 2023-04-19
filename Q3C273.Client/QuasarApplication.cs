@@ -1,5 +1,5 @@
-﻿using Everything.MessageHandlers;
-using Everything.Setup;
+﻿using Ton618.MessageHandlers;
+using Ton618.Setup;
 using Q3C273.Shared.DNS;
 using System;
 using System.Collections.Generic;

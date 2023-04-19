@@ -5,7 +5,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Everything.Utilities;
+using Ton618.Utilities;
 using Ton618.MouseKeyHook.Implementation;
 using Ton618.MouseKeyHook.WinApi;
 

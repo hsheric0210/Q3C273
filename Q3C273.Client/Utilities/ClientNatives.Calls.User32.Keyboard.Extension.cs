@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using Ton618.MouseKeyHook.Implementation;
 
-namespace Everything.Utilities
+namespace Ton618.Utilities
 {
     internal static partial class ClientNatives
     {

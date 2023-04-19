@@ -6,8 +6,8 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Everything.MouseKeyHook.WinApi;
-using Everything.Utilities;
+using Ton618.MouseKeyHook.WinApi;
+using Ton618.Utilities;
 using Ton618.MouseKeyHook.Implementation;
 
 namespace Ton618.MouseKeyHook.WinApi

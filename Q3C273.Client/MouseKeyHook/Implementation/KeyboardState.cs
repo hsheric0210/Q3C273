@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Everything.Utilities;
+using Ton618.Utilities;
 
 namespace Ton618.MouseKeyHook.Implementation
 {

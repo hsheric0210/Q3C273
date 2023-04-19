@@ -6,7 +6,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Everything.Utilities
+namespace Ton618.Utilities
 {
     internal static partial class ClientNatives
     {

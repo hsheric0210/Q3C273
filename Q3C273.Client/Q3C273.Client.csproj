@@ -21,7 +21,7 @@
         <PlatformTarget>AnyCPU</PlatformTarget>
     </PropertyGroup>
     <PropertyGroup>
-        <StartupObject>Everything.Program</StartupObject>
+        <StartupObject>Ton618.Program</StartupObject>
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>

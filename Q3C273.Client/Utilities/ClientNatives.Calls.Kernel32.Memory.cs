@@ -1,7 +1,7 @@
 ﻿using System;
 using Ton618.Win32PE.Structs;
 
-namespace Everything.Utilities
+namespace Ton618.Utilities
 {
     internal static partial class ClientNatives
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Everything.Utilities
+namespace Ton618.Utilities
 {
     internal static partial class ClientNatives
     {

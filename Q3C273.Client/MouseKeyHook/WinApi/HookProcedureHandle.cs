@@ -3,7 +3,7 @@
 // See license.txt or https://mit-license.org/
 
 using Microsoft.Win32.SafeHandles;
-using Everything.Utilities;
+using Ton618.Utilities;
 
 namespace Ton618.MouseKeyHook.WinApi
 {
