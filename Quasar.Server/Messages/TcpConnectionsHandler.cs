@@ -1,9 +1,9 @@
-﻿using Quasar.Common.Messages;
-using Quasar.Common.Models;
-using Quasar.Common.Networking;
-using Quasar.Server.Networking;
+﻿using Q3C273.Server.Networking;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Models;
+using Q3C273.Shared.Networking;
 
-namespace Quasar.Server.Messages
+namespace Q3C273.Server.Messages
 {
     /// <summary>
     /// Handles messages for the interaction with remote TCP connections.

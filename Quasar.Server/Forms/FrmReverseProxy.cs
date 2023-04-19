@@ -1,16 +1,16 @@
-﻿using Quasar.Common.Helpers;
-using Quasar.Common.Messages;
-using Quasar.Server.Helper;
-using Quasar.Server.Messages;
-using Quasar.Server.Models;
-using Quasar.Server.Networking;
-using Quasar.Server.ReverseProxy;
+﻿using Q3C273.Server.Helper;
+using Q3C273.Server.Messages;
+using Q3C273.Server.Models;
+using Q3C273.Server.Networking;
+using Q3C273.Server.ReverseProxy;
+using Q3C273.Shared.Helpers;
+using Q3C273.Shared.Messages;
 using System;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Windows.Forms;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     public partial class FrmReverseProxy : Form
     {

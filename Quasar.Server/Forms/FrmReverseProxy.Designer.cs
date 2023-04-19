@@ -1,6 +1,6 @@
-﻿using Quasar.Server.Controls;
+﻿using Q3C273.Server.Controls;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     partial class FrmReverseProxy
     {

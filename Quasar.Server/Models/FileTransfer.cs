@@ -1,9 +1,9 @@
-﻿using Quasar.Common.IO;
-using Quasar.Common.Utilities;
-using Quasar.Server.Enums;
+﻿using Q3C273.Server.Enums;
+using Q3C273.Shared.IO;
+using Q3C273.Shared.Utilities;
 using System;
 
-namespace Quasar.Server.Models
+namespace Q3C273.Server.Models
 {
     public class FileTransfer : IEquatable<FileTransfer>
     {
@@ -20,8 +20,10 @@ namespace Quasar.Server.Models
 
         public bool Equals(FileTransfer other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
             return Id == other.Id && Type == other.Type && Size == other.Size &&
                    TransferredSize == other.TransferredSize && string.Equals(LocalPath, other.LocalPath) &&
                    string.Equals(RemotePath, other.RemotePath) && string.Equals(Status, other.Status);
@@ -35,8 +37,14 @@ namespace Quasar.Server.Models
         {
             return new FileTransfer()
             {
-                Id = Id, Type = Type, Size = Size, TransferredSize = TransferredSize, LocalPath = LocalPath,
-                RemotePath = RemotePath, Status = Status, FileSplit = FileSplit
+                Id = Id,
+                Type = Type,
+                Size = Size,
+                TransferredSize = TransferredSize,
+                LocalPath = LocalPath,
+                RemotePath = RemotePath,
+                Status = Status,
+                FileSplit = FileSplit
             };
         }
 

@@ -4,11 +4,8 @@ using Everything.MessageHandlers;
 using Everything.Networking;
 using Everything.User;
 using Everything.Utilities;
-using Everything.MessageHandlers;
 using Everything.Setup;
-using Quasar.Common.DNS;
-using Quasar.Common.Helpers;
-using Quasar.Common.Messages;
+using Q3C273.Shared.DNS;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,6 +13,8 @@ using System.Drawing;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
+using Q3C273.Shared.Helpers;
+using Q3C273.Shared.Messages;
 
 namespace Everything
 {

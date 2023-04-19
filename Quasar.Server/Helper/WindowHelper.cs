@@ -1,6 +1,6 @@
-﻿using Quasar.Server.Networking;
+﻿using Q3C273.Server.Networking;
 
-namespace Quasar.Server.Helper
+namespace Q3C273.Server.Helper
 {
     public static class WindowHelper
     {

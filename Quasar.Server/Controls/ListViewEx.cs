@@ -1,10 +1,10 @@
-﻿using Quasar.Common.Helpers;
-using Quasar.Server.Helper;
-using Quasar.Server.Utilities;
+﻿using Q3C273.Server.Helper;
+using Q3C273.Server.Utilities;
+using Q3C273.Shared.Helpers;
 using System;
 using System.Windows.Forms;
 
-namespace Quasar.Server.Controls
+namespace Q3C273.Server.Controls
 {
     internal class AeroListView : ListView
     {
@@ -22,10 +22,10 @@ namespace Quasar.Server.Controls
         public AeroListView()
         {
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
-            this.LvwColumnSorter = new ListViewColumnSorter();
-            this.ListViewItemSorter = LvwColumnSorter;
-            this.View = View.Details;
-            this.FullRowSelect = true;
+            LvwColumnSorter = new ListViewColumnSorter();
+            ListViewItemSorter = LvwColumnSorter;
+            View = View.Details;
+            FullRowSelect = true;
         }
 
         /// <summary>
@@ -36,21 +36,18 @@ namespace Quasar.Server.Controls
         {
             base.OnHandleCreated(e);
 
-            if (PlatformHelper.RunningOnMono) return;
+            if (PlatformHelper.RunningOnMono)
+                return;
 
             if (PlatformHelper.VistaOrHigher)
-            {
                 // set window theme to explorer
-                NativeMethods.SetWindowTheme(this.Handle, "explorer", null);
-            }
+                NativeMethods.SetWindowTheme(Handle, "explorer", null);
 
             if (PlatformHelper.XpOrHigher)
-            {
                 // removes the ugly dotted line around focused item
-                NativeMethods.SendMessage(this.Handle, WM_CHANGEUISTATE, _removeDots, IntPtr.Zero);
-            }
+                NativeMethods.SendMessage(Handle, WM_CHANGEUISTATE, _removeDots, IntPtr.Zero);
         }
-        
+
         /// <summary>
         /// Raises the <see cref="E:ColumnClick" /> event.
         /// </summary>
@@ -60,23 +57,23 @@ namespace Quasar.Server.Controls
             base.OnColumnClick(e);
 
             // Determine if clicked column is already the column that is being sorted.
-            if (e.Column == this.LvwColumnSorter.SortColumn)
+            if (e.Column == LvwColumnSorter.SortColumn)
             {
                 // Reverse the current sort direction for this column.
-                this.LvwColumnSorter.Order = (this.LvwColumnSorter.Order == SortOrder.Ascending)
+                LvwColumnSorter.Order = LvwColumnSorter.Order == SortOrder.Ascending
                     ? SortOrder.Descending
                     : SortOrder.Ascending;
             }
             else
             {
                 // Set the column number that is to be sorted; default to ascending.
-                this.LvwColumnSorter.SortColumn = e.Column;
-                this.LvwColumnSorter.Order = SortOrder.Ascending;
+                LvwColumnSorter.SortColumn = e.Column;
+                LvwColumnSorter.Order = SortOrder.Ascending;
             }
 
             // Perform the sort with these new sort options.
-            if (!this.VirtualMode)
-                this.Sort();
+            if (!VirtualMode)
+                Sort();
         }
     }
 }

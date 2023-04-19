@@ -1,12 +1,13 @@
-﻿using Quasar.Common.Messages.ReverseProxy;
-using Quasar.Server.Networking;
+﻿using Q3C273.Server.Networking;
+using Q3C273.Shared.Messages.ReverseProxy;
+using Q3C273.Shared.Messages.ReverseProxy;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
 
-namespace Quasar.Server.ReverseProxy
+namespace Q3C273.Server.ReverseProxy
 {
     public class ReverseProxyClient
     {
@@ -86,14 +87,14 @@ namespace Quasar.Server.ReverseProxy
 
         public ReverseProxyClient(Client client, Socket socket, ReverseProxyServer server)
         {
-            this.Handle = socket;
-            this.Client = client;
-            this._handshakeStream = new MemoryStream();
-            this._buffer = new byte[BUFFER_SIZE];
-            this.IsConnected = true;
-            this.TargetServer = "";
-            this.Type = ProxyType.Unknown;
-            this.Server = server;
+            Handle = socket;
+            Client = client;
+            _handshakeStream = new MemoryStream();
+            _buffer = new byte[BUFFER_SIZE];
+            IsConnected = true;
+            TargetServer = "";
+            Type = ProxyType.Unknown;
+            Server = server;
 
             try
             {
@@ -109,7 +110,7 @@ namespace Quasar.Server.ReverseProxy
         {
             try
             {
-                int received = Handle.EndReceive(ar);
+                var received = Handle.EndReceive(ar);
 
                 if (received <= 0)
                 {
@@ -133,7 +134,7 @@ namespace Quasar.Server.ReverseProxy
                 return;
             }
 
-            byte[] payload = _handshakeStream.ToArray();
+            var payload = _handshakeStream.ToArray();
 
             switch (PacketsReceived)
             {
@@ -142,37 +143,35 @@ namespace Quasar.Server.ReverseProxy
                     //initial Socks packet
                     if (payload.Length >= 3)
                     {
-                        string headerStr = Encoding.ASCII.GetString(payload);
+                        var headerStr = Encoding.ASCII.GetString(payload);
 
                         //check the proxy client
                         if (payload[0] == SOCKS5_VERSION_NUMBER)
-                        {
                             Type = ProxyType.SOCKS5;
-                        }
                         else if (headerStr.StartsWith("CONNECT") && headerStr.Contains(":"))
                         {
                             Type = ProxyType.HTTPS;
 
                             //Grab here the IP / PORT
-                            using (StreamReader sr = new StreamReader(new MemoryStream(payload)))
+                            using (var sr = new StreamReader(new MemoryStream(payload)))
                             {
-                                string line = sr.ReadLine();
+                                var line = sr.ReadLine();
                                 if (line == null)
                                     break;
 
                                 //could have done it better with RegEx... oh well
-                                string[] split = line.Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries);
+                                var split = line.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                                 if (split.Length > 0)
                                 {
                                     try
                                     {
-                                        string ipPort = split[1];
-                                        this.TargetServer = ipPort.Split(':')[0];
-                                        this.TargetPort = ushort.Parse(ipPort.Split(':')[1]);
-                                        
-                                        this._isConnectCommand = true;
-                                        this._isDomainNameType = true;
-                                        
+                                        var ipPort = split[1];
+                                        TargetServer = ipPort.Split(':')[0];
+                                        TargetPort = ushort.Parse(ipPort.Split(':')[1]);
+
+                                        _isConnectCommand = true;
+                                        _isDomainNameType = true;
+
                                         //Send Command to client and wait for response from CommandHandler
                                         Client.Send(new ReverseProxyConnect
                                         {
@@ -181,7 +180,7 @@ namespace Quasar.Server.ReverseProxy
                                             Port = TargetPort
                                         });
                                         Server.CallonConnectionEstablished(this);
-                                        
+
                                         return; //Quit receiving and wait for client's response
                                     }
                                     catch
@@ -209,39 +208,35 @@ namespace Quasar.Server.ReverseProxy
                 case 1:
                 {
                     //Socks command
-                    int MinPacketLen = 6;
+                    var MinPacketLen = 6;
                     if (payload.Length >= MinPacketLen)
                     {
                         if (!CheckProxyVersion(payload))
                             return;
 
-                        this._isConnectCommand = payload[1] == 1;
-                        this._isBindCommand = payload[1] == 2;
-                        this._isUdpCommand = payload[1] == 3;
+                        _isConnectCommand = payload[1] == 1;
+                        _isBindCommand = payload[1] == 2;
+                        _isUdpCommand = payload[1] == 3;
 
-                        this._isIpType = payload[3] == 1;
-                        this._isDomainNameType = payload[3] == 3;
-                        this._isIPv6NameType = payload[3] == 4;
+                        _isIpType = payload[3] == 1;
+                        _isDomainNameType = payload[3] == 3;
+                        _isIPv6NameType = payload[3] == 4;
 
                         Array.Reverse(payload, payload.Length - 2, 2);
-                        this.TargetPort = BitConverter.ToUInt16(payload, payload.Length - 2);
+                        TargetPort = BitConverter.ToUInt16(payload, payload.Length - 2);
 
                         if (_isConnectCommand)
                         {
                             if (_isIpType)
-                            {
-                                this.TargetServer = payload[4] + "." + payload[5] + "." + payload[6] + "." + payload[7];
-                            }
+                                TargetServer = payload[4] + "." + payload[5] + "." + payload[6] + "." + payload[7];
                             else if (_isDomainNameType)
                             {
                                 int domainLen = payload[4];
                                 if (MinPacketLen + domainLen < payload.Length)
-                                {
-                                    this.TargetServer = Encoding.ASCII.GetString(payload, 5, domainLen);
-                                }
+                                    TargetServer = Encoding.ASCII.GetString(payload, 5, domainLen);
                             }
 
-                            if (this.TargetServer.Length > 0)
+                            if (TargetServer.Length > 0)
                             {
                                 //Send Command to client and wait for response from CommandHandler
                                 Client.Send(new ReverseProxyConnect
@@ -283,7 +278,7 @@ namespace Quasar.Server.ReverseProxy
             {
                 _disconnectIsSend = true;
                 //send to the Server we've been disconnected
-                Client.Send(new ReverseProxyDisconnect {ConnectionId = ConnectionId});
+                Client.Send(new ReverseProxyDisconnect { ConnectionId = ConnectionId });
             }
 
             try
@@ -326,7 +321,7 @@ namespace Quasar.Server.ReverseProxy
 
             if (Type == ProxyType.SOCKS5)
             {
-                SendToClient(new byte[] {SOCKS5_VERSION_NUMBER, SOCKS5_AUTH_METHOD_REPLY_NO_ACCEPTABLE_METHODS});
+                SendToClient(new byte[] { SOCKS5_VERSION_NUMBER, SOCKS5_AUTH_METHOD_REPLY_NO_ACCEPTABLE_METHODS });
                 Disconnect();
             }
         }
@@ -334,7 +329,7 @@ namespace Quasar.Server.ReverseProxy
         private void SendSuccessToClient()
         {
             if (Type == ProxyType.SOCKS5)
-                SendToClient(new byte[] {SOCKS5_VERSION_NUMBER, SOCKS5_CMD_REPLY_SUCCEEDED});
+                SendToClient(new byte[] { SOCKS5_VERSION_NUMBER, SOCKS5_CMD_REPLY_SUCCEEDED });
         }
 
         private bool CheckProxyVersion(byte[] payload)
@@ -360,25 +355,23 @@ namespace Quasar.Server.ReverseProxy
 
                 if (response.IsConnected)
                 {
-                    this.HostName = response.HostName;
+                    HostName = response.HostName;
 
                     //tell the Proxy Client that we've established a connection
                     if (Type == ProxyType.HTTPS)
-                    {
                         SendToClient(Encoding.ASCII.GetBytes("HTTP/1.0 200 Connection established\r\n\r\n"));
-                    }
                     else if (Type == ProxyType.SOCKS5)
                     {
                         //Thanks to http://www.mentalis.org/soft/projects/proxy/ for the Maths
                         try
                         {
-                            List<byte> responsePacket = new List<byte>();
+                            var responsePacket = new List<byte>();
                             responsePacket.Add(SOCKS5_VERSION_NUMBER);
                             responsePacket.Add(SOCKS5_CMD_REPLY_SUCCEEDED);
                             responsePacket.Add(SOCKS5_RESERVED);
                             responsePacket.Add(1);
                             responsePacket.AddRange(response.LocalAddress);
-                            responsePacket.Add((byte)(Math.Floor((decimal)response.LocalPort / 256)));
+                            responsePacket.Add((byte)Math.Floor((decimal)response.LocalPort / 256));
                             responsePacket.Add((byte)(response.LocalPort % 256));
 
                             SendToClient(responsePacket.ToArray());
@@ -416,9 +409,7 @@ namespace Quasar.Server.ReverseProxy
                 else
                 {
                     if (Type == ProxyType.HTTPS)
-                    {
                         Disconnect();
-                    }
                     else if (Type == ProxyType.SOCKS5)
                     {
                         //send a connection fail packet
@@ -442,7 +433,7 @@ namespace Quasar.Server.ReverseProxy
         {
             try
             {
-                int received = Handle.EndReceive(ar);
+                var received = Handle.EndReceive(ar);
 
                 if (received <= 0)
                 {
@@ -452,9 +443,9 @@ namespace Quasar.Server.ReverseProxy
 
                 LengthReceived += received;
 
-                byte[] payload = new byte[received];
+                var payload = new byte[received];
                 Array.Copy(_buffer, payload, received);
-                Client.Send(new ReverseProxyData {ConnectionId = ConnectionId, Data = payload});
+                Client.Send(new ReverseProxyData { ConnectionId = ConnectionId, Data = payload });
 
                 LengthSent += payload.Length;
                 PacketsSended++;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Quasar.Server.Helper
+namespace Q3C273.Server.Helper
 {
     public static class ClipboardHelper
     {

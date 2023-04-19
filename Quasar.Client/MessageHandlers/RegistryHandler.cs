@@ -1,10 +1,9 @@
 ﻿using Everything.Extensions;
 using Everything.Helper;
 using Everything.Registry;
-using Everything.Registry;
-using Quasar.Common.Messages;
-using Quasar.Common.Models;
-using Quasar.Common.Networking;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Networking;
+using Q3C273.Shared.Models;
 using System;
 
 namespace Everything.MessageHandlers

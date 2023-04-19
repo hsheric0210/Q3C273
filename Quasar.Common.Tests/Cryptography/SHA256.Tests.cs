@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Quasar.Common.Cryptography;
-using Quasar.Common.Helpers;
+using Q3C273.Shared.Cryptography;
+using Q3C273.Shared.Helpers;
 
-namespace Quasar.Common.Tests.Cryptography
+namespace Q3C273.Shared.Tests.Cryptography
 {
     [TestClass]
     public class Sha256Tests

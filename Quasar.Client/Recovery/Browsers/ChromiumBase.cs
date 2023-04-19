@@ -1,10 +1,8 @@
-﻿using Everything.Recovery;
-using Everything.Recovery.Utilities;
-using Everything.Recovery.Browsers;
-using Quasar.Common.Models;
+﻿using Everything.Recovery.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Q3C273.Shared.Models;
 
 namespace Everything.Recovery.Browsers
 {

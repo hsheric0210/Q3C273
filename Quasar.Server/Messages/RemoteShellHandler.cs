@@ -1,8 +1,8 @@
-﻿using Quasar.Common.Messages;
-using Quasar.Common.Networking;
-using Quasar.Server.Networking;
+﻿using Q3C273.Server.Networking;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Networking;
 
-namespace Quasar.Server.Messages
+namespace Q3C273.Server.Messages
 {
     /// <summary>
     /// Handles messages for the interaction with the remote shell.
@@ -75,7 +75,7 @@ namespace Quasar.Server.Messages
         /// <param name="command">The command to execute.</param>
         public void SendCommand(string command)
         {
-            _client.Send(new DoShellExecute {Command = command});
+            _client.Send(new DoShellExecute { Command = command });
         }
 
         private void Execute(ISender client, DoShellExecuteResponse message)

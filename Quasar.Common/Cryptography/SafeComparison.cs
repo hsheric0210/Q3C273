@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace Quasar.Common.Cryptography
+namespace Q3C273.Shared.Cryptography
 {
     public class SafeComparison
     {
@@ -17,8 +17,8 @@ namespace Quasar.Common.Cryptography
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static bool AreEqual(byte[] a1, byte[] a2)
         {
-            bool result = true;
-            for (int i = 0; i < a1.Length; ++i)
+            var result = true;
+            for (var i = 0; i < a1.Length; ++i)
             {
                 if (a1[i] != a2[i])
                     result = false;

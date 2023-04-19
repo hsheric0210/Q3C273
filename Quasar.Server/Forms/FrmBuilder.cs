@@ -1,7 +1,7 @@
-﻿using Quasar.Common.DNS;
-using Quasar.Common.Helpers;
-using Quasar.Server.Build;
-using Quasar.Server.Models;
+﻿using Q3C273.Server.Models;
+using Q3C273.Shared.DNS;
+using Q3C273.Shared.Helpers;
+using Q3C273.Server.Build;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     public partial class FrmBuilder : Form
     {

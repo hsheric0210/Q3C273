@@ -1,9 +1,9 @@
 ﻿using Everything.Helper;
-using Quasar.Common.Enums;
-using Quasar.Common.Messages;
-using Quasar.Common.Networking;
-using Quasar.Common.Video;
-using Quasar.Common.Video.Codecs;
+using Q3C273.Shared.Enums;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Networking;
+using Q3C273.Shared.Video.Codecs;
+using Q3C273.Shared.Video;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;

@@ -1,7 +1,6 @@
 ﻿using Everything.Helper;
-using Everything.Recovery;
 using Microsoft.Win32;
-using Quasar.Common.Models;
+using Q3C273.Shared.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;

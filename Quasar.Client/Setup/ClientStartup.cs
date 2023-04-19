@@ -1,6 +1,6 @@
 ﻿using Everything.Helper;
 using Microsoft.Win32;
-using Quasar.Common.Enums;
+using Q3C273.Shared.Enums;
 using System.Diagnostics;
 
 namespace Everything.Setup

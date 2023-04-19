@@ -1,10 +1,10 @@
-﻿using Quasar.Server.Models;
+﻿using Q3C273.Server.Models;
 using System;
 using System.Net;
 using System.Text;
 using System.Threading;
 
-namespace Quasar.Server.Utilities
+namespace Q3C273.Server.Utilities
 {
     public static class NoIpUpdater
     {
@@ -12,8 +12,9 @@ namespace Quasar.Server.Utilities
 
         public static void Start()
         {
-            if (_running) return;
-            Thread updateThread = new Thread(BackgroundUpdater) {IsBackground = true};
+            if (_running)
+                return;
+            var updateThread = new Thread(BackgroundUpdater) { IsBackground = true };
             updateThread.Start();
         }
 
@@ -24,14 +25,14 @@ namespace Quasar.Server.Utilities
             {
                 try
                 {
-                    HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(string.Format("https://dynupdate.no-ip.com/nic/update?hostname={0}", Settings.NoIPHost));
+                    var request = (HttpWebRequest)WebRequest.Create(string.Format("https://dynupdate.no-ip.com/nic/update?hostname={0}", Settings.NoIPHost));
                     request.Proxy = null;
                     request.UserAgent = string.Format("Quasar No-Ip Updater/2.0 {0}", Settings.NoIPUsername);
                     request.Timeout = 10000;
                     request.Headers.Add(HttpRequestHeader.Authorization, string.Format("Basic {0}", Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", Settings.NoIPUsername, Settings.NoIPPassword)))));
                     request.Method = "GET";
 
-                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    using (var response = (HttpWebResponse)request.GetResponse())
                     {
                     }
                 }

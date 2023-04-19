@@ -1,6 +1,6 @@
-﻿using Quasar.Server.Controls;
+﻿using Q3C273.Server.Controls;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     partial class FrmPasswordRecovery
     {
@@ -74,7 +74,7 @@ namespace Quasar.Server.Forms
             this.saveToFileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveAllToolStripMenuItem,
             this.saveSelectedToolStripMenuItem});
-            this.saveToFileToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.save;
+            this.saveToFileToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.save;
             this.saveToFileToolStripMenuItem.Name = "saveToFileToolStripMenuItem";
             this.saveToFileToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.saveToFileToolStripMenuItem.Text = "Save to File";
@@ -98,7 +98,7 @@ namespace Quasar.Server.Forms
             this.copyToClipboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyAllToolStripMenuItem,
             this.copySelectedToolStripMenuItem});
-            this.copyToClipboardToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.page_copy;
+            this.copyToClipboardToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.page_copy;
             this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
             this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.copyToClipboardToolStripMenuItem.Text = "Copy to Clipboard";
@@ -127,7 +127,7 @@ namespace Quasar.Server.Forms
             this.clearToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clearAllToolStripMenuItem,
             this.clearSelectedToolStripMenuItem});
-            this.clearToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.delete;
+            this.clearToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.delete;
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
             this.clearToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.clearToolStripMenuItem.Text = "Clear";
@@ -148,7 +148,7 @@ namespace Quasar.Server.Forms
             // 
             // refreshToolStripMenuItem
             // 
-            this.refreshToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.refresh;
+            this.refreshToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.refresh;
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             this.refreshToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
@@ -268,7 +268,7 @@ namespace Quasar.Server.Forms
 
         #endregion
 
-        private Controls.AeroListView lstPasswords;
+        private AeroListView lstPasswords;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ColumnHeader hIdentification;
         private System.Windows.Forms.ColumnHeader hURL;

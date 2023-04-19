@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Quasar.Server.Networking
+namespace Q3C273.Server.Networking
 {
     /// <summary>
     /// Implements a pool of byte arrays to improve allocation performance when parsing data.
@@ -38,7 +38,7 @@ namespace Quasar.Server.Networking
         /// <param name="e">The event arguments.</param>
         protected virtual void OnBufferRequested(EventArgs e)
         {
-            var handler =BufferRequested;
+            var handler = BufferRequested;
             if (handler != null)
                 handler(this, e);
         }
@@ -53,7 +53,7 @@ namespace Quasar.Server.Networking
         /// <param name="e">The event arguments.</param>
         protected virtual void OnBufferReturned(EventArgs e)
         {
-            var handler = BufferReturned; 
+            var handler = BufferReturned;
             if (handler != null)
                 handler(this, e);
         }
@@ -103,7 +103,7 @@ namespace Quasar.Server.Networking
 
             _buffers = new Stack<byte[]>(baseBufferCount);
 
-            for (int i = 0; i < baseBufferCount; i++)
+            for (var i = 0; i < baseBufferCount; i++)
             {
                 _buffers.Push(new byte[baseBufferLength]);
             }
@@ -123,7 +123,7 @@ namespace Quasar.Server.Networking
             {
                 if (_buffers.Count > 0)
                 {
-                    byte[] buffer = _buffers.Pop();
+                    var buffer = _buffers.Pop();
                     return buffer;
                 }
             }
@@ -133,7 +133,7 @@ namespace Quasar.Server.Networking
 
         private byte[] AllocateNewBuffer()
         {
-            byte[] newBuffer = new byte[_bufferLength];
+            var newBuffer = new byte[_bufferLength];
             _bufferCount++;
             OnNewBufferAllocated(EventArgs.Empty);
 
@@ -182,8 +182,8 @@ namespace Quasar.Server.Networking
             if (buffersToAdd <= 0)
                 throw new ArgumentOutOfRangeException("buffersToAdd", buffersToAdd, "The number of buffers to add must be a nonnegative, nonzero integer.");
 
-            List<byte[]> newBuffers = new List<byte[]>(buffersToAdd);
-            for (int i = 0; i < buffersToAdd; i++)
+            var newBuffers = new List<byte[]>(buffersToAdd);
+            for (var i = 0; i < buffersToAdd; i++)
             {
                 newBuffers.Add(new byte[_bufferLength]);
             }
@@ -191,7 +191,7 @@ namespace Quasar.Server.Networking
             lock (_buffers)
             {
                 _bufferCount += buffersToAdd;
-                for (int i = 0; i < buffersToAdd; i++)
+                for (var i = 0; i < buffersToAdd; i++)
                 {
                     _buffers.Push(newBuffers[i]);
                 }
@@ -214,11 +214,11 @@ namespace Quasar.Server.Networking
             if (buffersToRemove <= 0)
                 throw new ArgumentOutOfRangeException("buffersToRemove", buffersToRemove, "The number of buffers to remove must be a nonnegative, nonzero integer.");
 
-            int numRemoved = 0;
+            var numRemoved = 0;
 
             lock (_buffers)
             {
-                for (int i = 0; i < buffersToRemove && _buffers.Count > 0; i++)
+                for (var i = 0; i < buffersToRemove && _buffers.Count > 0; i++)
                 {
                     _buffers.Pop();
                     numRemoved++;

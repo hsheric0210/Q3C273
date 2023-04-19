@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
 using ProtoBuf;
 
-namespace Quasar.Common.Messages
+namespace Q3C273.Shared.Messages
 {
     [ProtoContract]
     public class DoCreateRegistryValue : IMessage

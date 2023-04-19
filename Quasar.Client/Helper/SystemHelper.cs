@@ -1,4 +1,4 @@
-﻿using Quasar.Common.Helpers;
+﻿using Q3C273.Shared.Helpers;
 using System;
 using System.Management;
 

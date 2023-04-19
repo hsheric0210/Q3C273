@@ -1,9 +1,9 @@
 ﻿using Everything.Recovery;
 using Everything.Recovery.Browsers;
 using Everything.Recovery.FtpClients;
-using Quasar.Common.Messages;
-using Quasar.Common.Models;
-using Quasar.Common.Networking;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Models;
+using Q3C273.Shared.Networking;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

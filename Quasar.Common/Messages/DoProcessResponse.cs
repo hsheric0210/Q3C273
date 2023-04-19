@@ -1,7 +1,7 @@
 ﻿using ProtoBuf;
-using Quasar.Common.Enums;
+using Q3C273.Shared.Enums;
 
-namespace Quasar.Common.Messages
+namespace Q3C273.Shared.Messages
 {
     [ProtoContract]
     public class DoProcessResponse : IMessage

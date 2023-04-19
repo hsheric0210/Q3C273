@@ -1,9 +1,9 @@
 ﻿using Microsoft.Win32;
-using Quasar.Common.Models;
-using Quasar.Common.Utilities;
+using Q3C273.Shared.Models;
+using Q3C273.Shared.Utilities;
 using System;
 
-namespace Quasar.Server.Registry
+namespace Q3C273.Server.Registry
 {
     public class RegValueHelper
     {
@@ -11,7 +11,7 @@ namespace Quasar.Server.Registry
 
         public static bool IsDefaultValue(string valueName)
         {
-            return String.IsNullOrEmpty(valueName);
+            return string.IsNullOrEmpty(valueName);
         }
 
         public static string GetName(string valueName)

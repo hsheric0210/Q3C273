@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Quasar.Common.Messages
+namespace Q3C273.Shared.Messages
 {
     public static class TypeRegistry
     {
@@ -22,7 +22,7 @@ namespace Quasar.Common.Messages
             if (type == null || parent == null)
                 throw new ArgumentNullException();
 
-            bool isAlreadyAdded = RuntimeTypeModel.Default[parent].GetSubtypes().Any(subType => subType.DerivedType.Type == type);
+            var isAlreadyAdded = RuntimeTypeModel.Default[parent].GetSubtypes().Any(subType => subType.DerivedType.Type == type);
 
             if (!isAlreadyAdded)
                 RuntimeTypeModel.Default[parent].AddSubType(++_typeIndex, type);
@@ -35,7 +35,7 @@ namespace Quasar.Common.Messages
         /// <param name="types">Types to add.</param>
         public static void AddTypesToSerializer(Type parent, params Type[] types)
         {
-            foreach (Type type in types)
+            foreach (var type in types)
                 AddTypeToSerializer(parent, type);
         }
 

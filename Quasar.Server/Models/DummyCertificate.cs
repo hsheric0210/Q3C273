@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace Quasar.Server.Models
+namespace Q3C273.Server.Models
 {
     /// <summary>
     /// Provides a dummy certificate for debugging. Do not use in production.
@@ -193,7 +193,7 @@ namespace Quasar.Server.Models
         /// <summary>
         /// Initializes a new instance of <see cref="DummyCertificate"/> with a static dummy certificate.
         /// </summary>
-        public DummyCertificate() :base(CertificateBytes)
+        public DummyCertificate() : base(CertificateBytes)
         {
         }
     }

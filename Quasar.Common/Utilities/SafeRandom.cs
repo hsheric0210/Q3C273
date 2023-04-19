@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace Quasar.Common.Utilities
+namespace Q3C273.Shared.Utilities
 {
     /// <summary>
     /// Thread-safe random number generator.
@@ -18,7 +18,7 @@ namespace Quasar.Common.Utilities
         {
             if (_random == null)
             {
-                byte[] buffer = new byte[4];
+                var buffer = new byte[4];
                 GlobalCryptoProvider.GetBytes(buffer);
                 _random = new Random(BitConverter.ToInt32(buffer, 0));
             }

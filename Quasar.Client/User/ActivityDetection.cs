@@ -1,7 +1,7 @@
 ﻿using Everything.Helper;
 using Everything.Networking;
-using Quasar.Common.Enums;
-using Quasar.Common.Messages;
+using Q3C273.Shared.Enums;
+using Q3C273.Shared.Messages;
 using System;
 using System.Threading;
 

@@ -1,18 +1,18 @@
-﻿using Quasar.Common.Enums;
-using Quasar.Common.IO;
-using Quasar.Common.Messages;
-using Quasar.Common.Models;
-using Quasar.Common.Networking;
-using Quasar.Server.Enums;
-using Quasar.Server.Models;
-using Quasar.Server.Networking;
+﻿using Q3C273.Server.Enums;
+using Q3C273.Server.Models;
+using Q3C273.Server.Networking;
+using Q3C273.Shared.Enums;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Models;
+using Q3C273.Shared.Networking;
+using Q3C273.Shared.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace Quasar.Server.Messages
+namespace Q3C273.Server.Messages
 {
     /// <summary>
     /// Handles messages for the interaction with remote files and directories.
@@ -46,7 +46,7 @@ namespace Quasar.Server.Messages
         /// </summary>
         /// <remarks>
         /// Handlers registered with this event will be invoked on the 
-        /// <see cref="System.Threading.SynchronizationContext"/> chosen when the instance was constructed.
+        /// <see cref="SynchronizationContext"/> chosen when the instance was constructed.
         /// </remarks>
         public event DrivesChangedEventHandler DrivesChanged;
 
@@ -55,7 +55,7 @@ namespace Quasar.Server.Messages
         /// </summary>
         /// <remarks>
         /// Handlers registered with this event will be invoked on the 
-        /// <see cref="System.Threading.SynchronizationContext"/> chosen when the instance was constructed.
+        /// <see cref="SynchronizationContext"/> chosen when the instance was constructed.
         /// </remarks>
         public event DirectoryChangedEventHandler DirectoryChanged;
 
@@ -64,7 +64,7 @@ namespace Quasar.Server.Messages
         /// </summary>
         /// <remarks>
         /// Handlers registered with this event will be invoked on the 
-        /// <see cref="System.Threading.SynchronizationContext"/> chosen when the instance was constructed.
+        /// <see cref="SynchronizationContext"/> chosen when the instance was constructed.
         /// </remarks>
         public event FileTransferUpdatedEventHandler FileTransferUpdated;
 
@@ -197,15 +197,15 @@ namespace Quasar.Server.Messages
             if (string.IsNullOrEmpty(remotePath))
                 return;
 
-            int id = GetUniqueFileTransferId();
+            var id = GetUniqueFileTransferId();
 
             if (!Directory.Exists(_baseDownloadPath))
                 Directory.CreateDirectory(_baseDownloadPath);
 
-            string fileName = string.IsNullOrEmpty(localFileName) ? Path.GetFileName(remotePath) : localFileName;
-            string localPath = Path.Combine(_baseDownloadPath, fileName);
+            var fileName = string.IsNullOrEmpty(localFileName) ? Path.GetFileName(remotePath) : localFileName;
+            var localPath = Path.Combine(_baseDownloadPath, fileName);
 
-            int i = 1;
+            var i = 1;
             while (!overwrite && File.Exists(localPath))
             {
                 // rename file if it exists already
@@ -243,7 +243,7 @@ namespace Quasar.Server.Messages
 
             OnFileTransferUpdated(transfer);
 
-            _client.Send(new FileTransferRequest {RemotePath = remotePath, Id = id});
+            _client.Send(new FileTransferRequest { RemotePath = remotePath, Id = id });
         }
 
         /// <summary>
@@ -255,9 +255,9 @@ namespace Quasar.Server.Messages
         {
             new Thread(() =>
             {
-                int id = GetUniqueFileTransferId();
+                var id = GetUniqueFileTransferId();
 
-                FileTransfer transfer = new FileTransfer
+                var transfer = new FileTransfer
                 {
                     Id = id,
                     Type = TransferType.Upload,
@@ -294,7 +294,7 @@ namespace Quasar.Server.Messages
                     foreach (var chunk in transfer.FileSplit)
                     {
                         transfer.TransferredSize += chunk.Data.Length;
-                        decimal progress = transfer.Size == 0 ? 100 : Math.Round((decimal)((double)transfer.TransferredSize / (double)transfer.Size * 100.0), 2);
+                        var progress = transfer.Size == 0 ? 100 : Math.Round((decimal)(transfer.TransferredSize / (double)transfer.Size * 100.0), 2);
                         transfer.Status = $"Uploading...({progress}%)";
                         OnFileTransferUpdated(transfer);
 
@@ -350,7 +350,7 @@ namespace Quasar.Server.Messages
         /// <param name="transferId">The id of the file transfer to cancel.</param>
         public void CancelFileTransfer(int transferId)
         {
-            _client.Send(new FileTransferCancel {Id = transferId});
+            _client.Send(new FileTransferCancel { Id = transferId });
         }
 
         /// <summary>
@@ -376,7 +376,7 @@ namespace Quasar.Server.Messages
         /// <param name="type">The type of the file (file or directory).</param>
         public void DeleteFile(string remotePath, FileType type)
         {
-            _client.Send(new DoPathDelete {Path = remotePath, PathType = type});
+            _client.Send(new DoPathDelete { Path = remotePath, PathType = type });
         }
 
         /// <summary>
@@ -394,7 +394,7 @@ namespace Quasar.Server.Messages
         /// <param name="item">The startup item to add.</param>
         public void AddToStartup(StartupItem item)
         {
-            _client.Send(new DoStartupItemAdd {StartupItem = item});
+            _client.Send(new DoStartupItemAdd { StartupItem = item });
         }
 
         /// <summary>
@@ -403,7 +403,7 @@ namespace Quasar.Server.Messages
         /// <param name="remotePath">The remote path of the directory.</param>
         public void GetDirectoryContents(string remotePath)
         {
-            _client.Send(new GetDirectory {RemotePath = remotePath});
+            _client.Send(new GetDirectory { RemotePath = remotePath });
         }
 
         /// <summary>
@@ -440,7 +440,7 @@ namespace Quasar.Server.Messages
                 return;
             }
 
-            decimal progress = transfer.Size == 0 ? 100 : Math.Round((decimal) ((double) transfer.TransferredSize / (double) transfer.Size * 100.0), 2);
+            var progress = transfer.Size == 0 ? 100 : Math.Round((decimal)(transfer.TransferredSize / (double)transfer.Size * 100.0), 2);
             transfer.Status = $"Downloading...({progress}%)";
 
             OnFileTransferUpdated(transfer);
@@ -489,13 +489,11 @@ namespace Quasar.Server.Messages
 
             OnDrivesChanged(message.Drives);
         }
-        
+
         private void Execute(ISender client, GetDirectoryResponse message)
         {
             if (message.Items == null)
-            {
                 message.Items = new FileSystemEntry[0];
-            }
             OnDirectoryChanged(message.RemotePath, message.Items);
         }
 
@@ -506,7 +504,8 @@ namespace Quasar.Server.Messages
 
         private void ProcessActionPerformed(object sender, ProcessAction action, bool result)
         {
-            if (action != ProcessAction.Start) return;
+            if (action != ProcessAction.Start)
+                return;
             OnReport(result ? "Process started successfully" : "Process failed to start");
         }
 
@@ -560,7 +559,7 @@ namespace Quasar.Server.Messages
                 {
                     foreach (var transfer in _activeFileTransfers)
                     {
-                        _client.Send(new FileTransferCancel {Id = transfer.Id});
+                        _client.Send(new FileTransferCancel { Id = transfer.Id });
                         transfer.FileSplit?.Dispose();
                         if (transfer.Type == TransferType.Download)
                             File.Delete(transfer.LocalPath);

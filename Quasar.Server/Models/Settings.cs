@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace Quasar.Server.Models
+namespace Q3C273.Server.Models
 {
     public static class Settings
     {
@@ -159,10 +159,10 @@ namespace Quasar.Server.Models
         {
             try
             {
-                XPathDocument doc = new XPathDocument(SettingsPath);
-                XPathNavigator nav = doc.CreateNavigator();
-                XPathExpression expr = nav.Compile(@"/settings/" + pstrValueToRead);
-                XPathNodeIterator iterator = nav.Select(expr);
+                var doc = new XPathDocument(SettingsPath);
+                var nav = doc.CreateNavigator();
+                var expr = nav.Compile(@"/settings/" + pstrValueToRead);
+                var iterator = nav.Select(expr);
                 while (iterator.MoveNext())
                 {
                     return iterator.Current.Value;
@@ -178,15 +178,15 @@ namespace Quasar.Server.Models
 
         private static string ReadValueSafe(string pstrValueToRead, string defaultValue = "")
         {
-            string value = ReadValue(pstrValueToRead);
-            return (!string.IsNullOrEmpty(value)) ? value: defaultValue;
+            var value = ReadValue(pstrValueToRead);
+            return !string.IsNullOrEmpty(value) ? value : defaultValue;
         }
 
         private static void WriteValue(string pstrValueToRead, string pstrValueToWrite)
         {
             try
             {
-                XmlDocument doc = new XmlDocument();
+                var doc = new XmlDocument();
 
                 if (File.Exists(SettingsPath))
                 {
@@ -199,14 +199,12 @@ namespace Quasar.Server.Models
                 {
                     var dir = Path.GetDirectoryName(SettingsPath);
                     if (!Directory.Exists(dir))
-                    {
                         Directory.CreateDirectory(dir);
-                    }
                     doc.AppendChild(doc.CreateElement("settings"));
                 }
 
-                XmlElement root = doc.DocumentElement;
-                XmlNode oldNode = root.SelectSingleNode(@"/settings/" + pstrValueToRead);
+                var root = doc.DocumentElement;
+                var oldNode = root.SelectSingleNode(@"/settings/" + pstrValueToRead);
                 if (oldNode == null) // create if not exist
                 {
                     oldNode = doc.SelectSingleNode("settings");

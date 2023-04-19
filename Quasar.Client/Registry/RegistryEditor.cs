@@ -1,7 +1,7 @@
 ﻿using Everything.Extensions;
 using Everything.Helper;
 using Microsoft.Win32;
-using Quasar.Common.Models;
+using Q3C273.Shared.Models;
 using System;
 
 namespace Everything.Registry

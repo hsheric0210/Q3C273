@@ -1,4 +1,6 @@
-﻿namespace Quasar.Server.Forms
+﻿using Q3C273.Server.Controls;
+
+namespace Q3C273.Server.Forms
 {
     partial class FrmRemoteExecution
     {
@@ -39,7 +41,7 @@
             this.groupURL = new System.Windows.Forms.GroupBox();
             this.radioLocalFile = new System.Windows.Forms.RadioButton();
             this.radioURL = new System.Windows.Forms.RadioButton();
-            this.lstTransfers = new Quasar.Server.Controls.AeroListView();
+            this.lstTransfers = new Q3C273.Server.Controls.AeroListView();
             this.hClient = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chkUpdate = new System.Windows.Forms.CheckBox();
@@ -225,7 +227,7 @@
         private System.Windows.Forms.RadioButton radioLocalFile;
         private System.Windows.Forms.RadioButton radioURL;
         private System.Windows.Forms.Button btnBrowse;
-        private Controls.AeroListView lstTransfers;
+        private AeroListView lstTransfers;
         private System.Windows.Forms.ColumnHeader hClient;
         private System.Windows.Forms.ColumnHeader hStatus;
         private System.Windows.Forms.CheckBox chkUpdate;

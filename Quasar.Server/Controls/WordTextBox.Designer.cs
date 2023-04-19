@@ -1,4 +1,4 @@
-﻿namespace Quasar.Server.Controls
+﻿namespace Q3C273.Server.Controls
 {
     partial class WordTextBox
     {

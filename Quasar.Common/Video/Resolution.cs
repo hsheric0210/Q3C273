@@ -1,7 +1,7 @@
 ﻿using System;
 using ProtoBuf;
 
-namespace Quasar.Common.Video
+namespace Q3C273.Shared.Video
 {
     [ProtoContract]
     public class Resolution : IEquatable<Resolution>
@@ -14,8 +14,10 @@ namespace Quasar.Common.Video
 
         public bool Equals(Resolution other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
             return Width == other.Width && Height == other.Height;
         }
 

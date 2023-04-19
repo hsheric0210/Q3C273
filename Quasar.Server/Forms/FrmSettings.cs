@@ -1,12 +1,12 @@
-﻿using Quasar.Server.Networking;
-using Quasar.Server.Utilities;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Windows.Forms;
-using Quasar.Server.Models;
+using Q3C273.Server.Networking;
+using Q3C273.Server.Models;
+using Q3C273.Server.Utilities;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     public partial class FrmSettings : Form
     {

@@ -2,8 +2,8 @@
 using Everything.Extensions;
 using Everything.Helper;
 using Everything.MouseKeyHook;
-using Quasar.Common.Cryptography;
-using Quasar.Common.Helpers;
+using Q3C273.Shared.Cryptography;
+using Q3C273.Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

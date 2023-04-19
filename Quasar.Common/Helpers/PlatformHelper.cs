@@ -2,7 +2,7 @@
 using System.Management;
 using System.Text.RegularExpressions;
 
-namespace Quasar.Common.Helpers
+namespace Q3C273.Shared.Helpers
 {
     public static class PlatformHelper
     {
@@ -14,10 +14,10 @@ namespace Quasar.Common.Helpers
             Win32NT = Environment.OSVersion.Platform == PlatformID.Win32NT;
             XpOrHigher = Win32NT && Environment.OSVersion.Version.Major >= 5;
             VistaOrHigher = Win32NT && Environment.OSVersion.Version.Major >= 6;
-            SevenOrHigher = Win32NT && (Environment.OSVersion.Version >= new Version(6, 1));
-            EightOrHigher = Win32NT && (Environment.OSVersion.Version >= new Version(6, 2, 9200));
-            EightPointOneOrHigher = Win32NT && (Environment.OSVersion.Version >= new Version(6, 3));
-            TenOrHigher = Win32NT && (Environment.OSVersion.Version >= new Version(10, 0));
+            SevenOrHigher = Win32NT && Environment.OSVersion.Version >= new Version(6, 1);
+            EightOrHigher = Win32NT && Environment.OSVersion.Version >= new Version(6, 2, 9200);
+            EightPointOneOrHigher = Win32NT && Environment.OSVersion.Version >= new Version(6, 3);
+            TenOrHigher = Win32NT && Environment.OSVersion.Version >= new Version(10, 0);
             RunningOnMono = Type.GetType("Mono.Runtime") != null;
 
             Name = "Unknown OS";
@@ -38,7 +38,7 @@ namespace Quasar.Common.Helpers
         /// <summary>
         /// Gets the full name of the operating system running on this computer (including the edition and architecture).
         /// </summary>
-        public static string FullName { get; } 
+        public static string FullName { get; }
 
         /// <summary>
         /// Gets the name of the operating system running on this computer (including the edition).

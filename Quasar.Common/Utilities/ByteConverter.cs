@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Quasar.Common.Utilities
+namespace Q3C273.Shared.Utilities
 {
     public class ByteConverter
     {
@@ -76,16 +76,16 @@ namespace Quasar.Common.Utilities
 
         private static byte[] StringToBytes(string value)
         {
-            byte[] bytes = new byte[value.Length * sizeof(char)];
+            var bytes = new byte[value.Length * sizeof(char)];
             Buffer.BlockCopy(value.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
 
         private static byte[] StringArrayToBytes(string[] strings)
         {
-            List<byte> bytes = new List<byte>();
+            var bytes = new List<byte>();
 
-            foreach(string str in strings)
+            foreach (var str in strings)
             {
                 bytes.AddRange(StringToBytes(str));
                 bytes.AddRange(GetNullBytes());
@@ -96,28 +96,26 @@ namespace Quasar.Common.Utilities
 
         private static string BytesToString(byte[] bytes)
         {
-            int nrChars = (int)Math.Ceiling((float)bytes.Length / (float)sizeof(char));
-            char[] chars = new char[nrChars];
+            var nrChars = (int)Math.Ceiling(bytes.Length / (float)sizeof(char));
+            var chars = new char[nrChars];
             Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
             return new string(chars);
         }
 
         private static string[] BytesToStringArray(byte[] bytes)
         {
-            List<string> strings = new List<string>();
+            var strings = new List<string>();
 
-            int i = 0;
-            StringBuilder strBuilder = new StringBuilder(bytes.Length);
+            var i = 0;
+            var strBuilder = new StringBuilder(bytes.Length);
             while (i < bytes.Length)
             {
                 //Holds the number of nulls (3 nulls indicated end of a string)
-                int nullcount = 0;
+                var nullcount = 0;
                 while (i < bytes.Length && nullcount < 3)
                 {
                     if (bytes[i] == NULL_BYTE)
-                    {
                         nullcount++;
-                    }
                     else
                     {
                         strBuilder.Append(Convert.ToChar(bytes[i]));

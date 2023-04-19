@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Quasar.Server.Utilities;
+using Q3C273.Server.Utilities;
 
-namespace Quasar.Server.Controls
+namespace Q3C273.Server.Controls
 {
     public interface IRapidPictureBox
     {
@@ -120,14 +120,14 @@ namespace Quasar.Server.Controls
             {
                 CountFps();
 
-                if ((ScreenWidth != bmp.Width) && (ScreenHeight != bmp.Height))
+                if (ScreenWidth != bmp.Width && ScreenHeight != bmp.Height)
                     UpdateScreenSize(bmp.Width, bmp.Height);
 
                 lock (_imageLock)
                 {
                     // get old image to dispose it correctly
                     var oldImage = GetImageSafe;
-                    
+
                     SuspendLayout();
                     GetImageSafe = cloneBitmap ? new Bitmap(bmp, Width, Height) /*resize bitmap*/ : bmp;
                     ResumeLayout();
@@ -148,14 +148,14 @@ namespace Quasar.Server.Controls
         /// </summary>
         public RapidPictureBox()
         {
-            this.SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
         }
 
         protected override CreateParams CreateParams
         {
             get
             {
-                CreateParams cp = base.CreateParams;
+                var cp = base.CreateParams;
                 cp.ExStyle |= 0x02000000;  // Turn on WS_EX_COMPOSITED
                 return cp;
             }
@@ -166,9 +166,7 @@ namespace Quasar.Server.Controls
             lock (_imageLock)
             {
                 if (GetImageSafe != null)
-                {
                     pe.Graphics.DrawImage(GetImageSafe, Location);
-                }
             }
         }
 

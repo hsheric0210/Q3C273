@@ -1,9 +1,9 @@
-﻿using Quasar.Server.Forms;
+﻿using Q3C273.Server.Forms;
 using System;
 using System.Net;
 using System.Windows.Forms;
 
-namespace Quasar.Server
+namespace Q3C273.Server
 {
     internal static class Program
     {

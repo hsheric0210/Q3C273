@@ -1,12 +1,12 @@
-﻿using Quasar.Common.Cryptography;
-using Quasar.Common.Messages;
+﻿using Q3C273.Shared.Cryptography;
+using Q3C273.Shared.Messages;
 using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace Quasar.Server.Networking
+namespace Q3C273.Server.Networking
 {
     public class QuasarServer : Server
     {
@@ -35,7 +35,8 @@ namespace Quasar.Server.Networking
         /// <param name="client">The connected client.</param>
         private void OnClientConnected(Client client)
         {
-            if (ProcessingDisconnect || !Listening) return;
+            if (ProcessingDisconnect || !Listening)
+                return;
             var handler = ClientConnected;
             handler?.Invoke(client);
         }
@@ -57,7 +58,8 @@ namespace Quasar.Server.Networking
         /// <param name="client">The disconnected client.</param>
         private void OnClientDisconnected(Client client)
         {
-            if (ProcessingDisconnect || !Listening) return;
+            if (ProcessingDisconnect || !Listening)
+                return;
             var handler = ClientDisconnected;
             handler?.Invoke(client);
         }
@@ -68,8 +70,8 @@ namespace Quasar.Server.Networking
         /// <param name="serverCertificate">The server certificate.</param>
         public QuasarServer(X509Certificate2 serverCertificate) : base(serverCertificate)
         {
-            base.ClientState += OnClientState;
-            base.ClientRead += OnClientRead;
+            ClientState += OnClientState;
+            ClientRead += OnClientRead;
         }
 
         /// <summary>
@@ -83,9 +85,7 @@ namespace Quasar.Server.Networking
             if (!connected)
             {
                 if (client.Identified)
-                {
                     OnClientDisconnected(client);
-                }
             }
         }
 
@@ -99,12 +99,12 @@ namespace Quasar.Server.Networking
         {
             if (!client.Identified)
             {
-                if (message.GetType() == typeof (ClientIdentification))
+                if (message.GetType() == typeof(ClientIdentification))
                 {
-                    client.Identified = IdentifyClient(client, (ClientIdentification) message);
+                    client.Identified = IdentifyClient(client, (ClientIdentification)message);
                     if (client.Identified)
                     {
-                        client.Send(new ClientIdentificationResult {Result = true}); // finish handshake
+                        client.Send(new ClientIdentificationResult { Result = true }); // finish handshake
                         OnClientConnected(client);
                     }
                     else

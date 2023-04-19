@@ -1,6 +1,6 @@
-﻿using Quasar.Common.Messages;
+﻿using Q3C273.Shared.Messages;
 
-namespace Quasar.Common.Networking
+namespace Q3C273.Shared.Networking
 {
     public interface ISender
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Quasar.Server.Utilities
+namespace Q3C273.Server.Utilities
 {
     public class FrameUpdatedEventArgs : EventArgs
     {
@@ -30,7 +30,7 @@ namespace Quasar.Server.Utilities
 
         public void Update(float deltaTime)
         {
-            float currentFramesPerSecond = 1.0f / deltaTime;
+            var currentFramesPerSecond = 1.0f / deltaTime;
 
             _sampleBuffer.Enqueue(currentFramesPerSecond);
 
@@ -52,7 +52,7 @@ namespace Quasar.Server.Utilities
 
         protected virtual void OnFrameUpdated(FrameUpdatedEventArgs e)
         {
-            FrameUpdatedEventHandler handler = FrameUpdated;
+            var handler = FrameUpdated;
             if (handler != null)
                 handler(e);
         }

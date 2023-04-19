@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Win32;
 
-namespace Quasar.Server.Extensions
+namespace Q3C273.Server.Extensions
 {
     public static class RegistryKeyExtensions
     {
@@ -17,9 +17,9 @@ namespace Quasar.Server.Extensions
                 case RegistryValueKind.MultiString:
                     return string.Join(" ", (string[])valueData);
                 case RegistryValueKind.DWord:   //Convert with hexadecimal before int
-                    return String.Format("0x{0} ({1})", ((uint)((int)valueData)).ToString("x8"), ((uint)((int)valueData)).ToString());
+                    return string.Format("0x{0} ({1})", ((uint)(int)valueData).ToString("x8"), ((uint)(int)valueData).ToString());
                 case RegistryValueKind.QWord:
-                    return String.Format("0x{0} ({1})", ((ulong)((long)valueData)).ToString("x8"), ((ulong)((long)valueData)).ToString());
+                    return string.Format("0x{0} ({1})", ((ulong)(long)valueData).ToString("x8"), ((ulong)(long)valueData).ToString());
                 case RegistryValueKind.String:
                 case RegistryValueKind.ExpandString:
                     return valueData.ToString();

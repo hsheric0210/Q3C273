@@ -1,10 +1,10 @@
-﻿using Quasar.Common.Enums;
-using Quasar.Common.Messages;
-using Quasar.Server.Extensions;
-using Quasar.Server.Messages;
-using Quasar.Server.Models;
-using Quasar.Server.Networking;
-using Quasar.Server.Utilities;
+﻿using Q3C273.Server.Extensions;
+using Q3C273.Server.Messages;
+using Q3C273.Server.Models;
+using Q3C273.Server.Networking;
+using Q3C273.Server.Utilities;
+using Q3C273.Shared.Enums;
+using Q3C273.Shared.Messages;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +14,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     public partial class FrmMain : Form
     {
@@ -168,7 +168,7 @@ namespace Quasar.Server.Forms
             UpdateWindowTitle();
         }
 
-        private void ServerState(Networking.Server server, bool listening, ushort port)
+        private void ServerState(Q3C273.Server.Networking.Server server, bool listening, ushort port)
         {
             try
             {

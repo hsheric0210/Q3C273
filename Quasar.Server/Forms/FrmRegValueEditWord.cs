@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
 using Microsoft.Win32;
-using Quasar.Common.Models;
-using Quasar.Common.Utilities;
-using Quasar.Server.Enums;
+using Q3C273.Server.Enums;
+using Q3C273.Shared.Models;
+using Q3C273.Shared.Utilities;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     public partial class FrmRegValueEditWord : Form
     {

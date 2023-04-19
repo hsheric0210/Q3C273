@@ -1,8 +1,8 @@
-﻿using Quasar.Server.Models;
+﻿using Q3C273.Server.Models;
 using System.Collections;
 using System.Windows.Forms;
 
-namespace Quasar.Server.Utilities
+namespace Q3C273.Server.Utilities
 {
     public class ListViewColumnSorter : IComparer
     {
@@ -52,8 +52,8 @@ namespace Quasar.Server.Utilities
         public int Compare(object x, object y)
         {
             // Cast the objects to be compared to ListViewItem objects
-            var listviewX = (ListViewItem) x;
-            var listviewY = (ListViewItem) y;
+            var listviewX = (ListViewItem)x;
+            var listviewY = (ListViewItem)y;
 
             if (listviewX.SubItems[0].Text == ".." || listviewY.SubItems[0].Text == "..")
                 return 0;
@@ -70,7 +70,7 @@ namespace Quasar.Server.Utilities
                     // fileSize to be compared
                     a = (listviewX.Tag as FileManagerListTag).FileSize;
                     b = (listviewY.Tag as FileManagerListTag).FileSize;
-                    compareResult = a >= b ? (a == b ? 0 : 1) : -1;
+                    compareResult = a >= b ? a == b ? 0 : 1 : -1;
 
                 }
                 else
@@ -78,7 +78,7 @@ namespace Quasar.Server.Utilities
                     if (long.TryParse(listviewX.SubItems[_columnToSort].Text, out a)
                         && long.TryParse(listviewY.SubItems[_columnToSort].Text, out b))
                     {
-                        compareResult = a >= b ? (a == b ? 0 : 1) : -1;
+                        compareResult = a >= b ? a == b ? 0 : 1 : -1;
                     }
                     else
                     {
@@ -95,14 +95,12 @@ namespace Quasar.Server.Utilities
 
             // Calculate correct return value based on object comparison
             if (_orderOfSort == SortOrder.Ascending)
-            {
                 // Ascending sort is selected, return normal result of compare operation
                 return compareResult;
-            }
             else if (_orderOfSort == SortOrder.Descending)
             {
                 // Descending sort is selected, return negative result of compare operation
-                return (-compareResult);
+                return -compareResult;
             }
             else
             {

@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Quasar.Server.Controls.HexEditor
+namespace Q3C273.Server.Controls.HexEditor
 {
     /*
     * Derived and Adapted from Bernhard Elbl 
@@ -293,7 +293,8 @@ namespace Quasar.Server.Controls.HexEditor
                 if (CharSizeChanged != null)
                     CharSizeChanged(this, EventArgs.Empty);
             }
-        }SizeF _charSize;
+        }
+        SizeF _charSize;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int MaxBytesV
@@ -332,7 +333,8 @@ namespace Quasar.Server.Controls.HexEditor
                 UpdateRectanglePositioning();
                 Invalidate();
             }
-        }bool _isVScrollHidden = true;
+        }
+        bool _isVScrollHidden = true;
 
         #endregion
 
@@ -355,7 +357,8 @@ namespace Quasar.Server.Controls.HexEditor
                 UpdateRectanglePositioning();
                 Invalidate();
             }
-        }int _bytesPerLine = 8;
+        }
+        int _bytesPerLine = 8;
 
         /// <summary>
         /// Contains the margin between each
@@ -374,7 +377,8 @@ namespace Quasar.Server.Controls.HexEditor
                 UpdateRectanglePositioning();
                 Invalidate();
             }
-        }int _entityMargin = 10;
+        }
+        int _entityMargin = 10;
 
         /// <summary>
         /// Contains the type of border 
@@ -396,7 +400,8 @@ namespace Quasar.Server.Controls.HexEditor
                 UpdateRectanglePositioning();
                 Invalidate();
             }
-        }BorderStyle _borderStyle = BorderStyle.Fixed3D;
+        }
+        BorderStyle _borderStyle = BorderStyle.Fixed3D;
 
         /// <summary>
         /// Contains the color for the border 
@@ -415,7 +420,8 @@ namespace Quasar.Server.Controls.HexEditor
                 _borderColor = value;
                 Invalidate();
             }
-        }Color _borderColor = Color.Empty;
+        }
+        Color _borderColor = Color.Empty;
 
         /// <summary>
         /// Contains the color of the selected
@@ -432,7 +438,8 @@ namespace Quasar.Server.Controls.HexEditor
 
                 _selectionBackColor = value;
             }
-        }Color _selectionBackColor = Color.Blue;
+        }
+        Color _selectionBackColor = Color.Blue;
 
         /// <summary>
         /// Contains the color of the selected
@@ -449,7 +456,8 @@ namespace Quasar.Server.Controls.HexEditor
 
                 _selectionForeColor = value;
             }
-        }Color _selectionForeColor = Color.White;
+        }
+        Color _selectionForeColor = Color.White;
 
         /// <summary>
         /// Contains the case type for the
@@ -473,7 +481,8 @@ namespace Quasar.Server.Controls.HexEditor
 
                 Invalidate();
             }
-        }CaseStyle _lineCountCaseStyle = CaseStyle.UpperCase;
+        }
+        CaseStyle _lineCountCaseStyle = CaseStyle.UpperCase;
 
         /// <summary>
         /// Contains the case type for the
@@ -497,7 +506,8 @@ namespace Quasar.Server.Controls.HexEditor
 
                 Invalidate();
             }
-        }CaseStyle _hexViewCaseStyle = CaseStyle.UpperCase;
+        }
+        CaseStyle _hexViewCaseStyle = CaseStyle.UpperCase;
 
         /// <summary>
         /// Property that contains if the
@@ -518,7 +528,8 @@ namespace Quasar.Server.Controls.HexEditor
                 UpdateRectanglePositioning();
                 Invalidate();
             }
-        }bool _isVScrollVisible = false;
+        }
+        bool _isVScrollVisible = false;
 
         #endregion
 
@@ -678,7 +689,7 @@ namespace Quasar.Server.Controls.HexEditor
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (this.Focused)
+            if (Focused)
             {
                 if (_handler != null)
                     _handler.OnMouseDown(e);
@@ -691,7 +702,7 @@ namespace Quasar.Server.Controls.HexEditor
             }
             else
             {
-                this.Focus();
+                Focus();
             }
 
             base.OnMouseDown(e);
@@ -699,7 +710,7 @@ namespace Quasar.Server.Controls.HexEditor
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (this.Focused)
+            if (Focused)
             {
                 if (_dragging)
                 {
@@ -717,7 +728,7 @@ namespace Quasar.Server.Controls.HexEditor
         {
             _dragging = false;
 
-            if (this.Focused)
+            if (Focused)
             {
                 if (_handler != null)
                     _handler.OnMouseUp(e);
@@ -728,7 +739,7 @@ namespace Quasar.Server.Controls.HexEditor
 
         protected override void OnMouseDoubleClick(MouseEventArgs e)
         {
-            if (this.Focused)
+            if (Focused)
             {
                 if (_handler != null)
                     _handler.OnMouseDoubleClick(e);
@@ -880,8 +891,8 @@ namespace Quasar.Server.Controls.HexEditor
 
         public void RemoveSelectedBytes()
         {
-            int index = SelectionStart;
-            int length = SelectionLength;
+            var index = SelectionStart;
+            var length = SelectionLength;
             if (length > 0)
             {
                 lock (_hexTableLock)
@@ -987,7 +998,7 @@ namespace Quasar.Server.Controls.HexEditor
                 //Update the Caret
                 if (CaretFocused)
                 {
-                    Point caretLocation = new Point(CaretPosX, CaretPosY);
+                    var caretLocation = new Point(CaretPosX, CaretPosY);
                     caretLocation.Y += _recLineCount.Height * lines;
 
                     lock (_caretLock)
@@ -1002,7 +1013,7 @@ namespace Quasar.Server.Controls.HexEditor
         {
             if (_vScrollPos <= _vScrollMax - _vScrollLarge)
             {
-                lines = (lines + _vScrollPos) > (_vScrollMax - _vScrollLarge) ? (_vScrollMax - _vScrollLarge) - _vScrollPos + 1 : lines;
+                lines = lines + _vScrollPos > _vScrollMax - _vScrollLarge ? _vScrollMax - _vScrollLarge - _vScrollPos + 1 : lines;
                 //Scroll up
                 _vScrollPos += _vScrollSmall * lines;
                 //Update the visible bytes
@@ -1011,14 +1022,14 @@ namespace Quasar.Server.Controls.HexEditor
                 //Update the Caret
                 if (CaretFocused)
                 {
-                    Point caretLocation = new Point(CaretPosX, CaretPosY);
+                    var caretLocation = new Point(CaretPosX, CaretPosY);
                     caretLocation.Y -= _recLineCount.Height * lines;
 
                     lock (_caretLock)
                     {
                         _caret.SetCaretLocation(caretLocation);
                         if (caretLocation.Y < _recContent.Y)
-                            _caret.Hide(this.Handle);
+                            _caret.Hide(Handle);
                     }
                 }
             }
@@ -1030,9 +1041,7 @@ namespace Quasar.Server.Controls.HexEditor
                 return;
 
             if (lines < 0)
-            {
-                ScrollLineUp((-1) * lines);
-            }
+                ScrollLineUp(-1 * lines);
             else
             {
                 ScrollLineDown(lines);
@@ -1053,25 +1062,21 @@ namespace Quasar.Server.Controls.HexEditor
                 UpdateScrollValues();
 
                 if (CaretFocused)
-                {
                     position.Y = _recContent.Y;
-                }
             }
             else if (position.Y > _maxVisibleBytesV * _recLineCount.Height)
             {
                 //Need to scroll down until caret is visible
-                _vScrollPos += ((position.Y) / _recLineCount.Height - (_maxVisibleBytesV - 1)) * _vScrollSmall;
+                _vScrollPos += (position.Y / _recLineCount.Height - (_maxVisibleBytesV - 1)) * _vScrollSmall;
 
-                if (_vScrollPos > (_vScrollMax - (_vScrollLarge - 1)))
-                    _vScrollPos = (_vScrollMax - (_vScrollLarge - 1));
+                if (_vScrollPos > _vScrollMax - (_vScrollLarge - 1))
+                    _vScrollPos = _vScrollMax - (_vScrollLarge - 1);
 
                 UpdateVisibleByteIndex();
                 UpdateScrollValues();
 
                 if (CaretFocused)
-                {
                     position.Y = (_maxVisibleBytesV - 1) * _recLineCount.Height + _recContent.Y;
-                }
             }
             return position;
         }
@@ -1087,7 +1092,7 @@ namespace Quasar.Server.Controls.HexEditor
 
             //Start by calculating the size of a char
             SizeF charSize;
-            using (var graphics = this.CreateGraphics())
+            using (var graphics = CreateGraphics())
             {
                 charSize = graphics.MeasureString("D", Font, 100, _stringFormat);
             }
@@ -1126,15 +1131,15 @@ namespace Quasar.Server.Controls.HexEditor
                 _vScrollBar.Height = _recContent.Height;
             }
 
-            _recLineCount = new Rectangle(_recContent.X, _recContent.Y, (int)(_charSize.Width * 4), (int)(_charSize.Height) - 2);
+            _recLineCount = new Rectangle(_recContent.X, _recContent.Y, (int)(_charSize.Width * 4), (int)_charSize.Height - 2);
 
             _editView.Update(_recLineCount.X + _recLineCount.Width + _entityMargin / 2, _recContent);
 
             //Calculate needed maximums for the bytes
             _maxBytesH = _bytesPerLine;
-            _maxBytesV = (int)Math.Ceiling(((float)_recContent.Height / (float)_recLineCount.Height));
+            _maxBytesV = (int)Math.Ceiling(_recContent.Height / (float)_recLineCount.Height);
             _maxBytes = _maxBytesH * _maxBytesV;
-            _maxVisibleBytesV = (int)Math.Floor(((float)_recContent.Height / (float)_recLineCount.Height));
+            _maxVisibleBytesV = (int)Math.Floor(_recContent.Height / (float)_recLineCount.Height);
 
             UpdateScrollBarSize();
         }
@@ -1149,7 +1154,7 @@ namespace Quasar.Server.Controls.HexEditor
             else
             {
                 _firstByte = _vScrollPos * _maxBytesH;
-                _lastByte = (int)Math.Min(HexTableLength, _firstByte + _maxBytes);
+                _lastByte = Math.Min(HexTableLength, _firstByte + _maxBytes);
             }
         }
 
@@ -1177,15 +1182,15 @@ namespace Quasar.Server.Controls.HexEditor
             if (VScrollBarVisisble && _maxVisibleBytesV > 0 && _maxBytesH > 0)
             {
                 //Holds the size of a page (number of rows per page)
-                int largeScroll = _maxVisibleBytesV;
+                var largeScroll = _maxVisibleBytesV;
                 //Holds the row size (1)
-                int smallScroll = 1;
+                var smallScroll = 1;
                 //Holds the minimum value of the scrollbar
-                int minScroll = 0;
+                var minScroll = 0;
                 //Holds the maximum value of the scrollbar
-                int maxScroll = HexTableLength / _maxBytesH;
+                var maxScroll = HexTableLength / _maxBytesH;
                 //Holds the current positon on the scrollbar
-                int posScroll = _firstByte / _maxBytesH;
+                var posScroll = _firstByte / _maxBytesH;
 
                 if (largeScroll != _vScrollLarge || smallScroll != _vScrollSmall)
                 {
@@ -1258,7 +1263,7 @@ namespace Quasar.Server.Controls.HexEditor
             _handler = _editView;
 
             //Set defualt cursor
-            this.Cursor = Cursors.IBeam;
+            Cursor = Cursors.IBeam;
         }
 
         #endregion
@@ -1267,9 +1272,9 @@ namespace Quasar.Server.Controls.HexEditor
 
         private RectangleF GetLineCountBound(int index)
         {
-            RectangleF ret = new RectangleF(
+            var ret = new RectangleF(
                 _recLineCount.X,
-                _recLineCount.Y + (_recLineCount.Height * index),
+                _recLineCount.Y + _recLineCount.Height * index,
                 _recLineCount.Width,
                 _recLineCount.Height
                 );
@@ -1286,15 +1291,15 @@ namespace Quasar.Server.Controls.HexEditor
 
             if (BorderStyle == BorderStyle.Fixed3D)
             {
-                SolidBrush brush = new SolidBrush(BackColor);
-                Rectangle rect = ClientRectangle;
+                var brush = new SolidBrush(BackColor);
+                var rect = ClientRectangle;
                 pevent.Graphics.FillRectangle(brush, rect);
                 ControlPaint.DrawBorder3D(pevent.Graphics, ClientRectangle, Border3DStyle.Sunken);
             }
             else if (BorderStyle == BorderStyle.FixedSingle)
             {
-                SolidBrush brush = new SolidBrush(BackColor);
-                Rectangle rect = ClientRectangle;
+                var brush = new SolidBrush(BackColor);
+                var rect = ClientRectangle;
                 pevent.Graphics.FillRectangle(brush, rect);
                 ControlPaint.DrawBorder(pevent.Graphics, ClientRectangle, BorderColor, ButtonBorderStyle.Solid);
             }
@@ -1308,7 +1313,7 @@ namespace Quasar.Server.Controls.HexEditor
         {
             base.OnPaint(e);
 
-            Region r = new Region(ClientRectangle);
+            var r = new Region(ClientRectangle);
             r.Exclude(_recContent);
             e.Graphics.ExcludeClip(r);
 
@@ -1321,20 +1326,18 @@ namespace Quasar.Server.Controls.HexEditor
 
         private void PaintLineCount(Graphics g, int startIndex, int lastIndex)
         {
-            SolidBrush brush = new SolidBrush(ForeColor);
+            var brush = new SolidBrush(ForeColor);
 
-            for (int i = 0; ((i * _maxBytesH) + startIndex) <= lastIndex; i++)
+            for (var i = 0; i * _maxBytesH + startIndex <= lastIndex; i++)
             {
-                RectangleF drawSurface = GetLineCountBound(i);
-                string lineCount = (startIndex + (i * _maxBytesH)).ToString(_lineCountCaps);
+                var drawSurface = GetLineCountBound(i);
+                var lineCount = (startIndex + i * _maxBytesH).ToString(_lineCountCaps);
                 //Calculate how many '0' need to be added to the current count
-                int zeros = _nrCharsLineCount - lineCount.Length;
+                var zeros = _nrCharsLineCount - lineCount.Length;
 
                 string lineStr;
                 if (zeros > -1)
-                {
                     lineStr = new string('0', zeros) + lineCount;
-                }
                 else
                 {
                     lineStr = new string('~', _nrCharsLineCount);

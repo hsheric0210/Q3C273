@@ -1,4 +1,4 @@
-﻿using Quasar.Common.Messages.ReverseProxy;
+﻿using Q3C273.Shared.Messages.ReverseProxy;
 using System;
 using System.Net;
 using System.Net.Sockets;

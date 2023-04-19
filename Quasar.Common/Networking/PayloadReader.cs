@@ -1,9 +1,9 @@
 ﻿using ProtoBuf;
-using Quasar.Common.Messages;
+using Q3C273.Shared.Messages;
 using System;
 using System.IO;
 
-namespace Quasar.Common.Networking
+namespace Q3C273.Shared.Networking
 {
     public class PayloadReader : MemoryStream
     {
@@ -31,7 +31,7 @@ namespace Quasar.Common.Networking
         {
             if (_innerStream.Position + length <= _innerStream.Length)
             {
-                byte[] result = new byte[length];
+                var result = new byte[length];
                 _innerStream.Read(result, 0, result.Length);
                 return result;
             }
@@ -49,7 +49,7 @@ namespace Quasar.Common.Networking
              * it would cause to much trouble to check here for split or not fully
              * received packets.
              */
-            IMessage message = Serializer.Deserialize<IMessage>(_innerStream);
+            var message = Serializer.Deserialize<IMessage>(_innerStream);
             return message;
         }
 
@@ -58,9 +58,7 @@ namespace Quasar.Common.Networking
             try
             {
                 if (LeaveInnerStreamOpen)
-                {
                     _innerStream.Flush();
-                }
                 else
                 {
                     _innerStream.Close();

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Quasar.Common.Messages;
-using Quasar.Server.Extensions;
-using Quasar.Server.Helper;
-using Quasar.Server.Messages;
-using Quasar.Server.Networking;
+using Q3C273.Server.Extensions;
+using Q3C273.Server.Helper;
+using Q3C273.Server.Messages;
+using Q3C273.Server.Networking;
+using Q3C273.Shared.Messages;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     public partial class FrmSystemInformation : Form
     {

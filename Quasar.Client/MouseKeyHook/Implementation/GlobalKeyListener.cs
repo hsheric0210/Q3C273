@@ -3,7 +3,6 @@
 // See license.txt or https://mit-license.org/
 
 using System.Collections.Generic;
-using Everything.MouseKeyHook;
 using Everything.MouseKeyHook.WinApi;
 
 namespace Everything.MouseKeyHook.Implementation

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
 using ProtoBuf;
 
-namespace Quasar.Common.Models
+namespace Q3C273.Shared.Models
 {
     [ProtoContract]
     public class RegValueData

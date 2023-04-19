@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Forms;
-using Quasar.Server.Enums;
+using Q3C273.Server.Enums;
 
-namespace Quasar.Server.Controls
+namespace Q3C273.Server.Controls
 {
     public partial class WordTextBox : TextBox
     {

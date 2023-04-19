@@ -1,4 +1,4 @@
-﻿namespace Quasar.Server.Forms
+﻿namespace Q3C273.Server.Forms
 {
     partial class FrmRegValueEditMultiString
     {

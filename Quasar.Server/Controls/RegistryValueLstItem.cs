@@ -1,48 +1,51 @@
 ﻿using System.Windows.Forms;
-using Quasar.Common.Models;
-using Quasar.Server.Extensions;
-using Quasar.Server.Registry;
+using Q3C273.Server.Extensions;
+using Q3C273.Server.Registry;
+using Q3C273.Shared.Models;
 
-namespace Quasar.Server.Controls
+namespace Q3C273.Server.Controls
 {
     public class RegistryValueLstItem : ListViewItem
     {
         private string _type { get; set; }
         private string _data { get; set; }
 
-        public string RegName {
-            get { return this.Name; }
-            set 
-            { 
-                this.Name = value;
-                this.Text = RegValueHelper.GetName(value);
+        public string RegName
+        {
+            get { return Name; }
+            set
+            {
+                Name = value;
+                Text = RegValueHelper.GetName(value);
             }
         }
-        public string Type {
+        public string Type
+        {
             get { return _type; }
             set
             {
                 _type = value;
 
-                if (this.SubItems.Count < 2)
-                    this.SubItems.Add(_type);
+                if (SubItems.Count < 2)
+                    SubItems.Add(_type);
                 else
-                    this.SubItems[1].Text = _type;
+                    SubItems[1].Text = _type;
 
-                this.ImageIndex = GetRegistryValueImgIndex(_type);
+                ImageIndex = GetRegistryValueImgIndex(_type);
             }
         }
 
-        public string Data {
+        public string Data
+        {
             get { return _data; }
             set
             {
                 _data = value;
 
-                if (this.SubItems.Count < 3)
-                    this.SubItems.Add(_data);
-                else 
-                    this.SubItems[2].Text = _data;
+                if (SubItems.Count < 3)
+                    SubItems.Add(_data);
+                else
+                    SubItems[2].Text = _data;
             }
         }
 

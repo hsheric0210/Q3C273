@@ -1,6 +1,6 @@
-﻿using Quasar.Server.Controls;
+﻿using Q3C273.Server.Controls;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     partial class FrmRegistryEditor
     {
@@ -636,8 +636,8 @@ namespace Quasar.Server.Forms
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
         private System.Windows.Forms.SplitContainer splitContainer;
-        private Controls.RegistryTreeView tvRegistryDirectory;
-        private Controls.AeroListView lstRegistryValues;
+        private RegistryTreeView tvRegistryDirectory;
+        private AeroListView lstRegistryValues;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel selectedStripStatusLabel;
         private System.Windows.Forms.ImageList imageRegistryDirectoryList;

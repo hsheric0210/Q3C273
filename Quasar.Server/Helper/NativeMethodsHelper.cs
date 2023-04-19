@@ -1,7 +1,7 @@
 ﻿using System;
-using Quasar.Server.Utilities;
+using Q3C273.Server.Utilities;
 
-namespace Quasar.Server.Helper
+namespace Q3C273.Server.Helper
 {
     public static class NativeMethodsHelper
     {
@@ -13,12 +13,12 @@ namespace Quasar.Server.Helper
 
         public static int MakeWin32Long(short wLow, short wHigh)
         {
-            return (int)wLow << 16 | (int)(short)wHigh;
+            return wLow << 16 | (int)wHigh;
         }
 
         public static void SetItemState(IntPtr handle, int itemIndex, int mask, int value)
         {
-            NativeMethods.LVITEM lvItem = new NativeMethods.LVITEM
+            var lvItem = new NativeMethods.LVITEM
             {
                 stateMask = mask,
                 state = value

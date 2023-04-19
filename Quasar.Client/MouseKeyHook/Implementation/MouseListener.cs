@@ -4,7 +4,6 @@
 
 using System;
 using System.Windows.Forms;
-using Everything.MouseKeyHook;
 using Everything.MouseKeyHook.WinApi;
 using Everything.Utilities;
 

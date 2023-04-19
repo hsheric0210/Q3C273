@@ -1,6 +1,4 @@
 ﻿using Everything.User;
-using Quasar.Common.Messages;
-using Quasar.Common.Networking;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +6,8 @@ using System.Net.NetworkInformation;
 using Everything.IpGeoLocation;
 using Everything.IO;
 using Everything.Helper;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Networking;
 
 namespace Everything.MessageHandlers
 {

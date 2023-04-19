@@ -1,5 +1,5 @@
 ﻿using Microsoft.Win32;
-using Quasar.Common.Utilities;
+using Q3C273.Shared.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

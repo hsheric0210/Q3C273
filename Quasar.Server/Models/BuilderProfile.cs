@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace Quasar.Server.Models
+namespace Q3C273.Server.Models
 {
     public class BuilderProfile
     {
@@ -336,7 +336,8 @@ namespace Quasar.Server.Models
 
         public BuilderProfile(string profileName)
         {
-            if (string.IsNullOrEmpty(profileName)) throw new ArgumentException("Invalid Profile Path");
+            if (string.IsNullOrEmpty(profileName))
+                throw new ArgumentException("Invalid Profile Path");
             _profilePath = Path.Combine(Application.StartupPath, "Profiles\\" + profileName + ".xml");
         }
 
@@ -344,10 +345,10 @@ namespace Quasar.Server.Models
         {
             try
             {
-                XPathDocument doc = new XPathDocument(_profilePath);
-                XPathNavigator nav = doc.CreateNavigator();
-                XPathExpression expr = nav.Compile(@"/settings/" + pstrValueToRead);
-                XPathNodeIterator iterator = nav.Select(expr);
+                var doc = new XPathDocument(_profilePath);
+                var nav = doc.CreateNavigator();
+                var expr = nav.Compile(@"/settings/" + pstrValueToRead);
+                var iterator = nav.Select(expr);
                 while (iterator.MoveNext())
                 {
                     return iterator.Current.Value;
@@ -363,15 +364,15 @@ namespace Quasar.Server.Models
 
         private string ReadValueSafe(string pstrValueToRead, string defaultValue = "")
         {
-            string value = ReadValue(pstrValueToRead);
-            return (!string.IsNullOrEmpty(value)) ? value : defaultValue;
+            var value = ReadValue(pstrValueToRead);
+            return !string.IsNullOrEmpty(value) ? value : defaultValue;
         }
 
         private void WriteValue(string pstrValueToRead, string pstrValueToWrite)
         {
             try
             {
-                XmlDocument doc = new XmlDocument();
+                var doc = new XmlDocument();
 
                 if (File.Exists(_profilePath))
                 {
@@ -384,14 +385,12 @@ namespace Quasar.Server.Models
                 {
                     var dir = Path.GetDirectoryName(_profilePath);
                     if (!Directory.Exists(dir))
-                    {
                         Directory.CreateDirectory(dir);
-                    }
                     doc.AppendChild(doc.CreateElement("settings"));
                 }
-                
-                XmlElement root = doc.DocumentElement;
-                XmlNode oldNode = root.SelectSingleNode(@"/settings/" + pstrValueToRead);
+
+                var root = doc.DocumentElement;
+                var oldNode = root.SelectSingleNode(@"/settings/" + pstrValueToRead);
                 if (oldNode == null) // create if not exist
                 {
                     oldNode = doc.SelectSingleNode("settings");

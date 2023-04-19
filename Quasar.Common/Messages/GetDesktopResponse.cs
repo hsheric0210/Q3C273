@@ -1,7 +1,7 @@
 ﻿using ProtoBuf;
-using Quasar.Common.Video;
+using Q3C273.Shared.Video;
 
-namespace Quasar.Common.Messages
+namespace Q3C273.Shared.Messages
 {
     [ProtoContract]
     public class GetDesktopResponse : IMessage

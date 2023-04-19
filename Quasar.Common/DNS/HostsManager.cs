@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace Quasar.Common.DNS
+namespace Q3C273.Shared.DNS
 {
     public class HostsManager
     {
@@ -12,7 +12,7 @@ namespace Quasar.Common.DNS
 
         public HostsManager(List<Host> hosts)
         {
-            foreach(var host in hosts)
+            foreach (var host in hosts)
                 _hosts.Enqueue(host);
         }
 
@@ -27,20 +27,22 @@ namespace Quasar.Common.DNS
 
         private static IPAddress ResolveHostname(Host host)
         {
-            if (string.IsNullOrEmpty(host.Hostname)) return null;
+            if (string.IsNullOrEmpty(host.Hostname))
+                return null;
 
             IPAddress ip;
             if (IPAddress.TryParse(host.Hostname, out ip))
             {
                 if (ip.AddressFamily == AddressFamily.InterNetworkV6)
                 {
-                    if (!Socket.OSSupportsIPv6) return null;
+                    if (!Socket.OSSupportsIPv6)
+                        return null;
                 }
                 return ip;
             }
 
             var ipAddresses = Dns.GetHostEntry(host.Hostname).AddressList;
-            foreach (IPAddress ipAddress in ipAddresses)
+            foreach (var ipAddress in ipAddresses)
             {
                 switch (ipAddress.AddressFamily)
                 {

@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Quasar.Common.Video.Compression;
+using Q3C273.Shared.Video.Compression;
 using System;
 using System.Drawing;
 
-namespace Quasar.Common.Tests.Compression
+namespace Q3C273.Shared.Tests.Compression
 {
     [TestClass]
     public class JpgCompressionTests
@@ -11,7 +11,7 @@ namespace Quasar.Common.Tests.Compression
         [TestMethod, TestCategory("Compression")]
         public void CompressionTest()
         {
-            var quality = Int64.MaxValue;
+            var quality = long.MaxValue;
             var jpg = new JpgCompression(quality);
             var bitmap = new Bitmap(200, 200);
 

@@ -1,10 +1,10 @@
-﻿using Quasar.Common.Models;
+﻿using Q3C273.Shared.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Quasar.Common.IO
+namespace Q3C273.Shared.IO
 {
     public class FileSplit : IEnumerable<FileChunk>, IDisposable
     {
@@ -72,7 +72,7 @@ namespace Quasar.Common.IO
         {
             _fileStream.Seek(offset, SeekOrigin.Begin);
 
-            long chunkSize = _fileStream.Length - _fileStream.Position < MaxChunkSize
+            var chunkSize = _fileStream.Length - _fileStream.Position < MaxChunkSize
                 ? _fileStream.Length - _fileStream.Position
                 : MaxChunkSize;
 
@@ -107,9 +107,7 @@ namespace Quasar.Common.IO
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 _fileStream.Dispose();
-            }
         }
 
         /// <summary>

@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Everything.MouseKeyHook;
 using Everything.MouseKeyHook.Implementation;
 
 namespace Everything.MouseKeyHook.HotKeys

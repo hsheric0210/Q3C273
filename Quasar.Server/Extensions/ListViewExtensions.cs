@@ -1,10 +1,10 @@
-﻿using Quasar.Common.Helpers;
-using Quasar.Server.Helper;
-using Quasar.Server.Utilities;
+﻿using Q3C273.Server.Helper;
+using Q3C273.Server.Utilities;
+using Q3C273.Shared.Helpers;
 using System;
 using System.Windows.Forms;
 
-namespace Quasar.Server.Extensions
+namespace Q3C273.Server.Extensions
 {
     public static class ListViewExtensions
     {
@@ -17,8 +17,9 @@ namespace Quasar.Server.Extensions
         /// <param name="targetListView">The listview whose columns are to be autosized.</param>
         public static void AutosizeColumns(this ListView targetListView)
         {
-            if (PlatformHelper.RunningOnMono) return;
-            for (int lngColumn = 0; lngColumn <= (targetListView.Columns.Count - 1); lngColumn++)
+            if (PlatformHelper.RunningOnMono)
+                return;
+            for (var lngColumn = 0; lngColumn <= targetListView.Columns.Count - 1; lngColumn++)
             {
                 NativeMethods.SendMessage(targetListView.Handle, SET_COLUMN_WIDTH, new IntPtr(lngColumn), AUTOSIZE_USEHEADER);
             }

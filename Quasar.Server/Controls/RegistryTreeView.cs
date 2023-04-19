@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Quasar.Server.Controls
+namespace Q3C273.Server.Controls
 {
     public class RegistryTreeView : TreeView
     {

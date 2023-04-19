@@ -1,6 +1,6 @@
 ﻿using ProtoBuf;
 
-namespace Quasar.Common.Messages.ReverseProxy
+namespace Q3C273.Shared.Messages.ReverseProxy
 {
     [ProtoContract]
     public class ReverseProxyData : IMessage

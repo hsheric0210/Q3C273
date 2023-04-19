@@ -1,8 +1,8 @@
-﻿using Quasar.Common.Networking;
+﻿using Q3C273.Shared.Networking;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Quasar.Common.Messages
+namespace Q3C273.Shared.Messages
 {
     /// <summary>
     /// Handles registrations of <see cref="IMessageProcessor"/>s and processing of <see cref="IMessage"/>s.
@@ -27,7 +27,8 @@ namespace Quasar.Common.Messages
         {
             lock (SyncLock)
             {
-                if (Processors.Contains(proc)) return;
+                if (Processors.Contains(proc))
+                    return;
                 Processors.Add(proc);
             }
         }

@@ -1,5 +1,5 @@
-﻿using Quasar.Common.Extensions;
-using Quasar.Common.Messages;
+﻿using Q3C273.Shared.Extensions;
+using Q3C273.Shared.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Quasar.Server.Networking
+namespace Q3C273.Server.Networking
 {
     public class Server
     {
@@ -32,7 +32,8 @@ namespace Quasar.Server.Networking
         /// <param name="listening">The new listening state of the server.</param>
         private void OnServerState(bool listening)
         {
-            if (Listening == listening) return;
+            if (Listening == listening)
+                return;
 
             Listening = listening;
 
@@ -227,8 +228,9 @@ namespace Quasar.Server.Networking
         /// <param name="enableUPnP">Enables the automatic UPnP port forwarding.</param>
         public void Listen(ushort port, bool ipv6, bool enableUPnP)
         {
-            if (Listening) return;
-            this.Port = port;
+            if (Listening)
+                return;
+            Port = port;
 
             if (enableUPnP)
             {
@@ -275,12 +277,12 @@ namespace Quasar.Server.Networking
                             SslStream sslStream = null;
                             try
                             {
-                                Socket clientSocket = e.AcceptSocket;
+                                var clientSocket = e.AcceptSocket;
                                 clientSocket.SetKeepAliveEx(KeepAliveInterval, KeepAliveTime);
                                 sslStream = new SslStream(new NetworkStream(clientSocket, true), false);
                                 // the SslStream owns the socket and on disposing also disposes the NetworkStream and Socket
                                 sslStream.BeginAuthenticateAsServer(ServerCertificate, false, SslProtocols.Tls12, false, EndAuthenticateClient,
-                                    new PendingClient {Stream = sslStream, EndPoint = (IPEndPoint) clientSocket.RemoteEndPoint});
+                                    new PendingClient { Stream = sslStream, EndPoint = (IPEndPoint)clientSocket.RemoteEndPoint });
                             }
                             catch (Exception)
                             {
@@ -290,7 +292,7 @@ namespace Quasar.Server.Networking
                         case SocketError.ConnectionReset:
                             break;
                         default:
-                            throw new SocketException((int) e.SocketError);
+                            throw new SocketException((int)e.SocketError);
                     }
 
                     e.AcceptSocket = null; // enable reuse
@@ -317,12 +319,12 @@ namespace Quasar.Server.Networking
         /// <param name="ar">The status of the asynchronous operation.</param>
         private void EndAuthenticateClient(IAsyncResult ar)
         {
-            var con = (PendingClient) ar.AsyncState;
+            var con = (PendingClient)ar.AsyncState;
             try
             {
                 con.Stream.EndAuthenticateAsServer(ar);
 
-                Client client = new Client(_bufferPool, con.Stream, con.EndPoint);
+                var client = new Client(_bufferPool, con.Stream, con.EndPoint);
                 AddClient(client);
                 OnClientState(client, true);
             }
@@ -355,7 +357,8 @@ namespace Quasar.Server.Networking
         /// <param name="client">The client to remove.</param>
         private void RemoveClient(Client client)
         {
-            if (ProcessingDisconnect) return;
+            if (ProcessingDisconnect)
+                return;
 
             lock (_clientsLock)
             {
@@ -372,7 +375,8 @@ namespace Quasar.Server.Networking
         /// </summary>
         public void Disconnect()
         {
-            if (ProcessingDisconnect) return;
+            if (ProcessingDisconnect)
+                return;
             ProcessingDisconnect = true;
 
             if (_handle != null)

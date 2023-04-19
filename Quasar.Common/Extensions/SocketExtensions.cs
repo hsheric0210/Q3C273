@@ -2,7 +2,7 @@
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 
-namespace Quasar.Common.Extensions
+namespace Q3C273.Shared.Extensions
 {
     /// <summary>
     /// Socket Extension for KeepAlive
@@ -36,8 +36,8 @@ namespace Quasar.Common.Extensions
                 keepaliveinterval = keepAliveInterval,
                 keepalivetime = keepAliveTime
             };
-            int size = Marshal.SizeOf(keepAlive);
-            IntPtr keepAlivePtr = Marshal.AllocHGlobal(size);
+            var size = Marshal.SizeOf(keepAlive);
+            var keepAlivePtr = Marshal.AllocHGlobal(size);
             Marshal.StructureToPtr(keepAlive, keepAlivePtr, true);
             var buffer = new byte[size];
             Marshal.Copy(keepAlivePtr, buffer, 0, size);

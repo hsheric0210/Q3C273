@@ -1,6 +1,6 @@
-﻿using Quasar.Server.Controls;
+﻿using Q3C273.Server.Controls;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     partial class FrmFileManager
     {
@@ -52,12 +52,12 @@ namespace Quasar.Server.Forms
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imgListTransfers = new System.Windows.Forms.ImageList(this.components);
-            this.TabControlFileManager = new Quasar.Server.Controls.DotNetBarTabControl();
+            this.TabControlFileManager = new Q3C273.Server.Controls.DotNetBarTabControl();
             this.tabFileExplorer = new System.Windows.Forms.TabPage();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.lblPath = new System.Windows.Forms.Label();
             this.txtPath = new System.Windows.Forms.TextBox();
-            this.lstDirectory = new Quasar.Server.Controls.AeroListView();
+            this.lstDirectory = new Q3C273.Server.Controls.AeroListView();
             this.hName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -65,7 +65,7 @@ namespace Quasar.Server.Forms
             this.cmbDrives = new System.Windows.Forms.ComboBox();
             this.tabTransfers = new System.Windows.Forms.TabPage();
             this.btnOpenDLFolder = new System.Windows.Forms.Button();
-            this.lstTransfers = new Quasar.Server.Controls.AeroListView();
+            this.lstTransfers = new Q3C273.Server.Controls.AeroListView();
             this.hID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hTransferType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -127,7 +127,7 @@ namespace Quasar.Server.Forms
             // 
             // renameToolStripMenuItem
             // 
-            this.renameToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.textfield_rename;
+            this.renameToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.textfield_rename;
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
             this.renameToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.renameToolStripMenuItem.Text = "Rename";
@@ -135,7 +135,7 @@ namespace Quasar.Server.Forms
             // 
             // deleteToolStripMenuItem
             // 
-            this.deleteToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.delete;
+            this.deleteToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.delete;
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             this.deleteToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
@@ -148,7 +148,7 @@ namespace Quasar.Server.Forms
             // 
             // addToStartupToolStripMenuItem
             // 
-            this.addToStartupToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.application_add;
+            this.addToStartupToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.application_add;
             this.addToStartupToolStripMenuItem.Name = "addToStartupToolStripMenuItem";
             this.addToStartupToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.addToStartupToolStripMenuItem.Text = "Add to Startup";
@@ -161,7 +161,7 @@ namespace Quasar.Server.Forms
             // 
             // refreshToolStripMenuItem
             // 
-            this.refreshToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.refresh;
+            this.refreshToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.refresh;
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             this.refreshToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
@@ -169,7 +169,7 @@ namespace Quasar.Server.Forms
             // 
             // openDirectoryInShellToolStripMenuItem
             // 
-            this.openDirectoryInShellToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.terminal;
+            this.openDirectoryInShellToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.terminal;
             this.openDirectoryInShellToolStripMenuItem.Name = "openDirectoryInShellToolStripMenuItem";
             this.openDirectoryInShellToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.openDirectoryInShellToolStripMenuItem.Text = "Open Directory in Remote Shell";
@@ -218,7 +218,7 @@ namespace Quasar.Server.Forms
             // 
             // cancelToolStripMenuItem
             // 
-            this.cancelToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.cancel;
+            this.cancelToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.cancel;
             this.cancelToolStripMenuItem.Name = "cancelToolStripMenuItem";
             this.cancelToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.cancelToolStripMenuItem.Text = "Cancel";
@@ -231,7 +231,7 @@ namespace Quasar.Server.Forms
             // 
             // clearToolStripMenuItem
             // 
-            this.clearToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.broom;
+            this.clearToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.broom;
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
             this.clearToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.clearToolStripMenuItem.Text = "Clear transfers";
@@ -279,7 +279,7 @@ namespace Quasar.Server.Forms
             // 
             this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnRefresh.Image = global::Quasar.Server.Properties.Resources.refresh;
+            this.btnRefresh.Image = global::Q3C273.Server.Properties.Resources.refresh;
             this.btnRefresh.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnRefresh.Location = new System.Drawing.Point(682, 8);
             this.btnRefresh.Name = "btnRefresh";

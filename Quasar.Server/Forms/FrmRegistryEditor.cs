@@ -4,16 +4,16 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Win32;
-using Quasar.Common.Messages;
-using Quasar.Common.Models;
-using Quasar.Server.Controls;
-using Quasar.Server.Extensions;
-using Quasar.Server.Helper;
-using Quasar.Server.Messages;
-using Quasar.Server.Networking;
-using Quasar.Server.Registry;
+using Q3C273.Server.Controls;
+using Q3C273.Server.Extensions;
+using Q3C273.Server.Helper;
+using Q3C273.Server.Messages;
+using Q3C273.Server.Networking;
+using Q3C273.Server.Registry;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Models;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     public partial class FrmRegistryEditor : Form
     {

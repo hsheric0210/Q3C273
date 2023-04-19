@@ -1,6 +1,6 @@
 ﻿using Everything.Config;
-using Quasar.Common.Messages;
-using Quasar.Common.Networking;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Networking;
 
 namespace Everything.MessageHandlers
 {

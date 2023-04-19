@@ -1,6 +1,6 @@
-﻿using Quasar.Common.Enums;
+﻿using Q3C273.Shared.Enums;
 
-namespace Quasar.Common.Extensions
+namespace Q3C273.Shared.Extensions
 {
     public static class StringExtensions
     {

@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Quasar.Server.Controls.HexEditor
+namespace Q3C273.Server.Controls.HexEditor
 {
     public class EditView : IKeyMouseEventHandler
     {
@@ -42,9 +42,7 @@ namespace Quasar.Server.Controls.HexEditor
         public void OnKeyPress(KeyPressEventArgs e)
         {
             if (InHexView(_editor.CaretPosX))
-            {
                 _hexView.OnKeyPress(e);
-            }
             else
             {
                 _stringView.OnKeyPress(e);
@@ -54,9 +52,7 @@ namespace Quasar.Server.Controls.HexEditor
         public void OnKeyDown(KeyEventArgs e)
         {
             if (InHexView(_editor.CaretPosX))
-            {
                 _hexView.OnKeyDown(e);
-            }
             else
             {
                 _stringView.OnKeyDown(e);
@@ -75,9 +71,7 @@ namespace Quasar.Server.Controls.HexEditor
             if (e.Button == MouseButtons.Left)
             {
                 if (InHexView(e.X))
-                {
                     _hexView.OnMouseDown(e.X, e.Y);
-                }
                 else
                 {
                     _stringView.OnMouseDown(e.X, e.Y);
@@ -90,9 +84,7 @@ namespace Quasar.Server.Controls.HexEditor
             if (e.Button == MouseButtons.Left)
             {
                 if (InHexView(e.X))
-                {
                     _hexView.OnMouseDragged(e.X, e.Y);
-                }
                 else
                 {
                     _stringView.OnMouseDragged(e.X, e.Y);
@@ -108,9 +100,7 @@ namespace Quasar.Server.Controls.HexEditor
             if (e.Button == MouseButtons.Left)
             {
                 if (InHexView(e.X))
-                {
                     _hexView.OnMouseDoubleClick();
-                }
                 else
                 {
                     _stringView.OnMouseDoubleClick();
@@ -156,7 +146,7 @@ namespace Quasar.Server.Controls.HexEditor
 
         public void Paint(Graphics g, int startIndex, int endIndex)
         {
-            for (int i = 0; (i + startIndex) < endIndex; i++)
+            for (var i = 0; i + startIndex < endIndex; i++)
             {
                 _hexView.Paint(g, i, startIndex);
                 _stringView.Paint(g, i, startIndex);
@@ -169,7 +159,7 @@ namespace Quasar.Server.Controls.HexEditor
 
         private bool InHexView(int x)
         {
-            return (x < (_hexView.MaxWidth + _editor.EntityMargin - 2));
+            return x < _hexView.MaxWidth + _editor.EntityMargin - 2;
         }
 
         #endregion

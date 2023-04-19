@@ -1,6 +1,6 @@
-﻿using Quasar.Server.Controls;
+﻿using Q3C273.Server.Controls;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     partial class FrmRemoteDesktop
     {
@@ -105,7 +105,7 @@ namespace Quasar.Server.Forms
             // 
             // btnMouse
             // 
-            this.btnMouse.Image = global::Quasar.Server.Properties.Resources.mouse_delete;
+            this.btnMouse.Image = global::Q3C273.Server.Properties.Resources.mouse_delete;
             this.btnMouse.Location = new System.Drawing.Point(302, 5);
             this.btnMouse.Name = "btnMouse";
             this.btnMouse.Size = new System.Drawing.Size(28, 28);
@@ -134,7 +134,7 @@ namespace Quasar.Server.Forms
             // 
             // btnKeyboard
             // 
-            this.btnKeyboard.Image = global::Quasar.Server.Properties.Resources.keyboard_delete;
+            this.btnKeyboard.Image = global::Q3C273.Server.Properties.Resources.keyboard_delete;
             this.btnKeyboard.Location = new System.Drawing.Point(336, 5);
             this.btnKeyboard.Name = "btnKeyboard";
             this.btnKeyboard.Size = new System.Drawing.Size(28, 28);
@@ -235,6 +235,6 @@ namespace Quasar.Server.Forms
         private System.Windows.Forms.ComboBox cbMonitors;
         private System.Windows.Forms.Button btnKeyboard;
         private System.Windows.Forms.ToolTip toolTipButtons;
-        private Controls.RapidPictureBox picDesktop;
+        private RapidPictureBox picDesktop;
     }
 }

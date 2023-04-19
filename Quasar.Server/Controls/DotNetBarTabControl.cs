@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 // thanks to Mavamaarten~ for coding this
 
-namespace Quasar.Server.Controls
+namespace Q3C273.Server.Controls
 {
     internal class DotNetBarTabControl : TabControl
     {
@@ -22,8 +22,8 @@ namespace Quasar.Server.Controls
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            Bitmap b = new Bitmap(Width, Height);
-            Graphics g = Graphics.FromImage(b);
+            var b = new Bitmap(Width, Height);
+            var g = Graphics.FromImage(b);
             if (!DesignMode)
                 SelectedTab.BackColor = SystemColors.Control;
             g.Clear(SystemColors.Control);
@@ -33,16 +33,16 @@ namespace Quasar.Server.Controls
                 new Point(ItemSize.Height + 3, 999));
             g.DrawLine(new Pen(Color.FromArgb(170, 187, 204)), new Point(0, Size.Height - 1),
                 new Point(Width + 3, Size.Height - 1));
-            for (int i = 0; i <= TabCount - 1; i++)
+            for (var i = 0; i <= TabCount - 1; i++)
             {
                 if (i == SelectedIndex)
                 {
-                    Rectangle x2 = new Rectangle(new Point(GetTabRect(i).Location.X - 2, GetTabRect(i).Location.Y - 2),
+                    var x2 = new Rectangle(new Point(GetTabRect(i).Location.X - 2, GetTabRect(i).Location.Y - 2),
                         new Size(GetTabRect(i).Width + 3, GetTabRect(i).Height - 1));
-                    ColorBlend myBlend = new ColorBlend();
+                    var myBlend = new ColorBlend();
                     myBlend.Colors = new Color[] { Color.FromArgb(232, 232, 240), Color.FromArgb(232, 232, 240), Color.FromArgb(232, 232, 240) };
                     myBlend.Positions = new float[] { 0f, 0.5f, 1f };
-                    LinearGradientBrush lgBrush = new LinearGradientBrush(x2, Color.Black, Color.Black, 90f);
+                    var lgBrush = new LinearGradientBrush(x2, Color.Black, Color.Black, 90f);
                     lgBrush.InterpolationColors = myBlend;
                     g.FillRectangle(lgBrush, x2);
                     g.DrawRectangle(new Pen(Color.FromArgb(170, 187, 204)), x2);
@@ -96,7 +96,7 @@ namespace Quasar.Server.Controls
                 }
                 else
                 {
-                    Rectangle x2 = new Rectangle(new Point(GetTabRect(i).Location.X - 2, GetTabRect(i).Location.Y - 2),
+                    var x2 = new Rectangle(new Point(GetTabRect(i).Location.X - 2, GetTabRect(i).Location.Y - 2),
                         new Size(GetTabRect(i).Width + 3, GetTabRect(i).Height - 1));
                     g.FillRectangle(new SolidBrush(Color.FromArgb(246, 248, 252)), x2);
                     g.DrawLine(new Pen(Color.FromArgb(170, 187, 204)), new Point(x2.Right, x2.Top),

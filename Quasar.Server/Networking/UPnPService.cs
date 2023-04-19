@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Quasar.Server.Networking
+namespace Q3C273.Server.Networking
 {
     public class UPnPService
     {
@@ -41,7 +41,7 @@ namespace Quasar.Server.Networking
                 var cts = new CancellationTokenSource(10000);
                 _device = await _discoverer.DiscoverDeviceAsync(PortMapper.Upnp, cts);
 
-                Mapping mapping = new Mapping(Protocol.Tcp, port, port);
+                var mapping = new Mapping(Protocol.Tcp, port, port);
 
                 await _device.CreatePortMapAsync(mapping);
 

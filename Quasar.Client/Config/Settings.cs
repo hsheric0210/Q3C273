@@ -1,4 +1,4 @@
-﻿using Quasar.Common.Cryptography;
+﻿using Q3C273.Shared.Cryptography;
 using System;
 using System.IO;
 using System.Security.Cryptography;

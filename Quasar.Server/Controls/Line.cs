@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace Quasar.Server.Controls
+namespace Q3C273.Server.Controls
 {
     public class Line : Control
     {
@@ -15,7 +15,7 @@ namespace Quasar.Server.Controls
 
         public Line()
         {
-            this.TabStop = false;
+            TabStop = false;
         }
 
         protected override void OnPaint(PaintEventArgs e)

@@ -1,9 +1,9 @@
-﻿using Quasar.Common.Cryptography;
+﻿using Q3C273.Shared.Cryptography;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Quasar.Common.Helpers
+namespace Q3C273.Shared.Helpers
 {
     public static class FileHelper
     {
@@ -56,8 +56,9 @@ namespace Quasar.Common.Helpers
         /// <returns>Returns <value>true</value> for valid executable identifiers, otherwise <value>false</value>.</returns>
         public static bool HasExecutableIdentifier(byte[] binary)
         {
-            if (binary.Length < 2) return false;
-            return (binary[0] == 'M' && binary[1] == 'Z') || (binary[0] == 'Z' && binary[1] == 'M');
+            if (binary.Length < 2)
+                return false;
+            return binary[0] == 'M' && binary[1] == 'Z' || binary[0] == 'Z' && binary[1] == 'M';
         }
 
         /// <summary>
@@ -80,9 +81,9 @@ namespace Quasar.Common.Helpers
         {
             appendText = ReadLogFile(filename, aes) + appendText;
 
-            using (FileStream fStream = File.Open(filename, FileMode.Create, FileAccess.Write))
+            using (var fStream = File.Open(filename, FileMode.Create, FileAccess.Write))
             {
-                byte[] data = aes.Encrypt(Encoding.UTF8.GetBytes(appendText));
+                var data = aes.Encrypt(Encoding.UTF8.GetBytes(appendText));
                 fStream.Seek(0, SeekOrigin.Begin);
                 fStream.Write(data, 0, data.Length);
             }

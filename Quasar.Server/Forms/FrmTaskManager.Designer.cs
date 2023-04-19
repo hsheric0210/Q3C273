@@ -1,6 +1,6 @@
-﻿using Quasar.Server.Controls;
+﻿using Q3C273.Server.Controls;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     partial class FrmTaskManager
     {
@@ -61,7 +61,7 @@ namespace Quasar.Server.Forms
             // 
             // killProcessToolStripMenuItem
             // 
-            this.killProcessToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.cancel;
+            this.killProcessToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.cancel;
             this.killProcessToolStripMenuItem.Name = "killProcessToolStripMenuItem";
             this.killProcessToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.killProcessToolStripMenuItem.Text = "Kill Process";
@@ -69,7 +69,7 @@ namespace Quasar.Server.Forms
             // 
             // startProcessToolStripMenuItem
             // 
-            this.startProcessToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.application_go;
+            this.startProcessToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.application_go;
             this.startProcessToolStripMenuItem.Name = "startProcessToolStripMenuItem";
             this.startProcessToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.startProcessToolStripMenuItem.Text = "Start Process";
@@ -82,7 +82,7 @@ namespace Quasar.Server.Forms
             // 
             // refreshToolStripMenuItem
             // 
-            this.refreshToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.refresh;
+            this.refreshToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.refresh;
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             this.refreshToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";

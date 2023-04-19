@@ -1,11 +1,11 @@
-﻿using Quasar.Common.Enums;
-using Quasar.Common.Helpers;
-using Quasar.Common.Models;
+﻿using Q3C273.Shared.Enums;
+using Q3C273.Shared.Helpers;
+using Q3C273.Shared.Models;
 using System;
 using System.IO;
 using System.Windows.Forms;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     public partial class FrmStartupAdd : Form
     {

@@ -1,5 +1,5 @@
-﻿using Quasar.Common.Messages;
-using Quasar.Common.Networking;
+﻿using Q3C273.Shared.Messages;
+using Q3C273.Shared.Networking;
 using System;
 using System.Diagnostics;
 using System.Net;

@@ -1,5 +1,5 @@
 ﻿using Everything.Networking;
-using Quasar.Common.Messages;
+using Q3C273.Shared.Messages;
 using System;
 using System.Diagnostics;
 using System.Globalization;

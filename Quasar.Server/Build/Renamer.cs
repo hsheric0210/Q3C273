@@ -1,11 +1,11 @@
 ﻿using Mono.Cecil;
-using Quasar.Common.Utilities;
+using Q3C273.Shared.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Quasar.Server.Build
+namespace Q3C273.Server.Build
 {
     public class Renamer
     {
@@ -27,9 +27,9 @@ namespace Quasar.Server.Build
 
         public Renamer(AssemblyDefinition asmDef, int length)
         {
-            this.AsmDef = asmDef;
-            this.Length = length;
-            _typeOverloader = new MemberOverloader(this.Length);
+            AsmDef = asmDef;
+            Length = length;
+            _typeOverloader = new MemberOverloader(Length);
             _methodOverloaders = new Dictionary<TypeDefinition, MemberOverloader>();
             _fieldOverloaders = new Dictionary<TypeDefinition, MemberOverloader>();
             _eventOverloaders = new Dictionary<TypeDefinition, MemberOverloader>();
@@ -43,7 +43,7 @@ namespace Quasar.Server.Build
         {
             try
             {
-                foreach (TypeDefinition typeDef in AsmDef.Modules.SelectMany(module => module.Types))
+                foreach (var typeDef in AsmDef.Modules.SelectMany(module => module.Types))
                 {
                     RenameInType(typeDef);
                 }
@@ -57,50 +57,50 @@ namespace Quasar.Server.Build
 
         private void RenameInType(TypeDefinition typeDef)
         {
-            if (!typeDef.Namespace.StartsWith("Quasar") || typeDef.Namespace.StartsWith("Quasar.Common.Messages") || typeDef.IsEnum /* || typeDef.HasInterfaces */)
+            if (!typeDef.Namespace.StartsWith("Quasar") || typeDef.Namespace.StartsWith("Q3C273.Shared.Messages") || typeDef.IsEnum /* || typeDef.HasInterfaces */)
                 return;
 
             _typeOverloader.GiveName(typeDef);
 
             typeDef.Namespace = string.Empty;
 
-            MemberOverloader methodOverloader = GetMethodOverloader(typeDef);
-            MemberOverloader fieldOverloader = GetFieldOverloader(typeDef);
-            MemberOverloader eventOverloader = GetEventOverloader(typeDef);
+            var methodOverloader = GetMethodOverloader(typeDef);
+            var fieldOverloader = GetFieldOverloader(typeDef);
+            var eventOverloader = GetEventOverloader(typeDef);
 
             if (typeDef.HasNestedTypes)
-                foreach (TypeDefinition nestedType in typeDef.NestedTypes)
+                foreach (var nestedType in typeDef.NestedTypes)
                     RenameInType(nestedType);
 
             if (typeDef.HasMethods)
-                foreach (MethodDefinition methodDef in
+                foreach (var methodDef in
                         typeDef.Methods.Where(methodDef =>
                                 !methodDef.IsConstructor && !methodDef.HasCustomAttributes &&
                                 !methodDef.IsAbstract && !methodDef.IsVirtual))
                     methodOverloader.GiveName(methodDef);
 
             if (typeDef.HasFields)
-                foreach (FieldDefinition fieldDef in typeDef.Fields)
+                foreach (var fieldDef in typeDef.Fields)
                     fieldOverloader.GiveName(fieldDef);
 
             if (typeDef.HasEvents)
-                foreach (EventDefinition eventDef in typeDef.Events)
+                foreach (var eventDef in typeDef.Events)
                     eventOverloader.GiveName(eventDef);
         }
 
         private MemberOverloader GetMethodOverloader(TypeDefinition typeDef)
         {
-            return GetOverloader(this._methodOverloaders, typeDef);
+            return GetOverloader(_methodOverloaders, typeDef);
         }
 
         private MemberOverloader GetFieldOverloader(TypeDefinition typeDef)
         {
-            return GetOverloader(this._fieldOverloaders, typeDef);
+            return GetOverloader(_fieldOverloaders, typeDef);
         }
 
         private MemberOverloader GetEventOverloader(TypeDefinition typeDef)
         {
-            return GetOverloader(this._eventOverloaders, typeDef);
+            return GetOverloader(_eventOverloaders, typeDef);
         }
 
         private MemberOverloader GetOverloader(Dictionary<TypeDefinition, MemberOverloader> overloaderDictionary,
@@ -109,7 +109,7 @@ namespace Quasar.Server.Build
             MemberOverloader overloader;
             if (!overloaderDictionary.TryGetValue(targetTypeDef, out overloader))
             {
-                overloader = new MemberOverloader(this.Length);
+                overloader = new MemberOverloader(Length);
                 overloaderDictionary.Add(targetTypeDef, overloader);
             }
             return overloader;
@@ -131,16 +131,16 @@ namespace Quasar.Server.Build
 
             private MemberOverloader(int startingLength, bool doRandom, char[] chars)
             {
-                this._charMap = chars;
-                this.DoRandom = doRandom;
-                this.StartingLength = startingLength;
-                this._indices = new int[startingLength];
+                _charMap = chars;
+                DoRandom = doRandom;
+                StartingLength = startingLength;
+                _indices = new int[startingLength];
             }
 
             public void GiveName(MemberReference member)
             {
-                string currentName = GetCurrentName();
-                string originalName = member.ToString();
+                var currentName = GetCurrentName();
+                var originalName = member.ToString();
                 member.Name = currentName;
                 while (_renamedMembers.ContainsValue(member.ToString()))
                 {
@@ -156,9 +156,9 @@ namespace Quasar.Server.Build
 
             private string GetRandomName()
             {
-                StringBuilder builder = new StringBuilder();
+                var builder = new StringBuilder();
 
-                for (int i = 0; i < StartingLength; i++)
+                for (var i = 0; i < StartingLength; i++)
                 {
                     builder.Append((char)_random.Next(int.MinValue, int.MaxValue));
                 }
@@ -169,15 +169,15 @@ namespace Quasar.Server.Build
             private string GetOverloadedName()
             {
                 IncrementIndices();
-                char[] chars = new char[_indices.Length];
-                for (int i = 0; i < _indices.Length; i++)
+                var chars = new char[_indices.Length];
+                for (var i = 0; i < _indices.Length; i++)
                     chars[i] = _charMap[_indices[i]];
                 return new string(chars);
             }
 
             private void IncrementIndices()
             {
-                for (int i = _indices.Length - 1; i >= 0; i--)
+                for (var i = _indices.Length - 1; i >= 0; i--)
                 {
                     _indices[i]++;
                     if (_indices[i] >= _charMap.Length)

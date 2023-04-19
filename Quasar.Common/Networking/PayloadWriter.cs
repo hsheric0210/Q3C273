@@ -1,9 +1,9 @@
 ﻿using ProtoBuf;
-using Quasar.Common.Messages;
+using Q3C273.Shared.Messages;
 using System;
 using System.IO;
 
-namespace Quasar.Common.Networking
+namespace Q3C273.Shared.Networking
 {
     public class PayloadWriter : MemoryStream
     {
@@ -33,10 +33,10 @@ namespace Quasar.Common.Networking
         /// <returns>The amount of written bytes to the stream.</returns>
         public int WriteMessage(IMessage message)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 Serializer.Serialize(ms, message);
-                byte[] payload = ms.ToArray();
+                var payload = ms.ToArray();
                 WriteInteger(payload.Length);
                 WriteBytes(payload);
                 return sizeof(int) + payload.Length;
@@ -48,9 +48,7 @@ namespace Quasar.Common.Networking
             try
             {
                 if (LeaveInnerStreamOpen)
-                {
                     _innerStream.Flush();
-                }
                 else
                 {
                     _innerStream.Close();

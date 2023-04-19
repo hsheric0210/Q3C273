@@ -1,8 +1,8 @@
-﻿using Quasar.Common.Networking;
+﻿using Q3C273.Shared.Networking;
 using System;
 using System.Threading;
 
-namespace Quasar.Common.Messages
+namespace Q3C273.Shared.Messages
 {
     /// <summary>
     /// Provides a MessageProcessor implementation that provides progress report callbacks.
@@ -51,9 +51,7 @@ namespace Quasar.Common.Messages
             // an event handler is removed between now and then.
             var handler = ProgressChanged;
             if (handler != null)
-            {
                 SynchronizationContext.Post(_invokeReportProgressHandlers, value);
-            }
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace Quasar.Common.Enums
+﻿namespace Q3C273.Shared.Enums
 {
     public enum ShutdownAction
     {

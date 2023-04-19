@@ -1,4 +1,4 @@
-﻿using Quasar.Common.Enums;
+﻿using Q3C273.Shared.Enums;
 using System;
 using System.Security.Principal;
 

@@ -1,6 +1,6 @@
-﻿using Quasar.Common.Enums;
+﻿using Q3C273.Shared.Enums;
 
-namespace Quasar.Server.Models
+namespace Q3C273.Server.Models
 {
     public class FileManagerListTag
     {
@@ -10,8 +10,8 @@ namespace Quasar.Server.Models
 
         public FileManagerListTag(FileType type, long fileSize)
         {
-            this.Type = type;
-            this.FileSize = fileSize;
+            Type = type;
+            FileSize = fileSize;
         }
     }
 }

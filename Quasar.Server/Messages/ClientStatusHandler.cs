@@ -1,9 +1,9 @@
-﻿using Quasar.Common.Enums;
-using Quasar.Common.Messages;
-using Quasar.Common.Networking;
-using Quasar.Server.Networking;
+﻿using Q3C273.Server.Networking;
+using Q3C273.Shared.Enums;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Networking;
 
-namespace Quasar.Server.Messages
+namespace Q3C273.Server.Messages
 {
     /// <summary>
     /// Handles messages for the interaction with the remote client status.
@@ -54,7 +54,7 @@ namespace Quasar.Server.Messages
             SynchronizationContext.Post(c =>
             {
                 var handler = StatusUpdated;
-                handler?.Invoke(this, (Client) c, statusMessage);
+                handler?.Invoke(this, (Client)c, statusMessage);
             }, client);
         }
 
@@ -68,7 +68,7 @@ namespace Quasar.Server.Messages
             SynchronizationContext.Post(c =>
             {
                 var handler = UserStatusUpdated;
-                handler?.Invoke(this, (Client) c, userStatusMessage);
+                handler?.Invoke(this, (Client)c, userStatusMessage);
             }, client);
         }
 
@@ -91,10 +91,10 @@ namespace Quasar.Server.Messages
             switch (message)
             {
                 case SetStatus status:
-                    Execute((Client) sender, status);
+                    Execute((Client)sender, status);
                     break;
                 case SetUserStatus userStatus:
-                    Execute((Client) sender, userStatus);
+                    Execute((Client)sender, userStatus);
                     break;
             }
         }

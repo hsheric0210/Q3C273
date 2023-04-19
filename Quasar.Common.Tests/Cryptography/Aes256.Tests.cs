@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Quasar.Common.Cryptography;
-using Quasar.Common.Helpers;
+using Q3C273.Shared.Helpers;
+using Q3C273.Shared.Cryptography;
 using System.Text;
 
-namespace Quasar.Common.Tests.Cryptography
+namespace Q3C273.Shared.Tests.Cryptography
 {
     [TestClass]
     public class Aes128Tests

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using Quasar.Server.Networking;
+using Q3C273.Server.Networking;
 
-namespace Quasar.Server.ReverseProxy
+namespace Q3C273.Server.ReverseProxy
 {
     public class ReverseProxyServer
     {
@@ -36,14 +36,12 @@ namespace Quasar.Server.ReverseProxy
             {
                 lock (_clients)
                 {
-                    List<ReverseProxyClient> temp = new List<ReverseProxyClient>();
+                    var temp = new List<ReverseProxyClient>();
 
-                    for (int i = 0; i < _clients.Count; i++)
+                    for (var i = 0; i < _clients.Count; i++)
                     {
                         if (_clients[i].ProxySuccessful)
-                        {
                             temp.Add(_clients[i]);
-                        }
                     }
                     return temp.ToArray();
                 }
@@ -65,11 +63,11 @@ namespace Quasar.Server.ReverseProxy
         {
             Stop();
 
-            this.Clients = clients;
-            this._socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            this._socket.Bind(new IPEndPoint(IPAddress.Parse(ipAddress), port));
-            this._socket.Listen(100);
-            this._socket.BeginAccept(AsyncAccept, null);
+            Clients = clients;
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _socket.Bind(new IPEndPoint(IPAddress.Parse(ipAddress), port));
+            _socket.Listen(100);
+            _socket.BeginAccept(AsyncAccept, null);
         }
 
         private void AsyncAccept(IAsyncResult ar)
@@ -78,7 +76,7 @@ namespace Quasar.Server.ReverseProxy
             {
                 lock (_clients)
                 {
-                    _clients.Add(new ReverseProxyClient(Clients[_clientIndex % Clients.Length], this._socket.EndAccept(ar), this));
+                    _clients.Add(new ReverseProxyClient(Clients[_clientIndex % Clients.Length], _socket.EndAccept(ar), this));
                     _clientIndex++;
                 }
             }
@@ -88,7 +86,7 @@ namespace Quasar.Server.ReverseProxy
 
             try
             {
-                this._socket.BeginAccept(AsyncAccept, null);
+                _socket.BeginAccept(AsyncAccept, null);
             }
             catch
             {
@@ -106,7 +104,7 @@ namespace Quasar.Server.ReverseProxy
 
             lock (_clients)
             {
-                foreach (ReverseProxyClient client in new List<ReverseProxyClient>(_clients))
+                foreach (var client in new List<ReverseProxyClient>(_clients))
                     client.Disconnect();
                 _clients.Clear();
             }
@@ -141,7 +139,7 @@ namespace Quasar.Server.ReverseProxy
                 {
                     lock (_clients)
                     {
-                        for (int i = 0; i < _clients.Count; i++)
+                        for (var i = 0; i < _clients.Count; i++)
                         {
                             if (_clients[i].ConnectionId == proxyClient.ConnectionId)
                             {

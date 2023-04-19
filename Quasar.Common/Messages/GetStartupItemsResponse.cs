@@ -1,8 +1,8 @@
 ﻿using ProtoBuf;
-using Quasar.Common.Models;
+using Q3C273.Shared.Models;
 using System.Collections.Generic;
 
-namespace Quasar.Common.Messages
+namespace Q3C273.Shared.Messages
 {
     [ProtoContract]
     public class GetStartupItemsResponse : IMessage

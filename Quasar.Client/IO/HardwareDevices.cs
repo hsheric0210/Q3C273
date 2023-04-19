@@ -1,5 +1,5 @@
-﻿using Quasar.Common.Cryptography;
-using Quasar.Common.Helpers;
+﻿using Q3C273.Shared.Cryptography;
+using Q3C273.Shared.Helpers;
 using System;
 using System.Linq;
 using System.Management;

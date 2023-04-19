@@ -1,6 +1,6 @@
-﻿using Quasar.Server.Controls.HexEditor;
+﻿using Q3C273.Server.Controls.HexEditor;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     partial class FrmRegValueEditBinary
     {
@@ -138,6 +138,6 @@ namespace Quasar.Server.Forms
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Button okButton;
-        private Controls.HexEditor.HexEditor hexEditor;
+        private HexEditor hexEditor;
     }
 }

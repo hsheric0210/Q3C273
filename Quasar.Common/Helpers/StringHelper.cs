@@ -1,8 +1,8 @@
-﻿using Quasar.Common.Utilities;
+﻿using Q3C273.Shared.Utilities;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Quasar.Common.Helpers
+namespace Q3C273.Shared.Helpers
 {
     public static class StringHelper
     {
@@ -28,8 +28,8 @@ namespace Quasar.Common.Helpers
         /// <returns>A random string.</returns>
         public static string GetRandomString(int length)
         {
-            StringBuilder randomName = new StringBuilder(length);
-            for (int i = 0; i < length; i++)
+            var randomName = new StringBuilder(length);
+            for (var i = 0; i < length; i++)
                 randomName.Append(Alphabet[Random.Next(Alphabet.Length)]);
 
             return randomName.ToString();
@@ -43,7 +43,7 @@ namespace Quasar.Common.Helpers
         public static string GetHumanReadableFileSize(long size)
         {
             double len = size;
-            int order = 0;
+            var order = 0;
             while (len >= 1024 && order + 1 < Sizes.Length)
             {
                 order++;
@@ -59,7 +59,7 @@ namespace Quasar.Common.Helpers
         /// <returns>The formatted MAC address.</returns>
         public static string GetFormattedMacAddress(string macAddress)
         {
-            return (macAddress.Length != 12)
+            return macAddress.Length != 12
                 ? "00:00:00:00:00:00"
                 : Regex.Replace(macAddress, "(.{2})(.{2})(.{2})(.{2})(.{2})(.{2})", "$1:$2:$3:$4:$5:$6");
         }

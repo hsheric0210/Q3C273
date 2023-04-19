@@ -5,7 +5,7 @@
         <ItemGroup>
             <InputAssemblies Include="$(TargetPath)"/>
             <InputAssemblies Include="$(TargetDir)protobuf-net.dll"/>
-            <InputAssemblies Include="$(TargetDir)Quasar.Common.dll"/>
+            <InputAssemblies Include="$(TargetDir)Q3C273.Shared.dll"/>
             <InputAssemblies Include="$(TargetDir)BouncyCastle.Crypto.dll"/>
             <InputAssemblies Include="$(TargetDir)Newtonsoft.Json.dll"/>
         </ItemGroup>

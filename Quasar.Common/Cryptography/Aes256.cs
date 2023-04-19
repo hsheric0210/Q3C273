@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Quasar.Common.Cryptography
+namespace Q3C273.Shared.Cryptography
 {
     public class Aes256
     {
@@ -25,7 +25,7 @@ namespace Quasar.Common.Cryptography
             if (string.IsNullOrEmpty(masterKey))
                 throw new ArgumentException($"{nameof(masterKey)} can not be null or empty.");
 
-            using (Rfc2898DeriveBytes derive = new Rfc2898DeriveBytes(masterKey, Salt, 50000))
+            using (var derive = new Rfc2898DeriveBytes(masterKey, Salt, 50000))
             {
                 _key = derive.GetBytes(KeyLength);
                 _authKey = derive.GetBytes(AuthKeyLength);
@@ -68,7 +68,7 @@ namespace Quasar.Common.Cryptography
 
                         using (var hmac = new HMACSHA256(_authKey))
                         {
-                            byte[] hash = hmac.ComputeHash(ms.ToArray(), HmacSha256Length, ms.ToArray().Length - HmacSha256Length); // compute the HMAC of IV and ciphertext
+                            var hash = hmac.ComputeHash(ms.ToArray(), HmacSha256Length, ms.ToArray().Length - HmacSha256Length); // compute the HMAC of IV and ciphertext
                             ms.Position = 0; // write hash at beginning
                             ms.Write(hash, 0, hash.Length);
                         }
@@ -103,21 +103,21 @@ namespace Quasar.Common.Cryptography
                     using (var hmac = new HMACSHA256(_authKey))
                     {
                         var hash = hmac.ComputeHash(ms.ToArray(), HmacSha256Length, ms.ToArray().Length - HmacSha256Length);
-                        byte[] receivedHash = new byte[HmacSha256Length];
+                        var receivedHash = new byte[HmacSha256Length];
                         ms.Read(receivedHash, 0, receivedHash.Length);
 
                         if (!SafeComparison.AreEqual(hash, receivedHash))
                             throw new CryptographicException("Invalid message authentication code (MAC).");
                     }
 
-                    byte[] iv = new byte[IvLength];
+                    var iv = new byte[IvLength];
                     ms.Read(iv, 0, IvLength); // read next 16 bytes for IV, followed by ciphertext
                     aesProvider.IV = iv;
 
                     using (var cs = new CryptoStream(ms, aesProvider.CreateDecryptor(), CryptoStreamMode.Read))
                     {
-                        byte[] temp = new byte[ms.Length - IvLength + 1];
-                        byte[] data = new byte[cs.Read(temp, 0, temp.Length)];
+                        var temp = new byte[ms.Length - IvLength + 1];
+                        var data = new byte[cs.Read(temp, 0, temp.Length)];
                         Buffer.BlockCopy(temp, 0, data, 0, data.Length);
                         return data;
                     }

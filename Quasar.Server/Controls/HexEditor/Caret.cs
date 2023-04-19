@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace Quasar.Server.Controls.HexEditor
+namespace Q3C273.Server.Controls.HexEditor
 {
     public class Caret
     {
@@ -190,7 +190,7 @@ namespace Quasar.Server.Controls.HexEditor
 
         public bool IsSelected(int byteIndex)
         {
-            return (SelectionStart <= byteIndex && byteIndex < (SelectionStart + SelectionLength));
+            return SelectionStart <= byteIndex && byteIndex < SelectionStart + SelectionLength;
         }
 
         private void DeSelect()

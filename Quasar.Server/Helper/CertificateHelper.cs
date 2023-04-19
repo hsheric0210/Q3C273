@@ -11,7 +11,7 @@ using Org.BouncyCastle.X509.Extension;
 using System;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Quasar.Server.Helper
+namespace Q3C273.Server.Helper
 {
     public static class CertificateHelper
     {
@@ -21,7 +21,7 @@ namespace Quasar.Server.Helper
             var random = new SecureRandom(new CryptoApiRandomGenerator());
             var keyPairGen = new RsaKeyPairGenerator();
             keyPairGen.Init(new KeyGenerationParameters(random, keyStrength));
-            AsymmetricCipherKeyPair keyPair = keyPairGen.GenerateKeyPair();
+            var keyPair = keyPairGen.GenerateKeyPair();
 
             var certificateGenerator = new X509V3CertificateGenerator();
 
@@ -56,7 +56,7 @@ namespace Quasar.Server.Helper
             var random = new SecureRandom(new CryptoApiRandomGenerator());
             var keyPairGen = new RsaKeyPairGenerator();
             keyPairGen.Init(new KeyGenerationParameters(random, keyStrength));
-            AsymmetricCipherKeyPair keypair = keyPairGen.GenerateKeyPair();
+            var keypair = keyPairGen.GenerateKeyPair();
 
             var certificateGenerator = new X509V3CertificateGenerator();
 

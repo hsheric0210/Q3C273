@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Quasar.Common.Helpers;
+using Q3C273.Shared.Helpers;
 
-namespace Quasar.Common.Tests.Helpers
+namespace Q3C273.Shared.Tests.Helpers
 {
     [TestClass]
     public class FileHelperTests
@@ -9,7 +9,7 @@ namespace Quasar.Common.Tests.Helpers
         [TestMethod, TestCategory("Helpers")]
         public void RandomFilenameTest()
         {
-            int length = 100;
+            var length = 100;
             var name = FileHelper.GetRandomFilename(length);
 
             Assert.IsNotNull(name);
@@ -19,7 +19,7 @@ namespace Quasar.Common.Tests.Helpers
         [TestMethod, TestCategory("Helpers")]
         public void ValidateExecutableTest()
         {
-            var bytes = new byte[] {77, 90};
+            var bytes = new byte[] { 77, 90 };
 
             Assert.IsTrue(FileHelper.HasExecutableIdentifier(bytes));
         }
@@ -27,7 +27,7 @@ namespace Quasar.Common.Tests.Helpers
         [TestMethod, TestCategory("Helpers")]
         public void ValidateExecutableTest2()
         {
-            var bytes = new byte[] {22, 93};
+            var bytes = new byte[] { 22, 93 };
 
             Assert.IsFalse(FileHelper.HasExecutableIdentifier(bytes));
         }

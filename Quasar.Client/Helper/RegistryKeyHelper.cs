@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Everything.Extensions;
 using Microsoft.Win32;
-using Quasar.Common.Models;
-using Quasar.Common.Utilities;
+using Q3C273.Shared.Models;
+using Q3C273.Shared.Utilities;
 
 namespace Everything.Helper
 {

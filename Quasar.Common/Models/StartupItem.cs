@@ -1,7 +1,7 @@
 ﻿using ProtoBuf;
-using Quasar.Common.Enums;
+using Q3C273.Shared.Enums;
 
-namespace Quasar.Common.Models
+namespace Q3C273.Shared.Models
 {
     [ProtoContract]
     public class StartupItem

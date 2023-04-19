@@ -1,6 +1,6 @@
 ﻿using Everything.Config;
 using Everything.IO;
-using Quasar.Common.Helpers;
+using Q3C273.Shared.Helpers;
 using System;
 using System.Diagnostics;
 using System.IO;

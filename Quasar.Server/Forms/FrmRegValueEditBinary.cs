@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
-using Quasar.Common.Models;
-using Quasar.Server.Registry;
+using Q3C273.Server.Registry;
+using Q3C273.Shared.Models;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     public partial class FrmRegValueEditBinary : Form
     {

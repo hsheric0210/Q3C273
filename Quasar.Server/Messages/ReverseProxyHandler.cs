@@ -1,12 +1,12 @@
-﻿using Quasar.Common.Messages;
-using Quasar.Common.Messages.ReverseProxy;
-using Quasar.Common.Networking;
-using Quasar.Server.Networking;
-using Quasar.Server.ReverseProxy;
+﻿using Q3C273.Server.Networking;
+using Q3C273.Server.ReverseProxy;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Messages.ReverseProxy;
+using Q3C273.Shared.Networking;
 using System;
 using System.Linq;
 
-namespace Quasar.Server.Messages
+namespace Q3C273.Server.Messages
 {
     /// <summary>
     /// Handles messages for the interaction with the remote reverse proxy.
@@ -81,19 +81,19 @@ namespace Quasar.Server.Messages
 
         private void Execute(ISender client, ReverseProxyConnectResponse message)
         {
-            ReverseProxyClient socksClient = _socksServer.GetClientByConnectionId(message.ConnectionId);
+            var socksClient = _socksServer.GetClientByConnectionId(message.ConnectionId);
             socksClient?.HandleCommandResponse(message);
         }
 
         private void Execute(ISender client, ReverseProxyData message)
         {
-            ReverseProxyClient socksClient = _socksServer.GetClientByConnectionId(message.ConnectionId);
+            var socksClient = _socksServer.GetClientByConnectionId(message.ConnectionId);
             socksClient?.SendToClient(message.Data);
         }
 
         private void Execute(ISender client, ReverseProxyDisconnect message)
         {
-            ReverseProxyClient socksClient = _socksServer.GetClientByConnectionId(message.ConnectionId);
+            var socksClient = _socksServer.GetClientByConnectionId(message.ConnectionId);
             socksClient?.Disconnect();
         }
 
@@ -119,9 +119,7 @@ namespace Quasar.Server.Messages
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 StopReverseProxyServer();
-            }
         }
     }
 }

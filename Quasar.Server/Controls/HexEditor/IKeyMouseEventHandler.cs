@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Quasar.Server.Controls.HexEditor
+namespace Q3C273.Server.Controls.HexEditor
 {
     public interface IKeyMouseEventHandler
     {

@@ -1,6 +1,6 @@
-﻿using Quasar.Common.Networking;
+﻿using Q3C273.Shared.Networking;
 
-namespace Quasar.Common.Messages
+namespace Q3C273.Shared.Messages
 {
     /// <summary>
     /// Provides basic functionality to process messages.

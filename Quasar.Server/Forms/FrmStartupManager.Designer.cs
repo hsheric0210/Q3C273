@@ -1,6 +1,6 @@
-﻿using Quasar.Server.Controls;
+﻿using Q3C273.Server.Controls;
 
-namespace Quasar.Server.Forms
+namespace Q3C273.Server.Forms
 {
     partial class FrmStartupManager
     {
@@ -51,7 +51,7 @@ namespace Quasar.Server.Forms
             // 
             // addEntryToolStripMenuItem
             // 
-            this.addEntryToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.application_add;
+            this.addEntryToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.application_add;
             this.addEntryToolStripMenuItem.Name = "addEntryToolStripMenuItem";
             this.addEntryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.addEntryToolStripMenuItem.Text = "Add Entry";
@@ -59,7 +59,7 @@ namespace Quasar.Server.Forms
             // 
             // removeEntryToolStripMenuItem
             // 
-            this.removeEntryToolStripMenuItem.Image = global::Quasar.Server.Properties.Resources.application_delete;
+            this.removeEntryToolStripMenuItem.Image = global::Q3C273.Server.Properties.Resources.application_delete;
             this.removeEntryToolStripMenuItem.Name = "removeEntryToolStripMenuItem";
             this.removeEntryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.removeEntryToolStripMenuItem.Text = "Remove Entry";
@@ -119,7 +119,7 @@ namespace Quasar.Server.Forms
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem addEntryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeEntryToolStripMenuItem;
-        private Controls.AeroListView lstStartupItems;
+        private AeroListView lstStartupItems;
 
     }
 }

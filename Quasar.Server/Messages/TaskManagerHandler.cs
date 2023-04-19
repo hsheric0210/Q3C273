@@ -1,10 +1,10 @@
-﻿using Quasar.Common.Enums;
-using Quasar.Common.Messages;
-using Quasar.Common.Models;
-using Quasar.Common.Networking;
-using Quasar.Server.Networking;
+﻿using Q3C273.Server.Networking;
+using Q3C273.Shared.Enums;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Models;
+using Q3C273.Shared.Networking;
 
-namespace Quasar.Server.Messages
+namespace Q3C273.Server.Messages
 {
     /// <summary>
     /// Handles messages for the interaction with remote tasks.
@@ -91,7 +91,7 @@ namespace Quasar.Server.Messages
         /// <param name="isUpdate">Decides whether the file is a client update.</param>
         public void StartProcessFromWeb(string url, bool isUpdate = false)
         {
-            _client.Send(new DoProcessStart { DownloadUrl = url, IsUpdate = isUpdate});
+            _client.Send(new DoProcessStart { DownloadUrl = url, IsUpdate = isUpdate });
         }
 
         /// <summary>

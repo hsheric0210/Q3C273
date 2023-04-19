@@ -1,4 +1,4 @@
-﻿namespace Quasar.Server.Models
+﻿namespace Q3C273.Server.Models
 {
     public class BuildOptions
     {

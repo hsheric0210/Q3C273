@@ -1,7 +1,7 @@
 ﻿using Everything.Networking;
-using Quasar.Common.Messages;
-using Quasar.Common.Messages.ReverseProxy;
-using Quasar.Common.Networking;
+using Q3C273.Shared.Messages;
+using Q3C273.Shared.Messages.ReverseProxy;
+using Q3C273.Shared.Networking;
 
 namespace Everything.MessageHandlers
 {
