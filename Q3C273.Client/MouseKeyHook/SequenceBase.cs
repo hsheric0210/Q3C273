@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Everything.MouseKeyHook
+namespace Ton618.MouseKeyHook
 {
     /// <summary>
     ///     Describes a sequence of generic objects.

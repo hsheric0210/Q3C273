@@ -1,4 +1,4 @@
-﻿namespace Everything.IpGeoLocation
+﻿namespace Ton618.IpGeoLocation
 {
     /// <summary>
     /// Stores the IP geolocation information.

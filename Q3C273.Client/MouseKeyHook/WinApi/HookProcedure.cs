@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Everything.MouseKeyHook.WinApi
+namespace Ton618.MouseKeyHook.WinApi
 {
     /// <summary>
     ///     The CallWndProc hook procedure is an application-defined or library-defined callback

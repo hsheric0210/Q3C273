@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace Everything.Config
+namespace Ton618.Config
 {
     /// <summary>
     /// Stores the configuration of the client.

@@ -1,5 +1,4 @@
-﻿using Everything.Networking;
-using Everything.Setup;
+﻿using Everything.Setup;
 using Q3C273.Shared;
 using Q3C273.Shared.Enums;
 using Q3C273.Shared.Helpers;
@@ -11,8 +10,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
 using System.Threading;
+using Ton618.Networking;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     /// <summary>
     /// Handles messages for the interaction with tasks.

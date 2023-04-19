@@ -5,11 +5,11 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Everything.MouseKeyHook.Implementation;
-using Everything.MouseKeyHook.WinApi;
 using Everything.Utilities;
+using Ton618.MouseKeyHook.Implementation;
+using Ton618.MouseKeyHook.WinApi;
 
-namespace Everything.MouseKeyHook
+namespace Ton618.MouseKeyHook
 {
     /// <summary>
     ///     Provides extended argument data for the <see cref='KeyListener.KeyDown' /> or

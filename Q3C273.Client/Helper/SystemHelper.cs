@@ -2,7 +2,7 @@
 using System;
 using System.Management;
 
-namespace Everything.Helper
+namespace Ton618.Helper
 {
     public static class SystemHelper
     {

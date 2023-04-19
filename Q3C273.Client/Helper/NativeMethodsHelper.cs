@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Everything.Helper
+namespace Ton618.Helper
 {
     public static class NativeMethodsHelper
     {

@@ -6,7 +6,7 @@ using System.Management;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
-namespace Everything.IO
+namespace Ton618.IO
 {
     /// <summary>
     /// Provides access to retrieve information about the used hardware devices.

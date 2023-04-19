@@ -5,7 +5,7 @@
 using System;
 using System.Text;
 using System.Windows.Forms;
-using Everything.MouseKeyHook.Implementation;
+using Ton618.MouseKeyHook.Implementation;
 
 namespace Everything.Utilities
 {

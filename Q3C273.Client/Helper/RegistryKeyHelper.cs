@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Everything.Extensions;
 using Microsoft.Win32;
 using Q3C273.Shared.Models;
 using Q3C273.Shared.Utilities;
+using Ton618.Extensions;
 
-namespace Everything.Helper
+namespace Ton618.Helper
 {
     public static class RegistryKeyHelper
     {

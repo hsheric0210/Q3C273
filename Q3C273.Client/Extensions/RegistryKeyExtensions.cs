@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Everything.Extensions
+namespace Ton618.Extensions
 {
     /// <summary>
     /// Provides extensions for registry key and value operations.

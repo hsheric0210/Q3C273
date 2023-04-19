@@ -1,9 +1,9 @@
-using Everything.Helper;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using Ton618.Helper;
 
-namespace Everything.IpGeoLocation
+namespace Ton618.IpGeoLocation
 {
     /// <summary>
     /// Class to retrieve the IP geolocation information.

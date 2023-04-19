@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Everything.IpGeoLocation
+namespace Ton618.IpGeoLocation
 {
     [DataContract]
     public class GeoResponse

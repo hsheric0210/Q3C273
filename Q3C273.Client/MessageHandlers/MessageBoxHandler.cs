@@ -4,7 +4,7 @@ using System;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     public class MessageBoxHandler : IMessageProcessor
     {

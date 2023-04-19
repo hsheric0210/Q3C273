@@ -1,6 +1,4 @@
-﻿using Everything.Config;
-using Everything.Networking;
-using Everything.Setup;
+﻿using Everything.Setup;
 using Everything.User;
 using Everything.Utilities;
 using Q3C273.Shared.Enums;
@@ -9,8 +7,11 @@ using Q3C273.Shared.Networking;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using Ton618;
+using Ton618.Config;
+using Ton618.Networking;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     public class ClientServicesHandler : IMessageProcessor
     {

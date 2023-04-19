@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Everything.MouseKeyHook.WinApi;
+using Ton618.MouseKeyHook.WinApi;
 
-namespace Everything.MouseKeyHook.Implementation
+namespace Ton618.MouseKeyHook.Implementation
 {
     internal abstract class KeyListener : BaseListener, IKeyboardEvents
     {

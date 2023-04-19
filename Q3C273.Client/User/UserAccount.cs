@@ -2,7 +2,7 @@
 using System;
 using System.Security.Principal;
 
-namespace Everything.User
+namespace Ton618.User
 {
     public class UserAccount
     {

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Everything.MouseKeyHook.Implementation
+namespace Ton618.MouseKeyHook.Implementation
 {
     internal class Chord : IEnumerable<Keys>
     {

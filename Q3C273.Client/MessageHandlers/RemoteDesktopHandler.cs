@@ -1,5 +1,4 @@
-﻿using Everything.Helper;
-using Q3C273.Shared.Enums;
+﻿using Q3C273.Shared.Enums;
 using Q3C273.Shared.Messages;
 using Q3C273.Shared.Networking;
 using Q3C273.Shared.Video.Codecs;
@@ -9,8 +8,9 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
+using Ton618.Helper;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     public class RemoteDesktopHandler : NotificationMessageProcessor, IDisposable
     {

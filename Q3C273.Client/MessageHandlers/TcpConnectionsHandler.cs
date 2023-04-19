@@ -6,7 +6,7 @@ using Q3C273.Shared.Networking;
 using System;
 using System.Runtime.InteropServices;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     public class TcpConnectionsHandler : IMessageProcessor
     {

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Everything.Win32PE.PE
+namespace Ton618.Win32PE.PE
 {
     public static class ExtensionHelper
     {

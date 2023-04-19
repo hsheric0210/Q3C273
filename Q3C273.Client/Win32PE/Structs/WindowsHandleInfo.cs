@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Everything.Win32PE.Structs
+namespace Ton618.Win32PE.Structs
 {
     public class WindowsHandleInfo : IDisposable
     {

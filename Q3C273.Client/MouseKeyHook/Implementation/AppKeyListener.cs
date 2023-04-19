@@ -3,9 +3,9 @@
 // See license.txt or https://mit-license.org/
 
 using System.Collections.Generic;
-using Everything.MouseKeyHook.WinApi;
+using Ton618.MouseKeyHook.WinApi;
 
-namespace Everything.MouseKeyHook.Implementation
+namespace Ton618.MouseKeyHook.Implementation
 {
     internal class AppKeyListener : KeyListener
     {

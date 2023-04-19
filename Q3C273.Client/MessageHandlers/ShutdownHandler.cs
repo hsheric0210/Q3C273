@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     public class ShutdownHandler : IMessageProcessor
     {

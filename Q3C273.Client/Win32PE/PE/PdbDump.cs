@@ -1,11 +1,11 @@
-﻿using Everything.Win32PE.Structs;
-using Everything.Utilities;
+﻿using Everything.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Ton618.Win32PE.Structs;
 
-namespace Everything.Win32PE.PE
+namespace Ton618.Win32PE.PE
 {
     // mridgers/pdbdump.c
     // https://gist.github.com/mridgers/2968595

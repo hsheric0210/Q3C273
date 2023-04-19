@@ -1,7 +1,7 @@
-﻿using Everything.Win32PE.Structs;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using Ton618.Win32PE.Structs;
 
 namespace Everything.Utilities
 {

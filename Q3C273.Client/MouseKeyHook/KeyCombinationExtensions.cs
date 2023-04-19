@@ -5,9 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Everything.MouseKeyHook.Implementation;
+using Ton618.MouseKeyHook.Implementation;
 
-namespace Everything.MouseKeyHook
+namespace Ton618.MouseKeyHook
 {
     /// <summary>
     ///     Extension methods to detect key combinations

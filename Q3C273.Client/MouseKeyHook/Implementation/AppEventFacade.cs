@@ -2,7 +2,9 @@
 // Copyright (c) 2015 George Mamaladze
 // See license.txt or https://mit-license.org/
 
-namespace Everything.MouseKeyHook.Implementation
+using Everything.MouseKeyHook.Implementation;
+
+namespace Ton618.MouseKeyHook.Implementation
 {
     internal class AppEventFacade : EventFacade
     {

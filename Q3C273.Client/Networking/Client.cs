@@ -1,5 +1,4 @@
-﻿using Everything.ReverseProxy;
-using Q3C273.Shared.Extensions;
+﻿using Q3C273.Shared.Extensions;
 using Q3C273.Shared.Messages;
 using Q3C273.Shared.Messages.ReverseProxy;
 using Q3C273.Shared.Networking;
@@ -13,8 +12,9 @@ using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using Ton618.ReverseProxy;
 
-namespace Everything.Networking
+namespace Ton618.Networking
 {
     public class Client : ISender
     {

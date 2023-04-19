@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Everything.Win32PE.PE
+namespace Ton618.Win32PE.PE
 {
     public class BufferPtr : IDisposable
     {

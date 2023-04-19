@@ -1,4 +1,4 @@
-﻿namespace Everything.Win32PE.PE
+﻿namespace Ton618.Win32PE.PE
 {
     public struct ExportFunctionInfo
     {

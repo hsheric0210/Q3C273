@@ -5,7 +5,7 @@
 using Microsoft.Win32.SafeHandles;
 using Everything.Utilities;
 
-namespace Everything.MouseKeyHook.WinApi
+namespace Ton618.MouseKeyHook.WinApi
 {
     internal class HookProcedureHandle : SafeHandleZeroOrMinusOneIsInvalid
     {

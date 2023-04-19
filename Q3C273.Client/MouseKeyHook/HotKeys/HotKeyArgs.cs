@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Everything.MouseKeyHook.HotKeys
+namespace Ton618.MouseKeyHook.HotKeys
 {
     /// <summary>
     ///     The event arguments passed when a HotKeySet's OnHotKeysDownHold event is triggered.

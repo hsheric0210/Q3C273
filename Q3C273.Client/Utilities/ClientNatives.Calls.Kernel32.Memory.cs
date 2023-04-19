@@ -1,5 +1,5 @@
-﻿using Everything.Win32PE.Structs;
-using System;
+﻿using System;
+using Ton618.Win32PE.Structs;
 
 namespace Everything.Utilities
 {

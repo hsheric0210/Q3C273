@@ -5,9 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Everything.MouseKeyHook.Implementation;
+using Ton618.MouseKeyHook.Implementation;
 
-namespace Everything.MouseKeyHook.HotKeys
+namespace Ton618.MouseKeyHook.HotKeys
 {
     /// <summary>
     ///     An immutable set of Hot Keys that provides an event for when the set is activated.

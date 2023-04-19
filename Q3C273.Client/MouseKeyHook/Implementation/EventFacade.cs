@@ -5,7 +5,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace Everything.MouseKeyHook.Implementation
+namespace Ton618.MouseKeyHook.Implementation
 {
     internal abstract class EventFacade : IKeyboardMouseEvents
     {

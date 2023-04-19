@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using Ton618.Recovery;
 
-namespace Everything.Recovery.FtpClients
+namespace Ton618.Recovery.FtpClients
 {
     public class FileZillaPassReader : IAccountReader
     {

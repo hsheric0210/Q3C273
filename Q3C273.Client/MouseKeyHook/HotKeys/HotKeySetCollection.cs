@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace Everything.MouseKeyHook.HotKeys
+namespace Ton618.MouseKeyHook.HotKeys
 {
     /// <summary>
     ///     A collection of HotKeySets

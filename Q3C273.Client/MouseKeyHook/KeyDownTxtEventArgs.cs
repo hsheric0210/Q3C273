@@ -1,6 +1,6 @@
 using System;
 
-namespace Everything.MouseKeyHook
+namespace Ton618.MouseKeyHook
 {
     public class KeyDownTxtEventArgs : EventArgs
     {

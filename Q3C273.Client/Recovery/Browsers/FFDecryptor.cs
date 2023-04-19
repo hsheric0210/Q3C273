@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Everything.Recovery.Browsers
+namespace Ton618.Recovery.Browsers
 {
     /// <summary>
     /// Provides methods to decrypt Firefox credentials.

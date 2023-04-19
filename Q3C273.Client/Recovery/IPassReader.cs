@@ -1,7 +1,7 @@
 ﻿using Q3C273.Shared.Models;
 using System.Collections.Generic;
 
-namespace Everything.Recovery
+namespace Ton618.Recovery
 {
     /// <summary>
     /// Provides a common way to read stored accounts from applications.

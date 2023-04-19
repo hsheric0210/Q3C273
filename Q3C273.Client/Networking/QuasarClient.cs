@@ -1,8 +1,4 @@
-﻿using Everything.Config;
-using Everything.Helper;
-using Everything.IO;
-using Everything.IpGeoLocation;
-using Everything.User;
+﻿using Everything.User;
 using Q3C273.Shared.DNS;
 using Q3C273.Shared.Helpers;
 using Q3C273.Shared.Messages;
@@ -11,8 +7,12 @@ using System;
 using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using Ton618.Config;
+using Ton618.Helper;
+using Ton618.IO;
+using Ton618.IpGeoLocation;
 
-namespace Everything.Networking
+namespace Ton618.Networking
 {
     public class QuasarClient : Client, IDisposable
     {

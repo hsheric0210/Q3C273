@@ -7,7 +7,7 @@ using System.Text;
 
 #pragma warning disable IDE1006, CA1815 // Naming Styles
 
-namespace Everything.Win32PE.Structs
+namespace Ton618.Win32PE.Structs
 {
     [Flags]
     public enum CorVtableDefines : ushort

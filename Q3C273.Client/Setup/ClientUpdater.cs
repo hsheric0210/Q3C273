@@ -1,12 +1,13 @@
-﻿using Everything.Config;
-using Everything.IO;
+﻿using Everything.Setup;
 using Q3C273.Shared.Helpers;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using Ton618.Config;
+using Ton618.IO;
 
-namespace Everything.Setup
+namespace Ton618.Setup
 {
     public class ClientUpdater : ClientSetupBase
     {

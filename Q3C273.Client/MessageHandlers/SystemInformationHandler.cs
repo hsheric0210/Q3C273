@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.NetworkInformation;
-using Everything.IpGeoLocation;
-using Everything.IO;
-using Everything.Helper;
 using Q3C273.Shared.Messages;
 using Q3C273.Shared.Networking;
+using Ton618.IO;
+using Ton618.Helper;
+using Ton618.IpGeoLocation;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     public class SystemInformationHandler : IMessageProcessor
     {

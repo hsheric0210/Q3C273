@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Everything.MouseKeyHook.Implementation;
+using Ton618.MouseKeyHook.Implementation;
 
-namespace Everything.MouseKeyHook
+namespace Ton618.MouseKeyHook
 {
     /// <summary>
     ///     Used to represent a key combination as frequently used in application as shortcuts.

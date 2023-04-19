@@ -4,7 +4,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace Everything.MouseKeyHook.WinApi
+namespace Ton618.MouseKeyHook.WinApi
 {
     /// <summary>
     ///     The Point structure defines the X- and Y- coordinates of a point.

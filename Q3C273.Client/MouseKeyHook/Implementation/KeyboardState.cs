@@ -8,7 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Everything.Utilities;
 
-namespace Everything.MouseKeyHook.Implementation
+namespace Ton618.MouseKeyHook.Implementation
 {
     /// <summary>
     ///     Contains a snapshot of a keyboard state at certain moment and provides methods

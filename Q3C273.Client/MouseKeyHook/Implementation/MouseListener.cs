@@ -4,10 +4,11 @@
 
 using System;
 using System.Windows.Forms;
-using Everything.MouseKeyHook.WinApi;
 using Everything.Utilities;
+using Ton618.MouseKeyHook;
+using Ton618.MouseKeyHook.WinApi;
 
-namespace Everything.MouseKeyHook.Implementation
+namespace Ton618.MouseKeyHook.Implementation
 {
     internal abstract class MouseListener : BaseListener, IMouseEvents
     {

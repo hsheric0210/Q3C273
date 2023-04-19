@@ -1,5 +1,4 @@
-﻿using Everything.Networking;
-using Q3C273.Shared;
+﻿using Q3C273.Shared;
 using Q3C273.Shared.Enums;
 using Q3C273.Shared.Extensions;
 using Q3C273.Shared.Helpers;
@@ -13,8 +12,9 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using System.Threading;
+using Ton618.Networking;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     public class FileManagerHandler : NotificationMessageProcessor, IDisposable
     {

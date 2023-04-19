@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Everything.MouseKeyHook.WinApi
+namespace Ton618.MouseKeyHook.WinApi
 {
     internal struct CallbackData
     {

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Text;
 
-namespace Everything.Extensions
+namespace Ton618.Extensions
 {
     public static class ProcessExtensions
     {

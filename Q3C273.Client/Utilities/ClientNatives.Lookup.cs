@@ -1,8 +1,8 @@
-﻿using Everything.Win32PE.PE;
-using Everything.Win32PE.Structs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Ton618.Win32PE.PE;
+using Ton618.Win32PE.Structs;
 
 namespace Everything.Utilities
 {

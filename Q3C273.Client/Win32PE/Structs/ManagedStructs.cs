@@ -8,7 +8,7 @@ using System.Threading;
 
 #pragma warning disable IDE1006 // Naming Styles
 
-namespace Everything.Win32PE.Structs
+namespace Ton618.Win32PE.Structs
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct StructFieldInfo

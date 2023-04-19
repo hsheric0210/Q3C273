@@ -1,6 +1,6 @@
 ﻿using Q3C273.Shared.Messages;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     public abstract class NotificationMessageProcessor : MessageProcessorBase<string>
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Everything.Utilities
+namespace Ton618.Utilities
 {
     /// <summary>
     /// A user-wide mutex that ensures that only one instance runs at a time.

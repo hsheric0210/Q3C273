@@ -5,9 +5,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Everything.MouseKeyHook.WinApi;
+using Ton618.MouseKeyHook.WinApi;
 
-namespace Everything.MouseKeyHook
+namespace Ton618.MouseKeyHook
 {
     /// <summary>
     ///     Provides extended data for the MouseClickExt and MouseMoveExt events.

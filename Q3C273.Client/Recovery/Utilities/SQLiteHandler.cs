@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Everything.Recovery.Utilities
+namespace Ton618.Recovery.Utilities
 {
     public class SQLiteHandler
     {

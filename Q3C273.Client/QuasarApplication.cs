@@ -1,9 +1,4 @@
-﻿using Everything.Config;
-using Everything.Logging;
-using Everything.MessageHandlers;
-using Everything.Networking;
-using Everything.User;
-using Everything.Utilities;
+﻿using Everything.MessageHandlers;
 using Everything.Setup;
 using Q3C273.Shared.DNS;
 using System;
@@ -15,8 +10,14 @@ using System.Threading;
 using System.Windows.Forms;
 using Q3C273.Shared.Helpers;
 using Q3C273.Shared.Messages;
+using Ton618.Networking;
+using Ton618.MessageHandlers;
+using Ton618.Logging;
+using Ton618.Utilities;
+using Ton618.Config;
+using Ton618.User;
 
-namespace Everything
+namespace Ton618
 {
     /// <summary>
     /// The client application which handles basic bootstrapping of the message processors and background tasks.

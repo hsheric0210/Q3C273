@@ -4,7 +4,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace Everything.MouseKeyHook.WinApi
+namespace Ton618.MouseKeyHook.WinApi
 {
     /// <summary>
     ///     The <see cref="MouseStruct" /> structure contains information about a mouse input event.

@@ -1,13 +1,13 @@
-﻿using Everything.Networking;
-using Q3C273.Shared.Messages;
+﻿using Q3C273.Shared.Messages;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
+using Ton618.Networking;
 
-namespace Everything.IO
+namespace Ton618.IO
 {
     /// <summary>
     /// This class manages a remote shell session.

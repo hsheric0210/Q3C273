@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Everything.Helper
+namespace Ton618.Helper
 {
     public static class DateTimeHelper
     {

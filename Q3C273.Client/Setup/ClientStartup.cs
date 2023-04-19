@@ -1,9 +1,9 @@
-﻿using Everything.Helper;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using Q3C273.Shared.Enums;
 using System.Diagnostics;
+using Ton618.Helper;
 
-namespace Everything.Setup
+namespace Ton618.Setup
 {
     public class ClientStartup : ClientSetupBase
     {

@@ -1,13 +1,14 @@
-﻿using Everything.Config;
-using Everything.Extensions;
+﻿using Everything.Setup;
 using Q3C273.Shared.Helpers;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Ton618.Config;
+using Ton618.Extensions;
 
-namespace Everything.Setup
+namespace Ton618.Setup
 {
     public class ClientInstaller : ClientSetupBase
     {

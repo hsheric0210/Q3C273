@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Everything.Logging
+namespace Ton618.Logging
 {
     /// <summary>
     /// Provides a service to run the keylogger.

@@ -1,6 +1,6 @@
-﻿using Everything.User;
+﻿using Ton618.User;
 
-namespace Everything.Setup
+namespace Ton618.Setup
 {
     public abstract class ClientSetupBase
     {

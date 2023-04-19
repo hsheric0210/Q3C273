@@ -1,6 +1,4 @@
-﻿using Everything.Extensions;
-using Everything.Helper;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using Q3C273.Shared.Enums;
 using Q3C273.Shared.Messages;
 using Q3C273.Shared.Models;
@@ -9,8 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Ton618.Extensions;
+using Ton618.Helper;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     public class StartupManagerHandler : IMessageProcessor
     {

@@ -5,7 +5,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace Everything.MouseKeyHook
+namespace Ton618.MouseKeyHook
 {
     /// <summary>
     ///     Provides all mouse events.

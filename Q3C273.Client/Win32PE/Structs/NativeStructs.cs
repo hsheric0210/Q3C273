@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Everything.Win32PE.Structs
+namespace Ton618.Win32PE.Structs
 {
     public enum DebugNotifySession
     {

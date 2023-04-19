@@ -4,7 +4,7 @@
 
 using Everything.MouseKeyHook.Implementation;
 
-namespace Everything.MouseKeyHook
+namespace Ton618.MouseKeyHook
 {
     /// <summary>
     ///     This is the class to start with.

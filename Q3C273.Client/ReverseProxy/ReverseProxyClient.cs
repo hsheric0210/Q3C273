@@ -2,8 +2,9 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using Ton618.Networking;
 
-namespace Everything.ReverseProxy
+namespace Ton618.ReverseProxy
 {
     public class ReverseProxyClient
     {
@@ -13,11 +14,11 @@ namespace Everything.ReverseProxy
         public Socket Handle { get; private set; }
         public string Target { get; private set; }
         public int Port { get; private set; }
-        public Networking.Client Client { get; private set; }
+        public Client Client { get; private set; }
         private byte[] _buffer;
         private bool _disconnectIsSend;
 
-        public ReverseProxyClient(ReverseProxyConnect command, Networking.Client client)
+        public ReverseProxyClient(ReverseProxyConnect command, Client client)
         {
             ConnectionId = command.ConnectionId;
             Target = command.Target;

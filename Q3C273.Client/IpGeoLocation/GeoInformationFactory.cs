@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Everything.IpGeoLocation
+namespace Ton618.IpGeoLocation
 {
     /// <summary>
     /// Factory to retrieve and cache the last IP geolocation information for <see cref="MINIMUM_VALID_TIME"/> minutes.

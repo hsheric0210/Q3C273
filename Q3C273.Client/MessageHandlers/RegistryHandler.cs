@@ -1,12 +1,12 @@
-﻿using Everything.Extensions;
-using Everything.Helper;
-using Everything.Registry;
-using Q3C273.Shared.Messages;
+﻿using Q3C273.Shared.Messages;
 using Q3C273.Shared.Networking;
 using Q3C273.Shared.Models;
 using System;
+using Ton618.Extensions;
+using Ton618.Helper;
+using Ton618.Registry;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     public class RegistryHandler : IMessageProcessor
     {

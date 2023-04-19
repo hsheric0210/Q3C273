@@ -1,10 +1,10 @@
-﻿using Everything.IO;
-using Everything.Networking;
-using Q3C273.Shared.Messages;
+﻿using Q3C273.Shared.Messages;
 using Q3C273.Shared.Networking;
 using System;
+using Ton618.IO;
+using Ton618.Networking;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     /// <summary>
     /// Handles messages for the interaction with the remote shell.

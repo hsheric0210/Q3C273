@@ -1,11 +1,11 @@
-﻿using Everything.Helper;
-using Everything.Networking;
-using Q3C273.Shared.Enums;
+﻿using Q3C273.Shared.Enums;
 using Q3C273.Shared.Messages;
 using System;
 using System.Threading;
+using Ton618.Helper;
+using Ton618.Networking;
 
-namespace Everything.User
+namespace Ton618.User
 {
     /// <summary>
     /// Provides user activity detection and sends <see cref="SetUserStatus"/> messages on change.

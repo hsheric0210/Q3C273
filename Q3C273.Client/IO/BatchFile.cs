@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace Everything.IO
+namespace Ton618.IO
 {
     /// <summary>
     /// Provides methods to create batch files for application update, uninstall and restart operations.

@@ -4,7 +4,7 @@ using System.Drawing.Imaging;
 using System.Windows.Forms;
 using Everything.Utilities;
 
-namespace Everything.Helper
+namespace Ton618.Helper
 {
     public static class ScreenHelper
     {

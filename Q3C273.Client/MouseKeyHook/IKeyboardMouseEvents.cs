@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Everything.MouseKeyHook
+namespace Ton618.MouseKeyHook
 {
     /// <summary>
     ///     Provides keyboard and mouse events.

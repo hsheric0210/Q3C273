@@ -6,10 +6,11 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Everything.MouseKeyHook.Implementation;
+using Everything.MouseKeyHook.WinApi;
 using Everything.Utilities;
+using Ton618.MouseKeyHook.Implementation;
 
-namespace Everything.MouseKeyHook.WinApi
+namespace Ton618.MouseKeyHook.WinApi
 {
     internal static class HookHelper
     {

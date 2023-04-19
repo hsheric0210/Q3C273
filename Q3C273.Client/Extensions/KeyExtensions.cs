@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Everything.Extensions
+namespace Ton618.Extensions
 {
     public static class KeyExtensions
     {

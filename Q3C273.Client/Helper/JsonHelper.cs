@@ -2,7 +2,7 @@
 using System.Runtime.Serialization.Json;
 using System.Text;
 
-namespace Everything.Helper
+namespace Ton618.Helper
 {
     /// <summary>
     /// Provides methods to serialize and deserialize JSON.

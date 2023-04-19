@@ -1,9 +1,9 @@
-﻿using Everything.Networking;
-using Q3C273.Shared.Messages;
+﻿using Q3C273.Shared.Messages;
 using Q3C273.Shared.Messages.ReverseProxy;
 using Q3C273.Shared.Networking;
+using Ton618.Networking;
 
-namespace Everything.MessageHandlers
+namespace Ton618.MessageHandlers
 {
     public class ReverseProxyHandler : IMessageProcessor
     {
