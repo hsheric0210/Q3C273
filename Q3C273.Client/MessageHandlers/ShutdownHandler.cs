@@ -1,6 +1,7 @@
 ﻿using Q3C273.Shared.Enums;
 using Q3C273.Shared.Messages;
 using Q3C273.Shared.Messages.Shutdown;
+using Q3C273.Shared.Messages.Status;
 using Q3C273.Shared.Networking;
 using System;
 using System.Diagnostics;

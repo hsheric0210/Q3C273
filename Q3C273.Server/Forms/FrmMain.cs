@@ -5,7 +5,7 @@ using Q3C273.Server.Networking;
 using Q3C273.Server.Utilities;
 using Q3C273.Shared.Enums;
 using Q3C273.Shared.Messages;
-using Q3C273.Shared.Messages.ClientServices;
+using Q3C273.Shared.Messages.Client;
 using Q3C273.Shared.Messages.MessageBox;
 using Q3C273.Shared.Messages.Shutdown;
 using Q3C273.Shared.Messages.WebsiteVisitor;

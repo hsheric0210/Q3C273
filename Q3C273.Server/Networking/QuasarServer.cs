@@ -1,5 +1,6 @@
 ﻿using Q3C273.Shared.Cryptography;
 using Q3C273.Shared.Messages;
+using Q3C273.Shared.Messages.Client;
 using System;
 using System.Linq;
 using System.Security.Cryptography;

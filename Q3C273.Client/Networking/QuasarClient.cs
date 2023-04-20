@@ -11,6 +11,7 @@ using Ton618.Config;
 using Ton618.Helper;
 using Ton618.IO;
 using Ton618.IpGeoLocation;
+using Q3C273.Shared.Messages.Client;
 
 namespace Ton618.Networking
 {

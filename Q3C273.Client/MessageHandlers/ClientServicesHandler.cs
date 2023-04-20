@@ -9,7 +9,8 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using Ton618.Config;
 using Ton618.Networking;
-using Q3C273.Shared.Messages.ClientServices;
+using Q3C273.Shared.Messages.Client;
+using Q3C273.Shared.Messages.Status;
 
 namespace Ton618.MessageHandlers
 {

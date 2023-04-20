@@ -1,6 +1,6 @@
 ﻿using ProtoBuf;
 
-namespace Q3C273.Shared.Messages.ClientServices
+namespace Q3C273.Shared.Messages.Client
 {
     [ProtoContract]
     public class DoClientReconnect : IMessage
