@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Q3C273.Shared.Messages
+namespace Q3C273.Shared.Messages.SystemInformation
 {
     [ProtoContract]
     public class GetSystemInfoResponse : IMessage

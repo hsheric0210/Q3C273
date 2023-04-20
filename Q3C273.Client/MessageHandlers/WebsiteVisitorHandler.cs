@@ -1,4 +1,5 @@
 ﻿using Q3C273.Shared.Messages;
+using Q3C273.Shared.Messages.WebsiteVisitor;
 using Q3C273.Shared.Networking;
 using System;
 using System.Diagnostics;

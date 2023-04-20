@@ -8,6 +8,7 @@ using Q3C273.Shared.Networking;
 using Ton618.IO;
 using Ton618.Helper;
 using Ton618.IpGeoLocation;
+using Q3C273.Shared.Messages.SystemInformation;
 
 namespace Ton618.MessageHandlers
 {

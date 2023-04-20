@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Ton618.Recovery;
+using Q3C273.Shared.Messages.PasswordRecovery;
 
 namespace Ton618.MessageHandlers
 {

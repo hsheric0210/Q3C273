@@ -1,7 +1,7 @@
 ﻿using ProtoBuf;
 using Q3C273.Shared.Enums;
 
-namespace Q3C273.Shared.Messages
+namespace Q3C273.Shared.Messages.FileManager
 {
     [ProtoContract]
     public class DoPathDelete : IMessage

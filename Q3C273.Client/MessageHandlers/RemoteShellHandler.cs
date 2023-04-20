@@ -1,4 +1,5 @@
 ﻿using Q3C273.Shared.Messages;
+using Q3C273.Shared.Messages.RemoteShell;
 using Q3C273.Shared.Networking;
 using System;
 using Ton618.IO;

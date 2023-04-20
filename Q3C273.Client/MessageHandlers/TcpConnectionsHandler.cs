@@ -5,6 +5,7 @@ using Q3C273.Shared.Models;
 using Q3C273.Shared.Networking;
 using System;
 using System.Runtime.InteropServices;
+using Q3C273.Shared.Messages.TcpConnections;
 
 namespace Ton618.MessageHandlers
 {

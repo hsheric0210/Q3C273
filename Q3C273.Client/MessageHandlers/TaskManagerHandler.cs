@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using Ton618.Networking;
+using Q3C273.Shared.Messages.TaskManager;
 
 namespace Ton618.MessageHandlers
 {

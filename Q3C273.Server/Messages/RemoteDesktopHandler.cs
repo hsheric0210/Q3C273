@@ -1,6 +1,7 @@
 ﻿using Q3C273.Server.Networking;
 using Q3C273.Shared.Enums;
 using Q3C273.Shared.Messages;
+using Q3C273.Shared.Messages.RemoteDesktop;
 using Q3C273.Shared.Networking;
 using Q3C273.Shared.Video.Codecs;
 using System;

@@ -9,6 +9,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
 using Ton618.Helper;
+using Q3C273.Shared.Messages.RemoteDesktop;
 
 namespace Ton618.MessageHandlers
 {

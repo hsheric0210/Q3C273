@@ -1,4 +1,5 @@
 ﻿using Q3C273.Shared.Messages;
+using Q3C273.Shared.Messages.Keylogger;
 using Q3C273.Shared.Networking;
 using Ton618.Config;
 

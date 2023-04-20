@@ -1,5 +1,6 @@
 ﻿using Q3C273.Server.Networking;
 using Q3C273.Shared.Messages;
+using Q3C273.Shared.Messages.RemoteShell;
 using Q3C273.Shared.Networking;
 
 namespace Q3C273.Server.Messages

@@ -5,6 +5,7 @@ using System;
 using Ton618.Extensions;
 using Ton618.Helper;
 using Ton618.Registry;
+using Q3C273.Shared.Messages.Registry;
 
 namespace Ton618.MessageHandlers
 {

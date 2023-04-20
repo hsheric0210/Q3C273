@@ -1,6 +1,6 @@
 ﻿using ProtoBuf;
 
-namespace Q3C273.Shared.Messages
+namespace Q3C273.Shared.Messages.TaskManager
 {
     [ProtoContract]
     public class DoProcessStart : IMessage

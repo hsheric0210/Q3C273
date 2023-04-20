@@ -1,7 +1,7 @@
 ﻿using ProtoBuf;
 using Q3C273.Shared.Models;
 
-namespace Q3C273.Shared.Messages
+namespace Q3C273.Shared.Messages.Registry
 {
     [ProtoContract]
     public class GetChangeRegistryValueResponse : IMessage

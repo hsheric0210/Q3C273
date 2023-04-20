@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Q3C273.Shared.Messages.FileManager;
+using Q3C273.Shared.Messages.StartupManager;
 
 namespace Q3C273.Server.Messages
 {

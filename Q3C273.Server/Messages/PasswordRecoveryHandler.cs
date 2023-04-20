@@ -1,5 +1,6 @@
 ﻿using Q3C273.Server.Networking;
 using Q3C273.Shared.Messages;
+using Q3C273.Shared.Messages.PasswordRecovery;
 using Q3C273.Shared.Models;
 using Q3C273.Shared.Networking;
 using System.Collections.Generic;
