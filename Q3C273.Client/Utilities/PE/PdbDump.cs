@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using static Ton618.Utilities.ClientNatives;
 
 namespace Ton618.Utilities.PE
 {
@@ -142,7 +143,7 @@ namespace Ton618.Utilities.PE
         {
             if (_disposed == false)
             {
-                if (disposing == true)
+                if (disposing)
                 {
                     if (_hProcess != IntPtr.Zero)
                     {
@@ -150,7 +151,7 @@ namespace Ton618.Utilities.PE
                         _hProcess = IntPtr.Zero;
                     }
 
-                    if (_symInitialized == true)
+                    if (_symInitialized)
                     {
                         ClientNatives.SymCleanup(_hProcess);
                         _symInitialized = false;

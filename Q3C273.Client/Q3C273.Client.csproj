@@ -28,6 +28,12 @@
         <RootNamespace>Ton618</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
+      <None Remove="Utilities\PE\ExtensionHelper_.cs.unused" />
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Include="Utilities\PE\ExtensionHelper_.cs.unused" />
+    </ItemGroup>
+    <ItemGroup>
         <Reference Include="System.Management" />
         <Reference Include="System.Security" />
         <Reference Include="System.Web" />

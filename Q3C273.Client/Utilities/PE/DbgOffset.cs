@@ -29,7 +29,7 @@ namespace Ton618.Utilities.PE
 
         public static DbgOffset Get(string typeName, string moduleName, string targetExePath)
         {
-            if (_cache.ContainsKey(typeName) == true)
+            if (_cache.ContainsKey(typeName))
                 return _cache[typeName];
 
             var list = GetList(typeName, moduleName, targetExePath);
@@ -108,7 +108,7 @@ namespace Ton618.Utilities.PE
                 FileName = "DisplayStruct.exe",
                 UseShellExecute = false,
                 WorkingDirectory = Path.GetDirectoryName(typeof(DbgOffset).Assembly.Location),
-                Arguments = $"{typeName} {moduleName}" + (string.IsNullOrEmpty(pidOrPath) == true ? "" : $" \"{pidOrPath}\""),
+                Arguments = $"{typeName} {moduleName}" + (string.IsNullOrEmpty(pidOrPath) ? "" : $" \"{pidOrPath}\""),
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
                 LoadUserProfile = false,
@@ -138,7 +138,7 @@ namespace Ton618.Utilities.PE
                     continue;
 
                 var name = ReadFieldName(line, offsetEndPos, out var nameEndPos);
-                if (string.IsNullOrEmpty(name) == true || nameEndPos == -1)
+                if (string.IsNullOrEmpty(name) || nameEndPos == -1)
                     continue;
 
                 var type = line.Substring(nameEndPos).Trim();
@@ -198,7 +198,7 @@ namespace Ton618.Utilities.PE
 
         private static void UnpackDisplayStructAppFromRes(string fileName)
         {
-            if (File.Exists(fileName) == true)
+            if (File.Exists(fileName))
                 return;
 
             var dirPath = Path.GetDirectoryName(typeof(DbgOffset).Assembly.Location);

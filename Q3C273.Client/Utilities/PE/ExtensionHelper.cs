@@ -147,6 +147,12 @@ namespace Ton618.Utilities.PE
             return result;
         }
 
+        public unsafe static void WriteValue<T>(this IntPtr ptr, T value) where T : unmanaged
+        {
+            var pValue = (T*)ptr.ToPointer();
+            *pValue = value;
+        }
+
         public static void WriteInt64(this IntPtr ptr, long value)
         {
             Marshal.WriteInt64(ptr, value);

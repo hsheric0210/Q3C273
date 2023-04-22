@@ -2,8 +2,9 @@
 
 namespace Ton618.Utilities.PE
 {
-    public static class HelperExtension
+    internal static class ExtensionHelper_
     {
+
         public static unsafe IntPtr ReadPtr(this IntPtr ptr)
         {
             if (IntPtr.Size == 4)
@@ -16,12 +17,6 @@ namespace Ton618.Utilities.PE
                 var ptrLong = (long*)ptr.ToPointer();
                 return new IntPtr(*ptrLong);
             }
-        }
-
-        public unsafe static void WriteValue<T>(this IntPtr ptr, T value) where T : unmanaged
-        {
-            var pValue = (T*)ptr.ToPointer();
-            *pValue = value;
         }
     }
 }

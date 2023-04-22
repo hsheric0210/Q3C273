@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Ton618.Utilities.PE
+namespace Ton618.Utilities
 {
     public class BufferPtr : IDisposable
     {

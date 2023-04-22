@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Ton618.Utilities.PE;
+using static Ton618.Utilities.PE.EnvBlock;
 
 namespace Ton618.Utilities
 {
@@ -31,7 +32,7 @@ namespace Ton618.Utilities
             var key = (module + '!' + proc).GetHashCode(); // Address caching
             if (!addresses.TryGetValue(key, out var addr))
             {
-                var peb = EnvironmentBlockInfo.GetPeb();
+                var peb = EnvBlock.GetPeb();
                 var ldrData = _PEB_LDR_DATA.Create(peb.Ldr);
                 var mod = ldrData.Find(module);
                 if (Equals(mod, default(_LDR_DATA_TABLE_ENTRY)))

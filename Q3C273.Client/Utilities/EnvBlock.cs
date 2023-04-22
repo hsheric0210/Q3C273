@@ -1,14 +1,15 @@
 ﻿using Ton618.Utilities;
 using System;
 using System.Runtime.InteropServices;
+using static Ton618.Utilities.ClientNatives;
 
 namespace Ton618.Utilities.PE
 {
-    public class EnvironmentBlockInfo
+    public partial class EnvBlock
     {
         // Do not replace this with dynamic call.
         [DllImport("kernel32.dll", EntryPoint = "VirtualAlloc")]
-        private static extern IntPtr VirtualAllocExplicit(IntPtr lpAddress, UIntPtr dwSize, AllocationType flAllocationType, MemoryProtection flProtection);
+        private static extern IntPtr VirtualAllocExplicit(IntPtr lpAddress, UIntPtr dwSize, AllocationType flAllocationType, PageAccessRights flProtection);
 
         [DllImport("ntdll.dll", CallingConvention = CallingConvention.StdCall)]
         private static extern IntPtr NtCurrentTeb();
@@ -29,7 +30,7 @@ namespace Ton618.Utilities.PE
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate long GetTebDelegate();
 
-        static EnvironmentBlockInfo()
+        static EnvBlock()
         {
             if (IntPtr.Size != 8)
                 return;
@@ -38,7 +39,7 @@ namespace Ton618.Utilities.PE
 
             _codePointer = VirtualAllocExplicit(IntPtr.Zero, new UIntPtr((uint)codeBytes.Length),
                 AllocationType.COMMIT | AllocationType.RESERVE,
-                MemoryProtection.EXECUTE_READWRITE
+                PageAccessRights.PAGE_EXECUTE_READWRITE
             );
 
             Marshal.Copy(codeBytes, 0, _codePointer, codeBytes.Length);

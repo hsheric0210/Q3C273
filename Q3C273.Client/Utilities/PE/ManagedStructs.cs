@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using static Ton618.Utilities.ClientNatives;
 
 #pragma warning disable IDE1006 // Naming Styles
 
@@ -49,12 +50,6 @@ namespace Ton618.Utilities.PE
             return Name?.GetHashCode() ?? 0;
         }
 
-    }
-
-    public class DllOrderLink
-    {
-        public IntPtr LoadOrderLink;
-        public IntPtr MemoryOrderLink;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -246,20 +241,20 @@ namespace Ton618.Utilities.PE
                 switch (handleTypeName)
                 {
                     case "Process":
-                        {
-                            var processName = GetProcessName(dupHandle);
-                            var processId = ClientNatives.GetProcessId(dupHandle);
+                    {
+                        var processName = GetProcessName(dupHandle);
+                        var processId = ClientNatives.GetProcessId(dupHandle);
 
-                            return $"{processName}({processId})";
-                        }
+                        return $"{processName}({processId})";
+                    }
 
                     case "Thread":
-                        {
-                            var processName = GetProcessName(ownerPid);
-                            var threadId = ClientNatives.GetThreadId(dupHandle);
+                    {
+                        var processName = GetProcessName(ownerPid);
+                        var threadId = ClientNatives.GetThreadId(dupHandle);
 
-                            return $"{processName}({ownerPid}): {threadId}";
-                        }
+                        return $"{processName}({ownerPid}): {threadId}";
+                    }
 
                     case "Directory":
                     case "ALPC Port":
@@ -274,7 +269,7 @@ namespace Ton618.Utilities.PE
                     case "File":
                         devicePath = GetObjectNameFromHandle(dupHandle);
 
-                        if (string.IsNullOrEmpty(devicePath) == true)
+                        if (string.IsNullOrEmpty(devicePath))
                             return "";
 
                         string dosPath;
@@ -498,7 +493,7 @@ namespace Ton618.Utilities.PE
                 var dupResult = ClientNatives.DuplicateHandle(targetProcessHandle, targetHandle, currentProcess,
                     out duplicatedHandle, addAccessRights, false,
                      addAccessRights == 0 ? DuplicateHandleOptions.DUPLICATE_SAME_ACCESS : 0);
-                if (dupResult == true)
+                if (dupResult)
                     return duplicatedHandle;
 
                 return IntPtr.Zero;

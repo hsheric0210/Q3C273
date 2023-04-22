@@ -71,7 +71,7 @@ namespace Ton618.Utilities.PE
         {
             get
             {
-                if (_is64BitHeader == true)
+                if (_is64BitHeader)
                     return _optionalHeader64.CLRRuntimeHeader;
                 else
                 {
@@ -84,7 +84,7 @@ namespace Ton618.Utilities.PE
         {
             get
             {
-                if (_is64BitHeader == true)
+                if (_is64BitHeader)
                     return _optionalHeader64.ExportTable;
                 else
                 {
@@ -97,7 +97,7 @@ namespace Ton618.Utilities.PE
         {
             get
             {
-                if (_is64BitHeader == true)
+                if (_is64BitHeader)
                     return _optionalHeader64.Debug;
                 else
                 {
@@ -282,7 +282,7 @@ namespace Ton618.Utilities.PE
         {
             buffer = null;
 
-            if (_readFromFile == true)
+            if (_readFromFile)
             {
                 var startAddress = Rva2Raw((int)rva);
                 var endAddress = startAddress + (int)size;
@@ -439,7 +439,7 @@ namespace Ton618.Utilities.PE
         {
             foreach (ProcessModule pm in Process.GetCurrentProcess().Modules)
             {
-                if (pm.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase) == true)
+                if (pm.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
                 {
                     var image = ReadFromMemory(pm.BaseAddress, pm.ModuleMemorySize);
                     image._filePath = pm.FileName;
@@ -494,7 +494,7 @@ namespace Ton618.Utilities.PE
 
                 image._readFromFile = true;
                 image._filePath = filePath;
-                image._baseAddress = new IntPtr(image._is64BitHeader == true ? (long)image._optionalHeader64.ImageBase
+                image._baseAddress = new IntPtr(image._is64BitHeader ? (long)image._optionalHeader64.ImageBase
                                         : image._optionalHeader32.ImageBase);
 
                 return image;
@@ -521,11 +521,11 @@ namespace Ton618.Utilities.PE
 
             foreach (var codeView in EnumerateCodeViewDebugInfo())
             {
-                if (string.IsNullOrEmpty(codeView.PdbFileName) == true)
+                if (string.IsNullOrEmpty(codeView.PdbFileName))
                     continue;
 
                 var pdbFileName = codeView.PdbFileName;
-                if (Path.IsPathRooted(codeView.PdbFileName) == true)
+                if (Path.IsPathRooted(codeView.PdbFileName))
                     pdbFileName = Path.GetFileName(codeView.PdbFileName);
 
                 var localPath = Path.Combine(rootPathToSave, pdbFileName);
@@ -544,15 +544,15 @@ namespace Ton618.Utilities.PE
                     }
                 }
 
-                if (File.Exists(localPath) == true)
+                if (File.Exists(localPath))
                 {
-                    if (Path.GetExtension(localPath).Equals(".pdb", StringComparison.OrdinalIgnoreCase) == true)
+                    if (Path.GetExtension(localPath).Equals(".pdb", StringComparison.OrdinalIgnoreCase))
                         pdbDownloadedPath = localPath;
 
                     continue;
                 }
 
-                if (CopyPdbFromLocal(modulePath, codeView.PdbFileName, localPath) == true)
+                if (CopyPdbFromLocal(modulePath, codeView.PdbFileName, localPath))
                     continue;
 
                 var target = new Uri(baseUri, codeView.PdbUriPath);
@@ -568,7 +568,7 @@ namespace Ton618.Utilities.PE
                 {
                     DownloadPdbFile(pdbLocation, localPath);
 
-                    if (Path.GetExtension(localPath).Equals(".pdb", StringComparison.OrdinalIgnoreCase) == true)
+                    if (Path.GetExtension(localPath).Equals(".pdb", StringComparison.OrdinalIgnoreCase))
                         pdbDownloadedPath = localPath;
                 }
                 else
@@ -607,7 +607,7 @@ namespace Ton618.Utilities.PE
 
         private static bool CopyPdbFromLocal(string modulePath, string pdbFileName, string localTargetPath)
         {
-            if (File.Exists(pdbFileName) == true)
+            if (File.Exists(pdbFileName))
             {
                 File.Copy(pdbFileName, localTargetPath);
                 return File.Exists(localTargetPath);
@@ -616,14 +616,14 @@ namespace Ton618.Utilities.PE
             var fileName = Path.GetFileName(pdbFileName);
             var pdbPath = Path.Combine(Environment.CurrentDirectory, fileName);
 
-            if (File.Exists(pdbPath) == true)
+            if (File.Exists(pdbPath))
             {
                 File.Copy(pdbPath, localTargetPath);
                 return File.Exists(localTargetPath);
             }
 
             pdbPath = Path.ChangeExtension(modulePath, ".pdb");
-            if (File.Exists(pdbPath) == true)
+            if (File.Exists(pdbPath))
             {
                 File.Copy(pdbPath, localTargetPath);
                 return File.Exists(localTargetPath);

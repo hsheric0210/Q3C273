@@ -1,6 +1,6 @@
-﻿using Ton618.Utilities;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
+using static Ton618.Utilities.ClientNatives;
 
 namespace Ton618.Utilities.PE
 {
@@ -73,7 +73,7 @@ namespace Ton618.Utilities.PE
 
             while (true)
             {
-                ret = ClientNatives.NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemExtendedHandleInformation, ptr, guessSize, out var requiredSize);
+                ret = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemExtendedHandleInformation, ptr, guessSize, out var requiredSize);
 
                 if (ret == NT_STATUS.STATUS_INFO_LENGTH_MISMATCH)
                 {

@@ -1,6 +1,6 @@
-﻿using Ton618.Utilities;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
+using static Ton618.Utilities.ClientNatives;
 
 namespace Ton618.Utilities.PE
 {
@@ -72,14 +72,14 @@ namespace Ton618.Utilities.PE
             NT_STATUS ret;
 
             var ptr = Marshal.AllocHGlobal(guessSize);
-            var processHandle = ClientNatives.OpenProcess(
+            var processHandle = OpenProcess(
                 ProcessAccessRights.PROCESS_QUERY_INFORMATION | ProcessAccessRights.PROCESS_DUP_HANDLE, false, pid);
             if (processHandle == IntPtr.Zero)
                 return;
 
             while (true)
             {
-                ret = ClientNatives.NtQueryInformationProcess(processHandle, PROCESS_INFORMATION_CLASS.ProcessHandleInformation, ptr, guessSize, out var requiredSize);
+                ret = NtQueryInformationProcess(processHandle, PROCESS_INFORMATION_CLASS.ProcessHandleInformation, ptr, guessSize, out var requiredSize);
 
                 if (ret == NT_STATUS.STATUS_INFO_LENGTH_MISMATCH)
                 {

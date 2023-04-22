@@ -13,7 +13,7 @@
 
         public override string ToString()
         {
-            return $"{Name} at 0x{RvaAddress.ToString("x")}";
+            return $"{Name} at 0x{RvaAddress:x}";
         }
     }
 
