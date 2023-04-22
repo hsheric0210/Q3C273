@@ -8,14 +8,6 @@ namespace Ton618.Utilities
     /// </summary>
     internal static partial class ClientNatives
     {
-        internal enum SecurityImpersonationLevel
-        {
-            SecurityAnonymous,
-            SecurityIdentification,
-            SecurityImpersonation,
-            SecurityDelegation
-        }
-
         internal enum PrivilegeAttributes
         {
             SE_PRIVILEGE_ENABLED_BY_DEFAULT = 0x00000001,

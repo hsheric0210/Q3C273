@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using static Ton618.Utilities.ClientNatives;
 
 namespace Ton618.Utilities.PE
 {
-    public partial class EnvBlock
+    internal partial class EnvBlock
     {
         // https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-teb
         [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct _TEB
+        internal unsafe struct _TEB
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 12)]
             public IntPtr[] Reserved1;
@@ -36,7 +37,7 @@ namespace Ton618.Utilities.PE
 
         // https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb
         [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct _PEB
+        internal unsafe struct _PEB
         {
             public fixed byte Reserved1[2];
             public byte BeingDebugged;
@@ -87,7 +88,7 @@ namespace Ton618.Utilities.PE
             //}
         }
 
-        public class DllOrderLink
+        internal class DllOrderLink
         {
             public IntPtr LoadOrderLink;
             public IntPtr MemoryOrderLink;
@@ -95,7 +96,7 @@ namespace Ton618.Utilities.PE
 
         // https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb_ldr_data
         [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct _PEB_LDR_DATA
+        internal unsafe struct _PEB_LDR_DATA
         {
             public fixed byte Reserved1[8];
             public IntPtr Reserved2;
@@ -186,7 +187,7 @@ namespace Ton618.Utilities.PE
 
         // https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb_ldr_data
         [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct _LDR_DATA_TABLE_ENTRY
+        internal unsafe struct _LDR_DATA_TABLE_ENTRY
         {
             public _LIST_ENTRY InLoadOrderLinks;
             public _LIST_ENTRY InMemoryOrderLinks;

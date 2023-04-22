@@ -5,7 +5,7 @@ using static Ton618.Utilities.ClientNatives;
 
 namespace Ton618.Utilities.PE
 {
-    public partial class EnvBlock
+    internal partial class EnvBlock
     {
         // Do not replace this with dynamic call.
         [DllImport("kernel32.dll", EntryPoint = "VirtualAlloc")]

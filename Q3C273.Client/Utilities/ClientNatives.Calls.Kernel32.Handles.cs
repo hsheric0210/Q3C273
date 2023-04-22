@@ -36,5 +36,11 @@ namespace Ton618.Utilities
         internal delegate bool CloseHandleProc([In] IntPtr hObject);
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         internal static bool CloseHandle([In] IntPtr hObject) => Lookup<CloseHandleProc>("kernel32.dll", "CloseHandle")(hObject);
+
+        internal delegate IntPtr GetModuleHandleProc([MarshalAs(UnmanagedType.LPWStr)] string moduleName);
+        internal static IntPtr GetModuleHandle([MarshalAs(UnmanagedType.LPWStr)] string moduleName) => Lookup<GetModuleHandleProc>("kernel32.dll", "GetModuleHandleW")(moduleName);
+
+        internal delegate uint WaitForSingleObjectProc(IntPtr hObject, uint dwMilliseconds);
+        internal static uint WaitForSingleObject(IntPtr hObject, uint dwMilliseconds) => Lookup<WaitForSingleObjectProc>("kernel32.dll", "WaitForSingleObject")(hObject, dwMilliseconds);
     }
 }

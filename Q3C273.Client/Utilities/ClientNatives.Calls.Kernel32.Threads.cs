@@ -38,5 +38,29 @@ namespace Ton618.Utilities
             [In] ThreadTokenAccessRights dwDesiredAccess,
             [In] bool bOpenAsSelf,
             [Out] out IntPtr hToken) => Lookup<OpenThreadTokenProc>("kernel32.dll", "OpenThreadToken")(hThread, dwDesiredAccess, bOpenAsSelf, out hToken);
+
+        internal delegate IntPtr CreateRemoteThreadProc(
+            IntPtr hProcess,
+            IntPtr lpThreadAttributes,
+            UIntPtr dwStackSize,
+            IntPtr lpStartAdress,
+            IntPtr lpParameter,
+            uint dwCreationFlags,
+            ref uint lpThreadId);
+        internal static IntPtr CreateRemoteThread(
+                    IntPtr hProcess,
+                    IntPtr lpThreadAttributes,
+                    UIntPtr dwStackSize,
+                    IntPtr lpStartAdress,
+                    IntPtr lpParameter,
+                    uint dwCreationFlags,
+                    ref uint lpThreadId) => Lookup<CreateRemoteThreadProc>("kernel32.dll", "CreateRemoteThread")(hProcess, lpThreadAttributes, dwStackSize, lpStartAdress, lpParameter, dwCreationFlags, ref lpThreadId);
+
+        internal delegate IntPtr GetExitCodeThreadProc(
+            IntPtr hThread,
+            out uint lpExitCode);
+        internal static IntPtr GetExitCodeThread(
+                    IntPtr hThread,
+                    out uint lpExitCode) => Lookup<GetExitCodeThreadProc>("kernel32.dll", "GetExitCodeThread")(hThread, out lpExitCode);
     }
 }

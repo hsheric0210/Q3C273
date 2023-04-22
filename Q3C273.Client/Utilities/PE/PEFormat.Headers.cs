@@ -56,7 +56,6 @@ namespace Ton618.Utilities.PE
         public ushort Characteristics;
     }
 
-
     [StructLayout(LayoutKind.Explicit)]
     public struct IMAGE_OPTIONAL_HEADER32
     {
@@ -394,5 +393,22 @@ namespace Ton618.Utilities.PE
         {
             get { return MajorRuntimeVersion << 16 | MinorRuntimeVersion; }
         }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct IMAGE_BASE_RELOCATION
+    {
+        public uint VirtualAddress;
+        public uint SizeOfBlock;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct IMAGE_IMPORT_DESCRIPTOR
+    {
+        public uint Characteristics;
+        public uint TimeDateStamp;
+        public uint ForwarderChain;
+        public uint Name;
+        public uint FirstThunk;
     }
 }
