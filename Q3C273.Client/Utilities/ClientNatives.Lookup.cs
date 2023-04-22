@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Ton618.Utilities.PE;
 using static Ton618.Utilities.PE.EnvBlock;

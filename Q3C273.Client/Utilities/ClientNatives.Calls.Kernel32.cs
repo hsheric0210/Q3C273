@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
-using Ton618.Utilities.PE;
 
 namespace Ton618.Utilities
 {

@@ -1,13 +1,7 @@
 ﻿using Q3C273.Shared;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms.VisualStyles;
 using Ton618.Utilities;
 using Ton618.Utilities.PE;
 using static Ton618.Utilities.ClientNatives;
@@ -17,15 +11,13 @@ namespace Ton618.Loader
     internal class ImageRelocator
     {
         private readonly byte[] imageBytes;
-        private readonly int imageSize;
         private PEImage pe;
 
         public ImageRelocator(byte[] image)
         {
             imageBytes = image;
-            imageSize = image.Length;
-            this.pe = PEImage.ReadFromMemory(image, IntPtr.Zero, image.Length);
-            if (this.pe == null)
+            pe = PEImage.ReadFromMemory(image, IntPtr.Zero, image.Length);
+            if (pe == null)
                 throw new InvalidOperationException("PE image failed to parse"); // TODO: Handle this
         }
 
@@ -45,11 +37,42 @@ namespace Ton618.Loader
             return specifics;
         }
 
-        public int Write(IntPtr processHandle)
+        public IntPtr GetProcAddr(IntPtr peHandle, string funcName)
         {
+            if (pe.ExportDirectory.Size == 0)
+                return IntPtr.Zero;
+            var i32size = (uint)Marshal.SizeOf<uint>();
+            var i16size = (uint)Marshal.SizeOf<ushort>();
+
+            var edtPtr = peHandle.uplusptr(pe.ExportDirectory.VirtualAddress);
+            var edt = Marshal.PtrToStructure<IMAGE_EXPORT_DIRECTORY>(edtPtr);
+
+            for (uint i = 0, j = edt.NumberOfNames; i < j; i++)
+            {
+                var nameOffsetPtr = peHandle.uplusptr(edt.AddressOfNames + (i * i32size));
+                var namePtr = peHandle.uplusptr(Marshal.PtrToStructure<uint>(nameOffsetPtr));
+                var name = Marshal.PtrToStringAnsi(namePtr);
+
+                if (name.Equals(funcName, StringComparison.OrdinalIgnoreCase))
+                {
+                    var ordinalPtr = peHandle.uplusptr(edt.AddressOfNameOrdinals + (i * i16size));
+                    var ordinal = Marshal.PtrToStructure<uint>(ordinalPtr);
+                    var addrPtr = peHandle.uplusptr(edt.AddressOfFunctions + (ordinal * i32size));
+                    var addr = Marshal.PtrToStructure<uint>(addrPtr);
+                    return peHandle.uplusptr(addr);
+                }
+            }
+
+            return IntPtr.Zero;
+        }
+
+        public IntPtr Inject(IntPtr processHandle)
+        {
+            var ptrSize = Marshal.SizeOf<IntPtr>();
+
             var specifics = Check(processHandle);
             if (specifics.HasFlag(ReflectiveSpecific.INCOMPATIBLE_BITS))
-                return 1;
+                throw new Exception("Processor bits mismatch");
 
             var remoteMemAddr = IntPtr.Zero;
             if (specifics.HasFlag(ReflectiveSpecific.NOT_ASLR_COMPAT))
@@ -68,14 +91,71 @@ namespace Ton618.Loader
                 AllocationType.COMMIT | AllocationType.RESERVE,
                 PageAccessRights.PAGE_EXECUTE_READWRITE);
             if (remoteMem == IntPtr.Zero)
-                return 2;
+                throw new Exception("Remote PE memory allocation failure");
 
             // Copy headers (they're always consistent and only contains 'relative' addresses thus we don't need to touch them)
             Marshal.Copy(imageBytes, 0, localMem, (int)pe.SizeOfHeader);
 
             CopySections(localMem);
 
-            return 0;
+            UpdateMemoryAddresses(localMem, remoteMem, pe.OriginalImageBase);
+
+            ImportDllImports(localMem, remoteMem, processHandle);
+
+            if (!specifics.HasFlag(ReflectiveSpecific.NOT_NX_COMPAT))
+                UpdateMemoryProtectionFlags(localMem, remoteMem, processHandle);
+
+            var written = UIntPtr.Zero;
+            var state = WriteProcessMemory(processHandle, remoteMem, localMem, (UIntPtr)pe.SizeOfImage, ref written);
+            if (!state)
+                throw new Exception("Cannot write PE to remote process.");
+
+            // call dllmain
+            var dllmain = remoteMem.uplusptr(pe.EntryPoint);
+            byte[][] shellCode;
+            if (pe.Is64Bitness)
+            {
+                shellCode = new byte[][]
+                {
+                    new byte[] {0x53, 0x48, 0x89, 0xe3, 0x66, 0x83, 0xe4, 0x00, 0x48, 0xb9 },
+                    new byte[] {0xba, 0x01, 0x00, 0x00, 0x00, 0x41, 0xb8, 0x00, 0x00, 0x00, 0x00, 0x48, 0xb8 },
+                    new byte[] {0xff, 0xd0, 0x48, 0x89, 0xdc, 0x5b, 0xc3 }
+                };
+            }
+            else
+            {
+                shellCode = new byte[][]
+                {
+                     new byte[] {0x53, 0x89, 0xe3, 0x83, 0xe4, 0xf0, 0xb9 },
+                     new byte[] {0xba, 0x01, 0x00, 0x00, 0x00, 0xb8, 0x00, 0x00, 0x00, 0x00, 0x50, 0x52, 0x51, 0xb8 },
+                     new byte[] {0xff, 0xd0, 0x89, 0xdc, 0x5b, 0xc3 }
+                };
+            }
+            var shellCodeSize = shellCode.Sum(s => s.Length) + ptrSize * 2;
+            var shellCodeMem = Marshal.AllocHGlobal(shellCodeSize);
+            var shellCodeMemOriginal = shellCodeMem;
+            shellCodeMem.WriteBytes(shellCode[0]);
+            shellCodeMem += shellCode[0].Length;
+            Marshal.StructureToPtr(remoteMem, shellCodeMem, false);
+            shellCodeMem.WriteBytes(shellCode[1]);
+            shellCodeMem += shellCode[1].Length;
+            Marshal.StructureToPtr(dllmain, shellCodeMem, false);
+            shellCodeMem.WriteBytes(shellCode[2]);
+
+            var shellCodeRMem = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)shellCodeSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_EXECUTE_READWRITE);
+            if (shellCodeRMem == IntPtr.Zero)
+                throw new Exception("Cannot allocate remote process memory for DllMain invocation.");
+            state = WriteProcessMemory(processHandle, shellCodeRMem, shellCodeMem, (UIntPtr)shellCodeSize, ref written);
+            if (!state || written != (UIntPtr)shellCodeSize)
+                throw new Exception("DllMain shellcode is not fully written to the target process memory.");
+
+            var threadHandle = CreateRemoteThreadAuto(processHandle, shellCodeRMem, IntPtr.Zero);
+            if (threadHandle == IntPtr.Zero)
+                throw new Exception("Cannot create remote DllMain invoker thread");
+
+            VirtualFreeEx(processHandle, shellCodeRMem, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
+
+            return remoteMem;
         }
 
         // Copy-Sections
@@ -104,18 +184,18 @@ namespace Ton618.Loader
         }
 
         // Update-MemoryAddresses
-        private void UpdateMemoryAddresses(IntPtr localMem, IntPtr remoteMem, long originalBase)
+        private void UpdateMemoryAddresses(IntPtr localMem, IntPtr remoteMem, ulong originalBase)
         {
-            if (originalBase == remoteMem.ToInt64() || pe.BaseRelocationDirectory.Size == 0)
+            if (originalBase == remoteMem.ToUInt64() || pe.BaseRelocationDirectory.Size == 0)
                 return; // Nothing to do
 
             var imageBaseRelocSize = Marshal.SizeOf<IMAGE_BASE_RELOCATION>();
-            var baseDifference = 0l;
-            var subDifference = originalBase > remoteMem.ToInt64();
+            var baseDifference = 0ul;
+            var subDifference = originalBase > remoteMem.ToUInt64();
             if (subDifference)
-                baseDifference = originalBase - remoteMem.ToInt64();
+                baseDifference = originalBase - remoteMem.ToUInt64();
             else
-                baseDifference = remoteMem.ToInt64() - originalBase;
+                baseDifference = remoteMem.ToUInt64() - originalBase;
             IntPtr baseRelocPtr = localMem.uplusptr(pe.BaseRelocationDirectory.VirtualAddress);
             var tableSize = pe.BaseRelocationDirectory.Size;
             while (tableSize > 0)
@@ -137,9 +217,9 @@ namespace Ton618.Loader
                         var finalAddr = memAddrBase + relocOffset;
                         var currAddr = Marshal.PtrToStructure<IntPtr>(finalAddr);
                         if (subDifference)
-                            currAddr = new IntPtr(currAddr.ToInt64() - baseDifference);
+                            currAddr = currAddr.uminusptr(baseDifference);
                         else
-                            currAddr = new IntPtr(currAddr.ToInt64() + baseDifference);
+                            currAddr = currAddr.uplusptr(baseDifference);
                         Marshal.StructureToPtr(currAddr, finalAddr, false);
                     }
                     else if (relocType != ImageRelocationType.IMAGE_REL_BASED_ABSOLUTE)
@@ -209,6 +289,63 @@ namespace Ton618.Loader
 
                 importDescriptorPtr += Marshal.SizeOf<IMAGE_IMPORT_DESCRIPTOR>();
             }
+        }
+
+        private void UpdateMemoryProtectionFlags(IntPtr localMem, IntPtr remoteMem, IntPtr processHandle)
+        {
+            foreach (var section in pe.EnumerateSections())
+            {
+                var sectionPtr = localMem.uplusptr(section.VirtualAddress);
+                var protectionFlag = GetVirtualProtectionValue(section.Characteristics);
+                var sectionSize = section.PhysicalAddressOrVirtualSize;
+                var state = VirtualProtect(sectionPtr, (UIntPtr)sectionSize, protectionFlag, out var oldProtection);
+                if (!state)
+                    throw new Exception("Cannot update memory protection rule for section " + sectionPtr);
+            }
+        }
+
+        private PageAccessRights GetVirtualProtectionValue(ImageSectionCharacteristics chr)
+        {
+            var protFlags = PageAccessRights.None;
+            if (chr.HasFlag(ImageSectionCharacteristics.IMAGE_SCN_MEM_EXECUTE))
+            {
+                if (chr.HasFlag(ImageSectionCharacteristics.IMAGE_SCN_MEM_READ))
+                {
+                    if (chr.HasFlag(ImageSectionCharacteristics.IMAGE_SCN_MEM_WRITE))
+                        protFlags = PageAccessRights.PAGE_EXECUTE_READWRITE;
+                    else
+                        protFlags = PageAccessRights.PAGE_EXECUTE_READ;
+                }
+                else
+                {
+                    if (chr.HasFlag(ImageSectionCharacteristics.IMAGE_SCN_MEM_READ))
+                        protFlags = PageAccessRights.PAGE_WRITECOPY;
+                    else
+                        protFlags = PageAccessRights.PAGE_EXECUTE;
+                }
+            }
+            else
+            {
+                if (chr.HasFlag(ImageSectionCharacteristics.IMAGE_SCN_MEM_READ))
+                {
+                    if (chr.HasFlag(ImageSectionCharacteristics.IMAGE_SCN_MEM_WRITE))
+                        protFlags = PageAccessRights.PAGE_READWRITE;
+                    else
+                        protFlags = PageAccessRights.PAGE_READONLY;
+                }
+                else
+                {
+                    if (chr.HasFlag(ImageSectionCharacteristics.IMAGE_SCN_MEM_READ))
+                        protFlags = PageAccessRights.PAGE_WRITECOPY;
+                    else
+                        protFlags = PageAccessRights.PAGE_NOACCESS;
+                }
+            }
+
+            if (chr.HasFlag(ImageSectionCharacteristics.IMAGE_SCN_MEM_NOT_CACHED))
+                protFlags |= PageAccessRights.PAGE_NOCACHE;
+
+            return protFlags;
         }
 
         private IntPtr ImportDllInRemoteProcess(IntPtr processHandle, IntPtr importDllPathPtr)

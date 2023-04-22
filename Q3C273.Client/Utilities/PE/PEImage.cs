@@ -57,6 +57,8 @@ namespace Ton618.Utilities.PE
 
         public DllCharacteristicsType DllCharacteristics => _is64BitHeader ? _optionalHeader64.DllCharacteristics : _optionalHeader32.DllCharacteristics;
 
+        public uint EntryPoint => _is64BitHeader ? _optionalHeader64.AddressOfEntryPoint : _optionalHeader32.AddressOfEntryPoint;
+
         static bool IsValidNTHeaders(int signature)
         {
             // PE 헤더임을 확인 (IMAGE_NT_SIGNATURE == 0x00004550)

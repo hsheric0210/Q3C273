@@ -1,5 +1,4 @@
 ﻿using System;
-using Ton618.Utilities.PE;
 
 namespace Ton618.Utilities
 {
@@ -20,6 +19,18 @@ namespace Ton618.Utilities
         internal delegate bool VirtualFreeExProc(IntPtr hProcess, IntPtr lpAddress, UIntPtr dwSize, MemFreeType dwFreeType);
         internal static bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, UIntPtr dwSize, MemFreeType dwFreeType)
             => Lookup<VirtualFreeExProc>("kernel32.dll", "VirtualFreeEx")(hProcess, lpAddress, dwSize, dwFreeType);
+
+        internal delegate bool VirtualProtectProc(
+            IntPtr lpAddress,
+            UIntPtr dwSize,
+            PageAccessRights flNewProtect,
+            out PageAccessRights lpflOldProtect);
+        internal static bool VirtualProtect(
+            IntPtr lpAddress,
+            UIntPtr dwSize,
+            PageAccessRights flNewProtect,
+            out PageAccessRights lpflOldProtect)
+            => Lookup<VirtualProtectProc>("kernel32.dll", "VirtualProtect")(lpAddress, dwSize, flNewProtect, out lpflOldProtect);
 
         internal delegate bool VirtualProtectExProc(
             IntPtr hProcess,
