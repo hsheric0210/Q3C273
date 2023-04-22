@@ -62,5 +62,12 @@ namespace Ton618.Utilities
         internal delegate bool FlushInstructionCacheProc(IntPtr hProcess, IntPtr lpBaseAddress, UIntPtr dwSize);
         internal static bool FlushInstructionCache(IntPtr hProcess, IntPtr lpBaseAddress, UIntPtr dwSize)
             => Lookup<FlushInstructionCacheProc>("kernel32.dll", "FlushInstructionCache")(hProcess, lpBaseAddress, dwSize);
+
+        internal delegate void SetLastErrorProc(uint dwErrCode);
+        internal static void SetLastError(uint dwErrCode) => Lookup<SetLastErrorProc>("kernel32.dll", "SetLastError")(dwErrCode);
+
+
+        internal delegate uint GetLastErrorProc();
+        internal static uint GetLastError() => Lookup<GetLastErrorProc>("kernel32.dll", "GetLastError")();
     }
 }

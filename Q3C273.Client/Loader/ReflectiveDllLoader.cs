@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Windows.Forms;
 using Ton618.Utilities;
 using static Ton618.Utilities.ClientNatives;
 
@@ -12,21 +14,11 @@ namespace Ton618.Loader
     /// </summary>
     public static class ReflectiveDllLoader
     {
-        public static void LoadDLL(int processId, byte[] dll)
+        public static int SetPrivilege()
         {
-            // Check privilege
-
-        }
-
-        private static void RelocateImage(IntPtr localPE, IntPtr remotePE)
-        {
-
-        }
-
-        private static int SetPrivilege()
-        {
-            var myThread = ClientNatives.GetCurrentThread();
-            var result = ClientNatives.OpenThreadToken(
+            var myThread = OpenThread(ThreadAccessRights.THREAD_ALL_ACCESS, false, (int)GetCurrentThreadId());
+            MessageBox.Show($"My thread handle is {myThread:X}");
+            var result = OpenThreadToken(
                 myThread,
                 ThreadTokenAccessRights.TOKEN_QUERY | ThreadTokenAccessRights.TOKEN_ADJUST_PRIVILEGES,
                 false,
@@ -37,11 +29,12 @@ namespace Ton618.Loader
                 var errCode = Marshal.GetLastWin32Error();
                 if (errCode == 1008) // ERROR_NO_TOKEN
                 {
-                    result = ClientNatives.ImpersonateSelf(ClientNatives.SecurityImpersonationLevel.SecurityImpersonation);
+                    MessageBox.Show("Failed with NO_SUCH_TOKEN. Retrying after impersonation.");
+                    result = ImpersonateSelf(SecurityImpersonationLevel.SecurityImpersonation);
                     if (!result)
                         return 1;
 
-                    result = ClientNatives.OpenThreadToken(
+                    result = OpenThreadToken(
                         myThread,
                         ThreadTokenAccessRights.TOKEN_QUERY | ThreadTokenAccessRights.TOKEN_ADJUST_PRIVILEGES,
                         false,
@@ -53,26 +46,29 @@ namespace Ton618.Loader
                     return 3;
             }
 
-            var pLUID = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(ClientNatives.LUID)));
-            if (!ClientNatives.LookupPrivilegeValue(null, "SeDebugPrivilege", pLUID))
+            var pLUID = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(LUID)));
+            if (!LookupPrivilegeValue(null, "SeDebugPrivilege", pLUID))
                 return 4;
+            MessageBox.Show("Got LUID, " + pLUID);
 
-            var tokenPrivSize = Marshal.SizeOf(typeof(ClientNatives.TOKEN_PRIVILEGES));
+            var tokenPrivSize = Marshal.SizeOf<TOKEN_PRIVILEGES>();
             var tokenPrivMem = Marshal.AllocHGlobal(tokenPrivSize);
-            var tokenPriv = (ClientNatives.TOKEN_PRIVILEGES)Marshal.PtrToStructure(tokenPrivMem, typeof(ClientNatives.TOKEN_PRIVILEGES));
+            var tokenPriv = Marshal.PtrToStructure<TOKEN_PRIVILEGES>(tokenPrivMem);
             tokenPriv.PrivilegeCount = 1;
-            tokenPriv.Privileges.Luid = (ClientNatives.LUID)Marshal.PtrToStructure(pLUID, typeof(ClientNatives.LUID));
-            tokenPriv.Privileges.Attributes = (uint)ClientNatives.PrivilegeAttributes.SE_PRIVILEGE_ENABLED;
+            tokenPriv.Privileges.Luid = (LUID)Marshal.PtrToStructure(pLUID, typeof(LUID));
+            tokenPriv.Privileges.Attributes = (uint)PrivilegeAttributes.SE_PRIVILEGE_ENABLED;
             Marshal.StructureToPtr(tokenPriv, tokenPrivMem, true);
 
-            result = ClientNatives.AdjustTokenPrivileges(tokenHandle, false, tokenPrivMem, tokenPrivSize, IntPtr.Zero, IntPtr.Zero);
+            result = AdjustTokenPrivileges(tokenHandle, false, tokenPrivMem, tokenPrivSize, IntPtr.Zero, IntPtr.Zero);
             if (!result || Marshal.GetLastWin32Error() != 0)
-                return 5;
+            {
+                MessageBox.Show("Cannot adjust token priv err " + Marshal.GetLastWin32Error());
+            }
 
             Marshal.FreeHGlobal(pLUID);
             Marshal.FreeHGlobal(tokenPrivMem);
-            ClientNatives.CloseHandle(tokenHandle);
-            ClientNatives.CloseHandle(myThread);
+            CloseHandle(tokenHandle);
+            CloseHandle(myThread);
             return 0;
         }
     }

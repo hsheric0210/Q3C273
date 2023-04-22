@@ -33,7 +33,6 @@ namespace Ton618.Utilities
         internal struct TOKEN_PRIVILEGES
         {
             public uint PrivilegeCount;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
             public LUID_AND_ATTRIBUTES Privileges;
         }
 
@@ -63,6 +62,8 @@ namespace Ton618.Utilities
         [Flags]
         public enum ProcessAccessRights : uint
         {
+            PROCESS_ALL_ACCESS = 0x000F0000u | 0x00100000u | 0xFFFF,
+            PROCESS_CREATE_THREAD = 0x0002,
             PROCESS_VM_OPERATION = 0x0008,
             PROCESS_VM_READ = 0x10,
             PROCESS_VM_WRITE = 0x0020,

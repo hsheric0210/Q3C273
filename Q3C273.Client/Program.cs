@@ -17,13 +17,13 @@ namespace Ton618
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             // Set the unhandled exception mode to force all Windows Forms errors to go through our handler
-            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            //Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 
             // Add the event handler for handling UI thread exceptions
-            Application.ThreadException += HandleThreadException;
+            //Application.ThreadException += HandleThreadException;
 
             // Add the event handler for handling non-UI thread exceptions
-            AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
+            //AppDomain.CurrentDomain.UnhandledException += HandleUnhandledException;
 
             ClientNatives.LoadNatives();
             Application.EnableVisualStyles();

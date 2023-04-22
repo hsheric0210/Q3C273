@@ -27,17 +27,6 @@ namespace Ton618.Utilities
         internal delegate bool TerminateThreadProc(IntPtr hThread, uint dwExitCode);
         internal static bool TerminateThread(IntPtr hThread, uint dwExitCode) => Lookup<TerminateThreadProc>("kernel32.dll", "TerminateThread")(hThread, dwExitCode);
 
-        internal delegate bool OpenThreadTokenProc(
-            [In] IntPtr hThread,
-            [In] ThreadTokenAccessRights dwDesiredAccess,
-            [In] bool bOpenAsSelf,
-            out IntPtr hToken);
-        internal static bool OpenThreadToken(
-            [In] IntPtr hThread,
-            [In] ThreadTokenAccessRights dwDesiredAccess,
-            [In] bool bOpenAsSelf,
-            [Out] out IntPtr hToken) => Lookup<OpenThreadTokenProc>("kernel32.dll", "OpenThreadToken")(hThread, dwDesiredAccess, bOpenAsSelf, out hToken);
-
         internal delegate IntPtr CreateRemoteThreadProc(
             IntPtr hProcess,
             IntPtr lpThreadAttributes,

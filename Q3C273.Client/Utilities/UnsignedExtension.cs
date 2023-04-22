@@ -31,5 +31,17 @@ namespace Ton618.Utilities
 
         public static UIntPtr uplusptr(this UIntPtr a, ulong b) => (UIntPtr)(a.ToUInt64() + b);
         public static UIntPtr uminusptr(this UIntPtr a, ulong b) => (UIntPtr)(a.ToUInt64() - b);
+
+        public static IntPtr uplusptr(this IntPtr a, IntPtr b) => (IntPtr)(a.ToUInt64() + b.ToUInt64());
+        public static IntPtr uminusptr(this IntPtr a, IntPtr b) => (IntPtr)(a.ToUInt64() - b.ToUInt64());
+
+        public static UIntPtr uplusptr(this UIntPtr a, IntPtr b) => (UIntPtr)(a.ToUInt64() + b.ToUInt64());
+        public static UIntPtr uminusptr(this UIntPtr a, IntPtr b) => (UIntPtr)(a.ToUInt64() - b.ToUInt64());
+
+        public static IntPtr uplusptr(this IntPtr a, UIntPtr b) => (IntPtr)(a.ToUInt64() + b.ToUInt64());
+        public static IntPtr uminusptr(this IntPtr a, UIntPtr b) => (IntPtr)(a.ToUInt64() - b.ToUInt64());
+
+        public static UIntPtr uplusptr(this UIntPtr a, UIntPtr b) => (UIntPtr)(a.ToUInt64() + b.ToUInt64());
+        public static UIntPtr uminusptr(this UIntPtr a, UIntPtr b) => (UIntPtr)(a.ToUInt64() - b.ToUInt64());
     }
 }

