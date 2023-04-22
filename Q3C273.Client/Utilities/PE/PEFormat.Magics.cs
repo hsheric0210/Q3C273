@@ -55,7 +55,7 @@ namespace Ton618.Utilities.PE
         IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE = 0x8000
     }
 
-    public enum ImageReloation : ushort
+    public enum ImageRelocationType : ushort
     {
         IMAGE_REL_BASED_ABSOLUTE = 0,
         IMAGE_REL_BASED_HIGHLOW = 3,

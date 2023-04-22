@@ -42,5 +42,31 @@ namespace Ton618.Utilities
             [In] IntPtr ObjectInformation,
             [In] int ObjectInformationLength,
             [Out] out int ReturnLength) => Lookup<NtQueryObjectProc>("ntdll.dll", "NtQueryObject")(Handle, ObjectInformationClass, ObjectInformation, ObjectInformationLength, out ReturnLength);
+
+        // Only available on Windows Vista and Windows 7
+        internal delegate uint NtCreateThreadExProc(
+            ref IntPtr lpThreadHandle,
+            uint flags,
+            IntPtr reserved1,
+            IntPtr hProcess,
+            IntPtr lpStartAddress,
+            IntPtr lpParameterAddress,
+            bool reserved2,
+            uint reserved3,
+            uint reserved4,
+            uint reserved5,
+            IntPtr reserved6);
+        internal static uint NtCreateThreadEx(
+            ref IntPtr lpThreadHandle,
+            uint flags,
+            IntPtr reserved1,
+            IntPtr hProcess,
+            IntPtr lpStartAddress,
+            IntPtr lpParameterAddress,
+            bool reserved2,
+            uint reserved3,
+            uint reserved4,
+            uint reserved5,
+            IntPtr reserved6) => Lookup<NtCreateThreadExProc>("ntdll.dll", "NtCreateThreadEx")(ref lpThreadHandle, flags, reserved1, hProcess, lpStartAddress, lpParameterAddress, reserved2, reserved3, reserved4, reserved5, reserved6);
     }
 }

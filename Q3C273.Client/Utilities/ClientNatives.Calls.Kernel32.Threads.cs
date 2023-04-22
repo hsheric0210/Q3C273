@@ -56,10 +56,11 @@ namespace Ton618.Utilities
                     uint dwCreationFlags,
                     ref uint lpThreadId) => Lookup<CreateRemoteThreadProc>("kernel32.dll", "CreateRemoteThread")(hProcess, lpThreadAttributes, dwStackSize, lpStartAdress, lpParameter, dwCreationFlags, ref lpThreadId);
 
-        internal delegate IntPtr GetExitCodeThreadProc(
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal delegate bool GetExitCodeThreadProc(
             IntPtr hThread,
             out uint lpExitCode);
-        internal static IntPtr GetExitCodeThread(
+        internal static bool GetExitCodeThread(
                     IntPtr hThread,
                     out uint lpExitCode) => Lookup<GetExitCodeThreadProc>("kernel32.dll", "GetExitCodeThread")(hThread, out lpExitCode);
     }

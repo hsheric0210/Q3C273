@@ -20,6 +20,9 @@ namespace Q3C273.Shared
         [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern unsafe int memcpy(void* dst, void* src, uint count);
 
+        [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int memset(IntPtr dst, int val, uint count);
+
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool DeleteFile(string name);

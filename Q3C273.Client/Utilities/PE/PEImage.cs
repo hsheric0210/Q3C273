@@ -49,11 +49,19 @@ namespace Ton618.Utilities.PE
             get { return _memorySize; }
         }
 
+        public ulong OriginalImageBase => _is64BitHeader ? _optionalHeader64.ImageBase : _optionalHeader32.ImageBase;
+
+        public uint SizeOfImage => _is64BitHeader ? _optionalHeader64.SizeOfImage : _optionalHeader32.SizeOfImage;
+
+        public uint SizeOfHeader => _is64BitHeader ? _optionalHeader64.SizeOfHeaders : _optionalHeader32.SizeOfHeaders;
+
+        public DllCharacteristicsType DllCharacteristics => _is64BitHeader ? _optionalHeader64.DllCharacteristics : _optionalHeader32.DllCharacteristics;
+
         static bool IsValidNTHeaders(int signature)
         {
             // PE 헤더임을 확인 (IMAGE_NT_SIGNATURE == 0x00004550)
             // if (signature[0] == 0x50 && signature[1] == 0x45 && signature[2] == 0 && signature[3] == 0)
-            if (signature == 0x00004550)
+            if (signature == 0x00004550) // 'PE'
                 return true;
 
             return false;
@@ -106,6 +114,32 @@ namespace Ton618.Utilities.PE
             }
         }
 
+        public IMAGE_DATA_DIRECTORY BaseRelocationDirectory
+        {
+            get
+            {
+                if (_is64BitHeader)
+                    return _optionalHeader64.BaseRelocationTable;
+                else
+                {
+                    return _optionalHeader32.BaseRelocationTable;
+                }
+            }
+        }
+
+        public IMAGE_DATA_DIRECTORY ImportDescriptorTable
+        {
+            get
+            {
+                if (_is64BitHeader)
+                    return _optionalHeader64.ImportTable;
+                else
+                {
+                    return _optionalHeader32.ImportTable;
+                }
+            }
+        }
+
         public IEnumerable<IMAGE_SECTION_HEADER> EnumerateSections()
         {
             return _sections;
@@ -140,13 +174,13 @@ namespace Ton618.Utilities.PE
         {
             var byteBuffer = new byte[nBytes];
 
-            var section = GetSection((int)rvaAddress);
+            var section = GetSection(rvaAddress);
             GetSafeBuffer(0, section.EndAddress, out var buffer);
 
             try
             {
                 var bytePos = GetSafeBuffer(buffer, rvaAddress);
-                var maxRead = Math.Min((int)(rvaAddress + nBytes), (int)section.EndAddress);
+                var maxRead = Math.Min((int)(rvaAddress + nBytes), section.EndAddress);
 
                 for (var i = (int)rvaAddress; i < maxRead; i++)
                 {
@@ -164,8 +198,8 @@ namespace Ton618.Utilities.PE
 
         public unsafe T Read<T>(uint rvaAddress) where T : struct
         {
-            var section = GetSection((int)rvaAddress);
-            GetSafeBuffer(0, (uint)section.VirtualAddress + (uint)section.SizeOfRawData, out var buffer);
+            var section = GetSection(rvaAddress);
+            GetSafeBuffer(0, section.VirtualAddress + section.SizeOfRawData, out var buffer);
 
             try
             {
@@ -180,19 +214,19 @@ namespace Ton618.Utilities.PE
 
         public unsafe T[] Reads<T>(uint rvaAddress, uint totalSize) where T : struct
         {
-            var section = GetSection((int)rvaAddress);
-            GetSafeBuffer(0, (uint)section.VirtualAddress + (uint)section.SizeOfRawData, out var buffer);
+            var section = GetSection(rvaAddress);
+            GetSafeBuffer(0, section.VirtualAddress + section.SizeOfRawData, out var buffer);
 
             var list = new List<T>();
 
-            var entrySize = (uint)Marshal.SizeOf(default(T));
+            var entrySize = Marshal.SizeOf(default(T));
             var count = totalSize / entrySize;
 
             try
             {
                 for (uint i = 0; i < count; i++)
                 {
-                    var bytePos = GetSafeBuffer(buffer, rvaAddress + i * entrySize);
+                    var bytePos = GetSafeBuffer(buffer, rvaAddress + i * (uint)entrySize);
                     list.Add((T)Marshal.PtrToStructure(bytePos, typeof(T)));
                 }
             }
@@ -220,9 +254,9 @@ namespace Ton618.Utilities.PE
             if (ExportDirectory.VirtualAddress == 0)
                 return null;
 
-            var section = GetSection((int)ExportDirectory.VirtualAddress);
+            var section = GetSection(ExportDirectory.VirtualAddress);
 
-            GetSafeBuffer(0, (uint)section.VirtualAddress + (uint)section.SizeOfRawData, out var buffer);
+            GetSafeBuffer(0, section.VirtualAddress + section.SizeOfRawData, out var buffer);
             var list = new List<ExportFunctionInfo>();
 
             try
@@ -284,10 +318,10 @@ namespace Ton618.Utilities.PE
 
             if (_readFromFile)
             {
-                var startAddress = Rva2Raw((int)rva);
-                var endAddress = startAddress + (int)size;
+                var startAddress = Rva2Raw(rva);
+                var endAddress = startAddress + size;
 
-                buffer = new BufferPtr(endAddress);
+                buffer = new BufferPtr((int)endAddress);
 
                 using (var fs = new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
@@ -312,12 +346,12 @@ namespace Ton618.Utilities.PE
                 ptr = buffer.GetPtr((int)rva);
             else if (buffer != null)
             {
-                var startAddress = Rva2Raw((int)rva);
-                ptr = buffer.GetPtr(startAddress);
+                var startAddress = Rva2Raw(rva);
+                ptr = buffer.GetPtr((int)startAddress);
             }
             else
             {
-                ptr = _baseAddress + (int)rva;
+                ptr = _baseAddress.uplusptr(rva);
             }
 
             return ptr;
@@ -335,7 +369,7 @@ namespace Ton618.Utilities.PE
                 var safeObj = new IMAGE_DEBUG_DIRECTORY();
                 var sizeOfDir = Marshal.SizeOf(safeObj);
 
-                var count = (int)Debug.Size / sizeOfDir;
+                var count = Debug.Size / sizeOfDir;
 
                 for (var i = 0; i < count; i++)
                 {
@@ -351,13 +385,13 @@ namespace Ton618.Utilities.PE
             }
         }
 
-        private int Rva2Raw(int virtualAddress)
+        private uint Rva2Raw(uint virtualAddress)
         {
             var section = GetSection(virtualAddress);
             return virtualAddress - section.VirtualAddress + section.PointerToRawData;
         }
 
-        private IMAGE_SECTION_HEADER GetSection(int virtualAddress)
+        private IMAGE_SECTION_HEADER GetSection(uint virtualAddress)
         {
             for (var i = 0; i < _sections.Length; i++)
             {
@@ -380,7 +414,7 @@ namespace Ton618.Utilities.PE
             // IMAGE_DOS_HEADER 를 읽어들이고,
             var dosHeader = br.Read<IMAGE_DOS_HEADER>();
             {
-                if (dosHeader.IsValid == false)
+                if (!dosHeader.IsValid)
                     return null;
 
                 image._dosHeader = dosHeader;
@@ -388,8 +422,8 @@ namespace Ton618.Utilities.PE
 
             // IMAGE_NT_HEADERS - signature 를 읽어들이고,
             {
-                br.BaseStream.Position = dosHeader.e_lfanew;
-                if (IsValidNTHeaders(br.ReadInt32()) == false)
+                br.BaseStream.Position = dosHeader.e_lfanew; // Jump to NT header (IMAGE_NT_HEADERS)
+                if (!IsValidNTHeaders(br.ReadInt32()))
                     return null;
             }
 
@@ -413,7 +447,7 @@ namespace Ton618.Utilities.PE
             // 32bit PE == 0xe0(224)bytes
             // 64bit PE == 0xF0(240)bytes
 
-            if (image._is64BitHeader == false)
+            if (!image._is64BitHeader)
                 image._optionalHeader32 = br.Read<IMAGE_OPTIONAL_HEADER32>();
             else
             {
@@ -531,7 +565,7 @@ namespace Ton618.Utilities.PE
                 var localPath = Path.Combine(rootPathToSave, pdbFileName);
                 var localFolder = Path.GetDirectoryName(localPath);
 
-                if (Directory.Exists(localFolder) == false)
+                if (!Directory.Exists(localFolder))
                 {
                     try
                     {

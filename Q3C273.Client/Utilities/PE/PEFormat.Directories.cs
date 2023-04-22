@@ -22,8 +22,8 @@ namespace Ton618.Utilities.PE
     {
         public uint Characteristics;
         public uint TimeDateStamp;
-        public short MajorVersion;
-        public short MinorVersion;
+        public ushort MajorVersion;
+        public ushort MinorVersion;
         public uint Name;
         public uint Base;
         public uint NumberOfFunctions;
@@ -75,8 +75,8 @@ namespace Ton618.Utilities.PE
     {
         public uint Characteristics;
         public uint TimeDateStamp;
-        public short MajorVersion;
-        public short MinorVersion;
+        public ushort MajorVersion;
+        public ushort MinorVersion;
         public uint Type;
         public uint SizeOfData;
         public uint AddressOfRawData;

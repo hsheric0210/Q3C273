@@ -13,12 +13,12 @@ namespace Ton618.Utilities
         internal static IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, UIntPtr dwSize, AllocationType flAllocationType, PageAccessRights flProtect)
             => Lookup<VirtualAllocExProc>("kernel32.dll", "VirtualAllocEx")(hProcess, lpAddress, dwSize, flAllocationType, flProtect);
 
-        internal delegate bool VirtualFreeProc(IntPtr lpAddress, uint dwSize, uint dwFreeType);
-        internal static bool VirtualFree(IntPtr lpAddress, uint dwSize, uint dwFreeType)
+        internal delegate bool VirtualFreeProc(IntPtr lpAddress, UIntPtr dwSize, MemFreeType dwFreeType);
+        internal static bool VirtualFree(IntPtr lpAddress, UIntPtr dwSize, MemFreeType dwFreeType)
             => Lookup<VirtualFreeProc>("kernel32.dll", "VirtualFree")(lpAddress, dwSize, dwFreeType);
 
-        internal delegate bool VirtualFreeExProc(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint dwFreeType);
-        internal static bool VirtualExFree(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint dwFreeType)
+        internal delegate bool VirtualFreeExProc(IntPtr hProcess, IntPtr lpAddress, UIntPtr dwSize, MemFreeType dwFreeType);
+        internal static bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, UIntPtr dwSize, MemFreeType dwFreeType)
             => Lookup<VirtualFreeExProc>("kernel32.dll", "VirtualFreeEx")(hProcess, lpAddress, dwSize, dwFreeType);
 
         internal delegate bool VirtualProtectExProc(

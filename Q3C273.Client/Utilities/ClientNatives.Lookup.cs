@@ -27,7 +27,7 @@ namespace Ton618.Utilities
         // 고마워요, 정성태님!
         //https://www.sysnet.pe.kr/2/0/12101
         // For calling convention: https://stackoverflow.com/questions/5155180/changing-a-c-sharp-delegates-calling-convention-to-cdecl
-        internal static T Lookup<T>(string module, string proc) // NOTE: The strings will be automatically encrypted using ConfuserEx
+        internal static IntPtr LookupPointer(string module, string proc) // NOTE: The strings will be automatically encrypted using ConfuserEx
         {
             var key = (module + '!' + proc).GetHashCode(); // Address caching
             if (!addresses.TryGetValue(key, out var addr))
@@ -44,7 +44,9 @@ namespace Ton618.Utilities
                 addr = (IntPtr)((ulong)mod.DllBase + procStr.RvaAddress);
                 addresses.Add(key, addr);
             }
-            return Marshal.GetDelegateForFunctionPointer<T>(addr);
+            return addr;
         }
+
+        internal static T Lookup<T>(string module, string proc) => Marshal.GetDelegateForFunctionPointer<T>(LookupPointer(module, proc));
     }
 }

@@ -343,19 +343,19 @@ namespace Ton618.Utilities.PE
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
         public byte[] Name;
-        public int PhysicalAddressOrVirtualSize;
-        public int VirtualAddress;
-        public int SizeOfRawData;
-        public int PointerToRawData;
-        public int PointerToRelocations;
-        public int PointerToLineNumbers;
-        public short NumberOfRelocations;
-        public short NumberOfLineNumbers;
+        public uint PhysicalAddressOrVirtualSize;
+        public uint VirtualAddress;
+        public uint SizeOfRawData;
+        public uint PointerToRawData;
+        public uint PointerToRelocations;
+        public uint PointerToLineNumbers;
+        public ushort NumberOfRelocations;
+        public ushort NumberOfLineNumbers;
         public uint Characteristics;
 
         public uint EndAddress
         {
-            get { return (uint)(VirtualAddress + SizeOfRawData); }
+            get { return VirtualAddress + SizeOfRawData; }
         }
 
         public string GetName()
