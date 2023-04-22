@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using static Ton618.Utilities.ClientNatives;
 
 #pragma warning disable IDE1006, CA1815 // Naming Styles
 
@@ -112,13 +113,13 @@ namespace Ton618.Utilities.PE
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct OBJECT_NAME_INFORMATION
+    internal struct OBJECT_NAME_INFORMATION
     {
         public _UNICODE_STRING Name;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct OBJECT_TYPE_INFORMATION
+    internal struct OBJECT_TYPE_INFORMATION
     {
         public _UNICODE_STRING Name;
         public uint TotalNumberOfObjects;
