@@ -81,6 +81,15 @@ namespace Ton618.Win32PE.Structs
         // THREAD_ALL_ACCESS = (uint)0x3FF | NativeFileAccess.SYNCHRONIZE | NativeFileAccess.STANDARD_RIGHTS_REQUIRED,
     }
 
+    [Flags]
+#pragma warning disable CA2217 // Do not mark enums with FlagsAttribute
+    public enum ThreadTokenAccessRights : uint
+#pragma warning restore CA2217 // Do not mark enums with FlagsAttribute
+    {
+        TOKEN_QUERY = 0x0008,
+        TOKEN_ADJUST_PRIVILEGES = 0x0020
+    }
+
     public enum CodeViewSignature : uint
     {
         RSDS = 0x53445352, // SDSR
