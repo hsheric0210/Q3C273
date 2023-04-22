@@ -1,6 +1,4 @@
-﻿using Ton618.Win32PE.Structs;
-
-namespace Ton618.Win32PE.PE
+﻿namespace Ton618.Utilities.PE
 {
     public static class ILDecoder
     {

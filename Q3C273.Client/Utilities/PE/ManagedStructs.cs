@@ -8,7 +8,7 @@ using System.Threading;
 
 #pragma warning disable IDE1006 // Naming Styles
 
-namespace Ton618.Win32PE.Structs
+namespace Ton618.Utilities.PE
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct StructFieldInfo
@@ -246,20 +246,20 @@ namespace Ton618.Win32PE.Structs
                 switch (handleTypeName)
                 {
                     case "Process":
-                    {
-                        var processName = GetProcessName(dupHandle);
-                        var processId = ClientNatives.GetProcessId(dupHandle);
+                        {
+                            var processName = GetProcessName(dupHandle);
+                            var processId = ClientNatives.GetProcessId(dupHandle);
 
-                        return $"{processName}({processId})";
-                    }
+                            return $"{processName}({processId})";
+                        }
 
                     case "Thread":
-                    {
-                        var processName = GetProcessName(ownerPid);
-                        var threadId = ClientNatives.GetThreadId(dupHandle);
+                        {
+                            var processName = GetProcessName(ownerPid);
+                            var threadId = ClientNatives.GetThreadId(dupHandle);
 
-                        return $"{processName}({ownerPid}): {threadId}";
-                    }
+                            return $"{processName}({ownerPid}): {threadId}";
+                        }
 
                     case "Directory":
                     case "ALPC Port":

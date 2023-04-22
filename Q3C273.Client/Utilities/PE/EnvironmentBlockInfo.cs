@@ -2,7 +2,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Ton618.Win32PE.Structs
+namespace Ton618.Utilities.PE
 {
     public class EnvironmentBlockInfo
     {

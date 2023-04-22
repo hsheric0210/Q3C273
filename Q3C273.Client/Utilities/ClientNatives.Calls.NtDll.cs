@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Ton618.Win32PE.Structs;
+using Ton618.Utilities.PE;
 
 namespace Ton618.Utilities
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ton618.Win32PE.Structs
+namespace Ton618.Utilities.PE
 {
     public static class HelperExtension
     {

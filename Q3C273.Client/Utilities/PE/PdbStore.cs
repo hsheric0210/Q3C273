@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Ton618.Win32PE.Structs;
 
-namespace Ton618.Win32PE.PE
+namespace Ton618.Utilities.PE
 {
     [ComVisible(true)]
     [Guid("34B66A2A-F694-49A7-A48F-3C7BDFD363C5")]

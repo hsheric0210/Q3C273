@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using Ton618.Win32PE.Structs;
 
-namespace Ton618.Win32PE.PE
+namespace Ton618.Utilities.PE
 {
     public class PEImage
     {
