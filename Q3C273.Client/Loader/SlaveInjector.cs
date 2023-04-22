@@ -26,6 +26,25 @@ namespace Ton618.Loader
 
         private delegate void NotifyLoad([MarshalAs(UnmanagedType.LPWStr)] string message);
 
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct ManagedLibraryLoaderParam
+        {
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+            public string dotNetVersion;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32768)]
+            public string dllLocation;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 1024)]
+            public string mainClass;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            public string mainMethod;
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32768)]
+            public string parameter;
+        }
+
         public void FindAndInject()
         {
             var bytes = File.ReadAllBytes("Q3C273.CLRLoader.dll");
@@ -58,24 +77,32 @@ namespace Ton618.Loader
 
                 MessageBox.Show("Injected to local " + local + " remote " + remote);
 
-                var str = "I'm here! Although no one knows where I came from.";
-                var managedMem = Marshal.StringToHGlobalUni(str);
-                var paramMem = VirtualAllocEx(handle, IntPtr.Zero, (UIntPtr)1024, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_READWRITE);
+                var str = new ManagedLibraryLoaderParam
+                {
+                    dotNetVersion = "v4.0.30319",
+                    dllLocation = "D:\\repo\\Quasar\\bin\\Release\\net472\\Q3C273.InjectionTester.dll",
+                    mainClass = "Q3C273.InjectionTester.Program",
+                    mainMethod = "UglyMethod1",
+                    parameter = "HaHaHaHa I'm Here!"
+                };
+                var strSize = Marshal.SizeOf<ManagedLibraryLoaderParam>();
+                var mem = Marshal.AllocHGlobal(strSize);
+                Marshal.StructureToPtr(str, mem, false);
+                var paramMem = VirtualAllocEx(handle, IntPtr.Zero, (UIntPtr)strSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_READWRITE);
                 if (paramMem == IntPtr.Zero)
                     throw new Exception("Failed to allocate test method param mem.");
                 var written = UIntPtr.Zero;
-                var state = WriteProcessMemory(handle, paramMem, managedMem, (UIntPtr)1024, ref written);
-                if (!state || written != (UIntPtr)1024)
+                var state = WriteProcessMemory(handle, paramMem, mem, (UIntPtr)strSize, ref written);
+                if (!state || written != (UIntPtr)strSize)
                     throw new Exception("Failed to write test method param mem.");
                 var tid = 0u;
-                var funcpos = loader.GetProcAddr(local, "NotifyLoad");
-                var relocFuncPos = funcpos.uminusptr(local).uplusptr(remote);
-                MessageBox.Show("Found test method 'NotifyLoad' from " + funcpos + " are relocated to " + relocFuncPos);
+                var funcpos = loader.GetProcAddr(local, "LoadManaged");
+                var relocFuncPos = funcpos.uminusptr(local).uplusptr(remote); // relocation is important
+                MessageBox.Show($"Func at {funcpos:x} reloc to {relocFuncPos:x}");
                 var thandle = CreateRemoteThread(handle, IntPtr.Zero, UIntPtr.Zero, relocFuncPos, paramMem, 0, ref tid);
                 if (thandle == IntPtr.Zero)
                     throw new Exception("Failed to create test method caller thread.");
                 WaitForSingleObject(thandle, 10000);
-                //Marshal.GetDelegateForFunctionPointer<LoadManaged>(loader.GetProcAddr(local, "LoadManaged"))("v4.0.30319", "D:\\Repo\\Quasar\\Bin\\Release\\Q3C273.InjectionTester.dll", "Q3C273.InjectionTester.Program", "main", "LoL");
                 CloseHandle(handle);
                 break;
             }

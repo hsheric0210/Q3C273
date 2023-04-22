@@ -4,4 +4,5 @@
 // Windows Header Files
 #include <windows.h>
 #include <metahost.h>
+#include <CorError.h>
 

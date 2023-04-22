@@ -6,8 +6,9 @@ TODO:
 
 * [x] Replace direct sensitive method calls (such as SetWindowsHookEx) with SilentProcAddress
 * [ ] Make program location more customizable (Currently, no `\` character supported, and doesn't support many paths)
-* [ ] Make Reflective-DLL-injectable (see [SharpNeedle](https://github.com/ChadSki/SharpNeedle) and [SimpleSyringe](https://github.com/hsheric0210/simplesyringe))
+* [x] Make Reflective-DLL-injectable (see [SharpNeedle](https://github.com/ChadSki/SharpNeedle) and [SimpleSyringe](https://github.com/hsheric0210/simplesyringe))
 * [x] Remove any signs of name `Quasar` from the builded executable.
+* [ ] Thread context hijacking injection (https://github.com/luciopaiva/easyhook/blob/master/EasyHookDll/RemoteHook/stealth.c)
 
 [![Build status](https://ci.appveyor.com/api/projects/status/5857hfy6r1ltb5f2?svg=true)](https://ci.appveyor.com/project/MaxXor/quasar)
 [![Downloads](https://img.shields.io/github/downloads/quasar/Quasar/total.svg)](https://github.com/quasar/Quasar/releases)
