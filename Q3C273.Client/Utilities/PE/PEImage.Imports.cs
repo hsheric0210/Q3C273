@@ -14,27 +14,22 @@ namespace Ton618.Utilities.PE
             var written = UIntPtr.Zero;
             var ptrSize = Marshal.SizeOf<IntPtr>();
 
-            var dllPathString = Marshal.PtrToStringAnsi(importDllPathPtr);
-            var dllPathSize = (UIntPtr)(dllPathString.Length + 1);
-            var remoteDllPathMemory = VirtualAllocEx(processHandle, IntPtr.Zero, dllPathSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_READWRITE);
-            if (remoteDllPathMemory == IntPtr.Zero)
-                throw new NativeMemoryException("Module path parameter memory for remote LoadLibraryA call");
-
-            var state = WriteProcessMemory(processHandle, remoteDllPathMemory, importDllPathPtr, dllPathSize, ref written);
-            if (!state || written != dllPathSize)
-                throw new NativeMemoryException("Module path parameter memory for remote LoadLibraryA call", remoteDllPathMemory, dllPathSize, written);
-
+            var remoteDllPathMemory = processHandle.WriteStringToProcess(importDllPathPtr, out var dllPathSize);
             var loadLibraryProcAddress = LookupPointer("kernel32.dll", "LoadLibraryA");
 
+            bool state;
             IntPtr dllAddress;
             if (Is64Bitness)
             {
                 //For 64bit DLL's, we can't use just CreateRemoteThread to call LoadLibrary because GetExitCodeThread will only give back a 32bit value, but we need a 64bit address
                 //Instead, write shellcode while calls LoadLibrary and writes the result to a memory address we specify. Then read from that memory once the thread finishes.
-                var returnValueMemory = VirtualAllocEx(processHandle, IntPtr.Zero, dllPathSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_READWRITE);
+                var returnValueMemory = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)dllPathSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_READWRITE);
                 if (returnValueMemory == IntPtr.Zero)
                     throw new NativeMemoryException("LoadLibraryA return value memory");
 
+                ShellCode.LoadLibraryA_x64.ExecuteOn(processHandle, remoteDllPathMemory, loadLibraryProcAddress, returnValueMemory);
+
+                /*
                 #region SHELLCODE
                 // Write Shellcode to the remote process which will call LoadLibraryA (Shellcode: LoadLibraryA.asm)
                 var shellCode = new byte[][]
@@ -57,6 +52,7 @@ namespace Ton618.Utilities.PE
                 nativeStream.WriteBytes(shellCode[3]);
                 #endregion
 
+                //var remoteShellCodeMem = processHandle.WriteToProcess(shellCodeMem, (UIntPtr)shellCodeSize, PageAccessRights.PAGE_EXECUTE_READWRITE);
                 var remoteShellCodeMem = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)shellCodeSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_EXECUTE_READWRITE);
                 if (remoteShellCodeMem == IntPtr.Zero)
                     throw new NativeMemoryException("Remote memory for LoadLibraryA shellcode");
@@ -68,6 +64,7 @@ namespace Ton618.Utilities.PE
                 var threadHandle = processHandle.CreateRemoteThreadAuto(remoteShellCodeMem, remoteDllPathMemory);
                 if (WaitForSingleObject(threadHandle, 30000) != 0)
                     throw new AggregateException("Library loader thread didn't finished successfully. (or timeout)");
+                */
 
                 var retValMem = Marshal.AllocHGlobal(ptrSize);
                 state = ReadProcessMemory(processHandle, returnValueMemory, retValMem, (UIntPtr)ptrSize, ref written);
@@ -76,7 +73,7 @@ namespace Ton618.Utilities.PE
 
                 dllAddress = Marshal.PtrToStructure<IntPtr>(retValMem);
                 VirtualFreeEx(processHandle, returnValueMemory, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
-                VirtualFreeEx(processHandle, remoteShellCodeMem, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
+                //VirtualFreeEx(processHandle, remoteShellCodeMem, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
             }
             else
             {

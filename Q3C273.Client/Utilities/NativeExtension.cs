@@ -8,6 +8,26 @@ namespace Ton618.Utilities
 {
     internal static class NativeExtension
     {
+        public static IntPtr WriteToProcess(this IntPtr processHandle, IntPtr localMemory, UIntPtr sizeOfData, PageAccessRights protect = PageAccessRights.PAGE_READWRITE)
+        {
+            var remoteAddress = VirtualAllocEx(processHandle, IntPtr.Zero, sizeOfData, AllocationType.COMMIT | AllocationType.RESERVE, protect);
+            if (remoteAddress == IntPtr.Zero)
+                throw new NativeMemoryException("Remote process memory");
+
+            var written = UIntPtr.Zero;
+            var state = WriteProcessMemory(processHandle, remoteAddress, localMemory, sizeOfData, ref written);
+            if (!state || written != sizeOfData)
+                throw new NativeMemoryException("Remote process memory", remoteAddress, sizeOfData, written);
+            return remoteAddress;
+        }
+
+        public static IntPtr WriteStringToProcess(this IntPtr processHandle, IntPtr localStringMemory, int stringLength) =>
+            // +1 for the null termination char
+            processHandle.WriteToProcess(localStringMemory, (UIntPtr)(stringLength + 1));
+
+        public static IntPtr WriteStringToProcess(this IntPtr processHandle, IntPtr localStringMemory, out int stringLength)
+            => processHandle.WriteStringToProcess(localStringMemory, stringLength = Marshal.PtrToStringAnsi(localStringMemory).Length);
+
         public unsafe static IntPtr GetProcAddressRemote(this IntPtr processHandle, IntPtr dllHandle, IntPtr procNameOrOrdinal, bool byOrdinal, bool is64bit)
         {
             bool state;
@@ -21,6 +41,8 @@ namespace Ton618.Utilities
             }
             else
             {
+                procNameMemory = processHandle.WriteStringToProcess(procNameOrOrdinal, out _);
+                /*
                 var procNameString = Marshal.PtrToStringAnsi(procNameOrOrdinal);
                 var procNameSize = (UIntPtr)(procNameString.Length + 1);
                 procNameMemory = VirtualAllocEx(processHandle, IntPtr.Zero, procNameSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_READWRITE);
@@ -30,6 +52,7 @@ namespace Ton618.Utilities
                 state = WriteProcessMemory(processHandle, procNameMemory, procNameOrOrdinal, procNameSize, ref written);
                 if (!state || procNameSize != written)
                     throw new NativeMemoryException("Function name memory", procNameMemory, procNameSize, written);
+                */
             }
 
             var resultBufferMemory = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)ptrSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_READWRITE);
@@ -38,6 +61,14 @@ namespace Ton618.Utilities
 
             var getProcAddress = LookupPointer("kernel32.dll", "GetProcAddress");
 
+            (is64bit ? ShellCode.GetProcAddress_x64 : ShellCode.GetProcAddress_x86)
+                .ExecuteOn(
+                    processHandle,
+                    dllHandle,
+                    procNameMemory,
+                    getProcAddress,
+                    resultBufferMemory);
+            /*
             #region GetProcAddress ShellCode
             byte[][] shellCode;
             if (is64bit)
@@ -74,7 +105,6 @@ namespace Ton618.Utilities
             nativeStream.WriteBytes(shellCode[3]);
             nativeStream.WriteObject(resultBufferMemory);
             nativeStream.WriteBytes(shellCode[4]);
-            #endregion
 
             var remoteShellCodeMemory = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)shellCodeSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_EXECUTE_READWRITE);
             if (remoteShellCodeMemory == IntPtr.Zero)
@@ -88,14 +118,16 @@ namespace Ton618.Utilities
             if (WaitForSingleObject(threadHandle, 30000) != 0)
                 throw new AggregateException("GetProcAddress remote thread didn't finished successfully.");
 
+            #endregion
+            */
             var retBuffer = Marshal.AllocHGlobal(ptrSize);
             state = ReadProcessMemory(processHandle, resultBufferMemory, retBuffer, (UIntPtr)ptrSize, ref written);
             if (!state)
-                throw new NativeMemoryException("Remote GetProcAddress shell code memory", remoteShellCodeMemory);
+                throw new NativeMemoryException("Remote GetProcAddress shell code memory", resultBufferMemory);
 
             var procAddress = Marshal.PtrToStructure<IntPtr>(retBuffer);
 
-            VirtualFreeEx(processHandle, remoteShellCodeMemory, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
+            //VirtualFreeEx(processHandle, remoteShellCodeMemory, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
             VirtualFreeEx(processHandle, resultBufferMemory, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
             if (!byOrdinal)
                 VirtualFreeEx(processHandle, procNameMemory, UIntPtr.Zero, MemFreeType.MEM_RELEASE);

@@ -11,7 +11,7 @@ before_build:
   - nuget restore
 
 build:
-  project: Quasar.sln
+  project: Q3C273.sln
   parallel: true
   verbosity: minimal
 

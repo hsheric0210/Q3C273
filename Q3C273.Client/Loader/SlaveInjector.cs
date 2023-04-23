@@ -47,7 +47,7 @@ namespace Ton618.Loader
 
         public void FindAndInject()
         {
-            var bytes = File.ReadAllBytes("Q3C273.CLRLoader.dll");
+            var bytes = File.ReadAllBytes("Q3C273.Injected.dll");
 
             var procs = Process.GetProcessesByName("cmd");
             Privileges.EnableDebugPrivilege();
@@ -80,15 +80,18 @@ namespace Ton618.Loader
                 var strSize = Marshal.SizeOf<ManagedLibraryLoaderParam>();
                 var mem = Marshal.AllocHGlobal(strSize);
                 Marshal.StructureToPtr(str, mem, false);
-                var paramMem = VirtualAllocEx(handle, IntPtr.Zero, (UIntPtr)strSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_READWRITE);
-                if (paramMem == IntPtr.Zero)
-                    throw new Exception("Failed to allocate test method param mem.");
-                var written = UIntPtr.Zero;
-                var state = WriteProcessMemory(handle, paramMem, mem, (UIntPtr)strSize, ref written);
-                if (!state || written != (UIntPtr)strSize)
-                    throw new Exception("Failed to write test method param mem.");
+                var paramMem = handle.WriteToProcess(mem, (UIntPtr)strSize);
+                //var paramMem = VirtualAllocEx(handle, IntPtr.Zero, (UIntPtr)strSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_READWRITE);
+                //if (paramMem == IntPtr.Zero)
+                //    throw new Exception("Failed to allocate test method param mem.");
+                //var written = UIntPtr.Zero;
+                //var state = WriteProcessMemory(handle, paramMem, mem, (UIntPtr)strSize, ref written);
+                //if (!state || written != (UIntPtr)strSize)
+                //    throw new Exception("Failed to write test method param mem.");
                 var tid = 0u;
-                var funcpos = loader.GetProcAddr(local, "LoadManaged");
+                var funcpos = loader.GetProcAddr(local, "NotifyLoad");
+                if (funcpos == IntPtr.Zero)
+                    throw new Exception("Specified function not found.");
                 var relocFuncPos = funcpos.uminusptr(local).uplusptr(remote); // relocation is important
                 var thandle = CreateRemoteThread(handle, IntPtr.Zero, UIntPtr.Zero, relocFuncPos, paramMem, 0, ref tid);
                 if (thandle == IntPtr.Zero)

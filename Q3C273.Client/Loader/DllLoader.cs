@@ -115,7 +115,9 @@ namespace Ton618.Loader
                 throw new NativeMemoryException("Remote injected PE memory", remoteMem, (UIntPtr)pe.SizeOfImage, written);
 
             // call dllmain
-            var dllmain = remoteMem.uplusptr(pe.EntryPoint);
+            var dllMainAddress = remoteMem.uplusptr(pe.EntryPoint);
+            (pe.Is64Bitness ? ShellCode.DllMain_x64 : ShellCode.DllMain_x86).ExecuteOn(processHandle, remoteMem, dllMainAddress);
+            /*
             byte[][] shellCode;
             if (pe.Is64Bitness)
             {
@@ -141,7 +143,7 @@ namespace Ton618.Loader
             nativeStream.WriteBytes(shellCode[0]);
             nativeStream.WriteObject(remoteMem);
             nativeStream.WriteBytes(shellCode[1]);
-            nativeStream.WriteObject(dllmain);
+            nativeStream.WriteObject(dllMainAddress);
             nativeStream.WriteBytes(shellCode[2]);
 
             var remoteShellCodeMem = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)shellCodeSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_EXECUTE_READWRITE);
@@ -160,6 +162,7 @@ namespace Ton618.Loader
                 throw new AggregateException("DllMain caller thread didn't finished successfully");
 
             VirtualFreeEx(processHandle, remoteShellCodeMem, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
+            */
 
             return (localMem, remoteMem);
         }
