@@ -2,13 +2,55 @@
 
 Its name **Q3C273** inspired from the first *Quasar* ever to be identified, [3C 273](https://en.wikipedia.org/wiki/3C_273).
 
-TODO:
+## TODO
 
 * [x] Replace direct sensitive method calls (such as SetWindowsHookEx) with SilentProcAddress
 * [ ] Make program location more customizable (Currently, no `\` character supported, and doesn't support many paths)
-* [x] Make Reflective-DLL-injectable (see [SharpNeedle](https://github.com/ChadSki/SharpNeedle) and [SimpleSyringe](https://github.com/hsheric0210/simplesyringe))
+* [x] Make Reflective-DLL-injectable (see [SharpNeedle](https://github.com/ChadSki/SharpNeedle), [SimpleSyringe](https://github.com/hsheric0210/simplesyringe)), and [Powersploit's](https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-ReflectivePEInjection.ps1)
 * [x] Remove any signs of name `Quasar` from the builded executable.
 * [ ] Thread context hijacking injection (https://github.com/luciopaiva/easyhook/blob/master/EasyHookDll/RemoteHook/stealth.c)
+
+* [ ] More persistence options. Such as [WMI event filter injection by Powersploit](https://github.com/PowerShellMafia/PowerSploit/blob/master/Persistence/Persistence.psm1), Winlogon shell injection, Time provider injection, etc. More available on [here](https://attack.mitre.org/tactics/TA0003/).
+* [ ] [AV bypass](https://github.com/PowerShellMafia/PowerSploit/blob/master/AntivirusBypass/Find-AVSignature.ps1)?
+* [ ] [APC injection](https://github.com/3gstudent/Inject-dll-by-APC)
+* [ ] Ransomeware. (File encryption)
+* [ ] Integrate [UACMe](https://github.com/hfiref0x/UACME) to bypass UAC's and replace Client Privilege Elevation with it.
+
+* [ ] Check some famous and useful post-exploitation frameworks
+  * [PoshC2](https://github.com/nettitude/PoshC2)
+  * [SILENTTRINITY](https://github.com/byt3bl33d3r/SILENTTRINITY)
+  * [pupy](https://github.com/n1nj4sec/pupy)
+  * [Merlin](https://github.com/Ne0nd0g/merlin)
+  * [Ghost](https://github.com/EntySec/Ghost)
+  * [VENOM](https://github.com/r00t-3xp10it/venom)
+  * [Khepri](https://github.com/geemion/Khepri)
+  * [Kubesploit](https://github.com/cyberark/kubesploit)
+  * [emp3r0r](https://github.com/jm33-m0/emp3r0r)
+  * [BlackMamba](https://github.com/loseys/BlackMamba)
+  * [Potato](https://github.com/foxglovesec/Potato)
+  * [BeRoot](https://github.com/AlessandroZ/BeRoot)
+  * [PowerHub](https://github.com/AdrianVollmer/PowerHub)
+  * [covertutils](https://github.com/operatorequals/covertutils)
+  * [OffensiveAutoIt](https://github.com/V1V1/OffensiveAutoIt)
+  * [Evasor](https://github.com/cyberark/Evasor)
+  * [Covermyass](https://github.com/sundowndev/covermyass)
+  * [RSPET](https://github.com/panagiks/RSPET)
+  * [FudgeC2](https://github.com/Ziconius/FudgeC2)
+  * [HatSploit](https://github.com/EntySec/HatSploit)
+  * [redpill](https://github.com/r00t-3xp10it/redpill)
+  * [XENA](https://github.com/zarkones/XENA)
+  * [TREVORspray](https://github.com/blacklanternsecurity/TREVORspray)
+  * [CredMaster](https://github.com/knavesec/CredMaster)
+  * [OffensiveDLR](https://github.com/byt3bl33d3r/OffensiveDLR)
+  * [Empire](https://github.com/EmpireProject/Empire)
+  * [Nishang](https://github.com/samratashok/nishang)
+  * [Responder](https://github.com/lgandx/Responder)
+  * [RTA](https://github.com/endgameinc/RTA)
+  * [CALDERA](https://github.com/mitre/caldera)
+  * [Atomic Red Team](https://github.com/redcanaryco/atomic-red-team)
+  * [Metta](https://github.com/uber-common/metta)
+
+* [ ] Also check these lists: [Red Teaming Toolkit](https://github.com/infosecn1nja/Red-Teaming-Toolkit)
 
 [![Build status](https://ci.appveyor.com/api/projects/status/5857hfy6r1ltb5f2?svg=true)](https://ci.appveyor.com/project/MaxXor/quasar)
 [![Downloads](https://img.shields.io/github/downloads/quasar/Quasar/total.svg)](https://github.com/quasar/Quasar/releases)

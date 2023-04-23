@@ -33,7 +33,7 @@ DWORD PipeClientThread(PPIPE_CLIENT_THREAD_PARAM param)
         for (int i = 0; i < written; i++)
             data.push_back(buffer[i]);
 
-        ProcessMessage(param->pipeHandle, data);
+        ProcessMessage(param->pipeHandle, (PMESSAGE_INFO_BASE)data.data());
 
         // All message received
         if (!GetLastError())

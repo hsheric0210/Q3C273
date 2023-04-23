@@ -146,11 +146,13 @@
   <ItemGroup>
     <ClInclude Include="main.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="message.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="message.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
