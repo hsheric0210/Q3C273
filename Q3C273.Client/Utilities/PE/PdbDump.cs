@@ -10,12 +10,13 @@ namespace Ton618.Utilities.PE
     // https://gist.github.com/mridgers/2968595
     public class PdbDump : IDisposable
     {
-        IntPtr _hProcess = IntPtr.Zero;
-        readonly string _pdbFilePath;
-        readonly IntPtr _baseAddress;
-        readonly int _memorySize;
+        private IntPtr hProcess = IntPtr.Zero;
+        private readonly string pdbFilePath;
+        private readonly IntPtr baseAddress;
+        private readonly int memorySize;
 
-        bool _symInitialized = false;
+        bool symInitialized = false;
+        bool disposed = false;
 
         public PdbDump(string pdbFilePath, IntPtr baseAddress, int memorySize)
         {
@@ -37,12 +38,12 @@ namespace Ton618.Utilities.PE
             if (ClientNatives.SymInitialize(processHandle, null, false) == false)
                 return;
 
-            _symInitialized = true;
+            symInitialized = true;
 
-            _hProcess = processHandle;
-            _pdbFilePath = pdbFilePath;
-            _memorySize = memorySize;
-            _baseAddress = LoadPdbModule(_hProcess, _pdbFilePath, baseAddress, (uint)_memorySize);
+            hProcess = processHandle;
+            this.pdbFilePath = pdbFilePath;
+            this.memorySize = memorySize;
+            this.baseAddress = LoadPdbModule(hProcess, this.pdbFilePath, baseAddress, (uint)this.memorySize);
         }
 
         public static PdbStore CreateSymbolStore(string pdbFilePath, IntPtr baseAddress, int memorySize)
@@ -53,7 +54,7 @@ namespace Ton618.Utilities.PE
             {
                 store = pdbDumper.GetStore((pStore) =>
                 {
-                    ClientNatives.SymEnumSymbols(pdbDumper._hProcess, (ulong)baseAddress.ToInt64(), "*", enum_proc, pStore);
+                    ClientNatives.SymEnumSymbols(pdbDumper.hProcess, (ulong)baseAddress.ToInt64(), "*", enum_proc, pStore);
                 });
             }
 
@@ -68,7 +69,7 @@ namespace Ton618.Utilities.PE
             {
                 store = pdbDumper.GetStore((pStore) =>
                 {
-                    ClientNatives.SymEnumTypes(pdbDumper._hProcess, (ulong)baseAddress.ToInt64(), enum_proc, pStore);
+                    ClientNatives.SymEnumTypes(pdbDumper.hProcess, (ulong)baseAddress.ToInt64(), enum_proc, pStore);
                 });
             }
 
@@ -79,7 +80,7 @@ namespace Ton618.Utilities.PE
         {
             return Enumerate((pStore) =>
             {
-                ClientNatives.SymEnumTypes(_hProcess, (ulong)_baseAddress.ToInt64(), enum_proc, pStore);
+                ClientNatives.SymEnumTypes(hProcess, (ulong)baseAddress.ToInt64(), enum_proc, pStore);
             });
         }
 
@@ -87,7 +88,7 @@ namespace Ton618.Utilities.PE
         {
             return Enumerate((pStore) =>
             {
-                ClientNatives.SymEnumSymbols(_hProcess, (ulong)_baseAddress.ToInt64(), "*", enum_proc, pStore);
+                ClientNatives.SymEnumSymbols(hProcess, (ulong)baseAddress.ToInt64(), "*", enum_proc, pStore);
             });
         }
 
@@ -136,28 +137,26 @@ namespace Ton618.Utilities.PE
                 IntPtr.Zero, pdbFilePath, null, baseAddress.ToInt64(), moduleSize, null, 0));
         }
 
-        bool _disposed = false;
-
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed == false)
+            if (disposed == false)
             {
                 if (disposing)
                 {
-                    if (_hProcess != IntPtr.Zero)
+                    if (hProcess != IntPtr.Zero)
                     {
-                        ClientNatives.CloseHandle(_hProcess);
-                        _hProcess = IntPtr.Zero;
+                        ClientNatives.CloseHandle(hProcess);
+                        hProcess = IntPtr.Zero;
                     }
 
-                    if (_symInitialized)
+                    if (symInitialized)
                     {
-                        ClientNatives.SymCleanup(_hProcess);
-                        _symInitialized = false;
+                        ClientNatives.SymCleanup(hProcess);
+                        symInitialized = false;
                     }
                 }
 
-                _disposed = true;
+                disposed = true;
             }
         }
 

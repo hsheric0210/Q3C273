@@ -68,24 +68,6 @@ namespace Ton618.Utilities.PE
                 var peb = (_PEB)Marshal.PtrToStructure(pebAddress, typeof(_PEB));
                 return peb;
             }
-
-            //public static IEnumerable<IntPtr> EnumerateHeaps(IntPtr pebAddress)
-            //{
-            //    var pebOffset = DbgOffset.Get("_PEB");
-            //
-            //    var processHeapsPtr = pebOffset.GetPointer(pebAddress, "ProcessHeaps").ReadPtr();
-            //    if (processHeapsPtr == IntPtr.Zero)
-            //        yield break;
-            //
-            //    if (pebOffset.TryRead<int>(pebAddress, "NumberOfHeaps", out var numberOfHeaps) == false)
-            //        yield break;
-            //
-            //    for (var i = 0; i < numberOfHeaps; i++)
-            //    {
-            //        var entryPtr = processHeapsPtr + IntPtr.Size * i;
-            //        yield return entryPtr.ReadPtr();
-            //    }
-            //}
         }
 
         internal class DllOrderLink

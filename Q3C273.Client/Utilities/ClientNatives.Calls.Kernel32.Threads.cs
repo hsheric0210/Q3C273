@@ -17,11 +17,11 @@ namespace Ton618.Utilities
         internal delegate IntPtr OpenThreadProc(
             [In] ThreadAccessRights dwDesiredAccess,
             [In, MarshalAs(UnmanagedType.Bool)] bool bInheritHandle,
-            [In] int dwProcessId);
+            [In] uint dwProcessId);
         internal static IntPtr OpenThread(
             [In] ThreadAccessRights dwDesiredAccess,
             [In, MarshalAs(UnmanagedType.Bool)] bool bInheritHandle,
-            [In] int dwProcessId)
+            [In] uint dwProcessId)
             => Lookup<OpenThreadProc>("kernel32.dll", "OpenThread")(dwDesiredAccess, bInheritHandle, dwProcessId);
 
         internal delegate bool TerminateThreadProc(IntPtr hThread, uint dwExitCode);

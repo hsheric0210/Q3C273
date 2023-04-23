@@ -6,34 +6,28 @@ namespace Ton618.Utilities.PE
 {
     public class WindowsHandleInfo : IDisposable
     {
-        IntPtr _ptr = IntPtr.Zero;
-        int _handleCount = 0;
-        int _handleOffset = 0;
+        private IntPtr ptr = IntPtr.Zero;
+        private int handleCount = 0;
+        private int handleOffset = 0;
 
-        public int HandleCount
-        {
-            get { return _handleCount; }
-        }
+        public int HandleCount => handleCount;
 
-        public WindowsHandleInfo()
-        {
-            Initialize();
-        }
+        public WindowsHandleInfo() => Initialize();
 
         public void Dispose()
         {
-            if (_ptr == IntPtr.Zero)
+            if (ptr == IntPtr.Zero)
                 return;
 
-            Marshal.FreeHGlobal(_ptr);
-            _ptr = IntPtr.Zero;
+            Marshal.FreeHGlobal(ptr);
+            ptr = IntPtr.Zero;
         }
 
         public _SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX this[int index]
         {
             get
             {
-                if (_ptr == IntPtr.Zero)
+                if (ptr == IntPtr.Zero)
                     return default;
 
                 unsafe
@@ -48,12 +42,12 @@ namespace Ton618.Utilities.PE
 
                     if (IntPtr.Size == 8)
                     {
-                        var handleTable = new IntPtr(_ptr.ToInt64() + _handleOffset);
+                        var handleTable = new IntPtr(ptr.ToInt64() + handleOffset);
                         entryPtr = new IntPtr(handleTable.ToInt64() + sizeof(_SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX) * index);
                     }
                     else
                     {
-                        var handleTable = new IntPtr(_ptr.ToInt32() + _handleOffset);
+                        var handleTable = new IntPtr(ptr.ToInt32() + handleOffset);
                         entryPtr = new IntPtr(handleTable.ToInt32() + sizeof(_SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX) * index);
                     }
 
@@ -69,17 +63,17 @@ namespace Ton618.Utilities.PE
             var guessSize = 4096;
             NT_STATUS ret;
 
-            var ptr = Marshal.AllocHGlobal(guessSize);
+            var _ptr = Marshal.AllocHGlobal(guessSize);
 
             while (true)
             {
-                ret = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemExtendedHandleInformation, ptr, guessSize, out var requiredSize);
+                ret = NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS.SystemExtendedHandleInformation, _ptr, guessSize, out var requiredSize);
 
                 if (ret == NT_STATUS.STATUS_INFO_LENGTH_MISMATCH)
                 {
-                    Marshal.FreeHGlobal(ptr);
+                    Marshal.FreeHGlobal(_ptr);
                     guessSize = requiredSize;
-                    ptr = Marshal.AllocHGlobal(guessSize);
+                    _ptr = Marshal.AllocHGlobal(guessSize);
                     continue;
                 }
 
@@ -93,15 +87,15 @@ namespace Ton618.Utilities.PE
                     } SYSTEM_HANDLE_INFORMATION, *PSYSTEM_HANDLE_INFORMATION;
                     */
 
-                    _handleCount = Marshal.ReadIntPtr(ptr).ToInt32();
+                    handleCount = Marshal.ReadIntPtr(_ptr).ToInt32();
 
                     var dummy = new _SYSTEM_HANDLE_INFORMATION_EX();
-                    _handleOffset = Marshal.OffsetOf(typeof(_SYSTEM_HANDLE_INFORMATION_EX), nameof(dummy.Handles)).ToInt32();
-                    _ptr = ptr;
+                    handleOffset = Marshal.OffsetOf(typeof(_SYSTEM_HANDLE_INFORMATION_EX), nameof(dummy.Handles)).ToInt32();
+                    ptr = _ptr;
                     break;
                 }
 
-                Marshal.FreeHGlobal(ptr);
+                Marshal.FreeHGlobal(_ptr);
                 break;
             }
         }

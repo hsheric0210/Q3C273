@@ -8,11 +8,11 @@ namespace Ton618.Utilities
     /// </summary>
     internal static partial class ClientNatives
     {
-        internal enum PrivilegeAttributes
+        internal enum PrivilegeAttributes : uint
         {
-            SE_PRIVILEGE_ENABLED_BY_DEFAULT = 0x00000001,
-            SE_PRIVILEGE_ENABLED = 0x00000002,
-            SE_PRIVILEGE_REMOVED = 0X00000004
+            SE_PRIVILEGE_ENABLED_BY_DEFAULT = 0x00000001u,
+            SE_PRIVILEGE_ENABLED = 0x00000002u,
+            SE_PRIVILEGE_REMOVED = 0X00000004u
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -33,7 +33,8 @@ namespace Ton618.Utilities
         internal struct TOKEN_PRIVILEGES
         {
             public uint PrivilegeCount;
-            public LUID_AND_ATTRIBUTES Privileges;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
+            public LUID_AND_ATTRIBUTES[] Privileges;
         }
 
 

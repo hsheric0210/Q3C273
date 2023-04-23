@@ -6,60 +6,44 @@ using System.Runtime.InteropServices;
 
 namespace Ton618.Utilities.PE
 {
-    public class PEImage
+    public partial class PEImage
     {
-        IMAGE_DOS_HEADER _dosHeader;
-        public IMAGE_DOS_HEADER DosHeader
-        {
-            get { return _dosHeader; }
-        }
+        private IMAGE_FILE_HEADER fileHeader;
+        private IMAGE_OPTIONAL_HEADER32 optionalHeader32;
+        private IMAGE_OPTIONAL_HEADER64 optionalHeader64;
+        private IMAGE_SECTION_HEADER[] sections;
+        private byte[] bufferCached;
+        private bool readFromFile;
 
-        IMAGE_FILE_HEADER _fileHeader;
-        IMAGE_OPTIONAL_HEADER32 _optionalHeader32;
-        IMAGE_OPTIONAL_HEADER64 _optionalHeader64;
-        IMAGE_COR20_HEADER? _corHeader;
+        public IMAGE_DOS_HEADER DosHeader { get; private set; }
 
-        IMAGE_SECTION_HEADER[] _sections;
+        public bool Is64Bitness { get; private set; }
 
-        bool _is64BitHeader;
-        public bool Is64Bitness
-        {
-            get { return _is64BitHeader; }
-        }
+        public IntPtr BaseAddress { get; private set; }
 
-        byte[] _bufferCached;
+        public string ModulePath { get; private set; }
 
-        IntPtr _baseAddress;
-        public IntPtr BaseAddress
-        {
-            get { return _baseAddress; }
-        }
+        public int MemorySize { get; private set; }
 
-        bool _readFromFile = false;
+        public ulong OriginalImageBase => Is64Bitness ? optionalHeader64.ImageBase : optionalHeader32.ImageBase;
 
-        string _filePath;
-        public string ModulePath
-        {
-            get { return _filePath; }
-        }
+        public uint SizeOfImage => Is64Bitness ? optionalHeader64.SizeOfImage : optionalHeader32.SizeOfImage;
 
-        int _memorySize;
-        public int MemorySize
-        {
-            get { return _memorySize; }
-        }
+        public uint SizeOfHeader => Is64Bitness ? optionalHeader64.SizeOfHeaders : optionalHeader32.SizeOfHeaders;
 
-        public ulong OriginalImageBase => _is64BitHeader ? _optionalHeader64.ImageBase : _optionalHeader32.ImageBase;
+        public DllCharacteristicsType DllCharacteristics => Is64Bitness ? optionalHeader64.DllCharacteristics : optionalHeader32.DllCharacteristics;
 
-        public uint SizeOfImage => _is64BitHeader ? _optionalHeader64.SizeOfImage : _optionalHeader32.SizeOfImage;
+        public uint EntryPoint => Is64Bitness ? optionalHeader64.AddressOfEntryPoint : optionalHeader32.AddressOfEntryPoint;
 
-        public uint SizeOfHeader => _is64BitHeader ? _optionalHeader64.SizeOfHeaders : _optionalHeader32.SizeOfHeaders;
+        public IMAGE_DATA_DIRECTORY ExportDirectory => Is64Bitness ? optionalHeader64.ExportTable : optionalHeader32.ExportTable;
 
-        public DllCharacteristicsType DllCharacteristics => _is64BitHeader ? _optionalHeader64.DllCharacteristics : _optionalHeader32.DllCharacteristics;
+        public IMAGE_DATA_DIRECTORY Debug => Is64Bitness ? optionalHeader64.Debug : optionalHeader32.Debug;
 
-        public uint EntryPoint => _is64BitHeader ? _optionalHeader64.AddressOfEntryPoint : _optionalHeader32.AddressOfEntryPoint;
+        public IMAGE_DATA_DIRECTORY BaseRelocationDirectory => Is64Bitness ? optionalHeader64.BaseRelocationTable : optionalHeader32.BaseRelocationTable;
 
-        static bool IsValidNTHeaders(int signature)
+        public IMAGE_DATA_DIRECTORY ImportDescriptorTable => Is64Bitness ? optionalHeader64.ImportTable : optionalHeader32.ImportTable;
+
+        private static bool IsValidNTHeaders(int signature)
         {
             // PE 헤더임을 확인 (IMAGE_NT_SIGNATURE == 0x00004550)
             // if (signature[0] == 0x50 && signature[1] == 0x45 && signature[2] == 0 && signature[3] == 0)
@@ -69,107 +53,28 @@ namespace Ton618.Utilities.PE
             return false;
         }
 
-        public bool IsManaged
+        public IEnumerable<IMAGE_SECTION_HEADER> EnumerateSections() => sections;
+        private IMAGE_SECTION_HEADER GetSection(uint virtualAddress)
         {
-            get
+            for (var i = 0; i < sections.Length; i++)
             {
-                return CLRRuntimeHeaderDirectory.VirtualAddress != 0;
-            }
-        }
+                var section = sections[i];
 
-        public IMAGE_DATA_DIRECTORY CLRRuntimeHeaderDirectory
-        {
-            get
-            {
-                if (_is64BitHeader)
-                    return _optionalHeader64.CLRRuntimeHeader;
-                else
-                {
-                    return _optionalHeader32.CLRRuntimeHeader;
-                }
-            }
-        }
+                var startAddr = section.VirtualAddress;
+                var endAddr = section.VirtualAddress + section.PhysicalAddressOrVirtualSize;
 
-        public IMAGE_DATA_DIRECTORY ExportDirectory
-        {
-            get
-            {
-                if (_is64BitHeader)
-                    return _optionalHeader64.ExportTable;
-                else
-                {
-                    return _optionalHeader32.ExportTable;
-                }
-            }
-        }
-
-        public IMAGE_DATA_DIRECTORY Debug
-        {
-            get
-            {
-                if (_is64BitHeader)
-                    return _optionalHeader64.Debug;
-                else
-                {
-                    return _optionalHeader32.Debug;
-                }
-            }
-        }
-
-        public IMAGE_DATA_DIRECTORY BaseRelocationDirectory
-        {
-            get
-            {
-                if (_is64BitHeader)
-                    return _optionalHeader64.BaseRelocationTable;
-                else
-                {
-                    return _optionalHeader32.BaseRelocationTable;
-                }
-            }
-        }
-
-        public IMAGE_DATA_DIRECTORY ImportDescriptorTable
-        {
-            get
-            {
-                if (_is64BitHeader)
-                    return _optionalHeader64.ImportTable;
-                else
-                {
-                    return _optionalHeader32.ImportTable;
-                }
-            }
-        }
-
-        public IEnumerable<IMAGE_SECTION_HEADER> EnumerateSections()
-        {
-            return _sections;
-        }
-
-        public IEnumerable<VTableFixups> EnumerateVTableFixups()
-        {
-            var corHeader = GetClrDirectoryHeader();
-            var vtfs = Reads<VTableFixups>(corHeader.VTableFixups.VirtualAddress, corHeader.VTableFixups.Size);
-            return vtfs;
-        }
-
-        public ExportFunctionInfo GetExportFunction(string functionName)
-        {
-            var functions = GetExportFunctions();
-
-            for (var i = 0; i < functions?.Length; i++)
-            {
-                if (functions[i].Name == functionName)
-                    return functions[i];
+                if (startAddr <= virtualAddress && virtualAddress <= endAddr)
+                    return section;
             }
 
             return default;
         }
 
-        public IEnumerable<ExportFunctionInfo> EnumerateExportFunctions()
+
+        private uint Rva2Raw(uint virtualAddress)
         {
-            return GetExportFunctions();
+            var section = GetSection(virtualAddress);
+            return virtualAddress - section.VirtualAddress + section.PointerToRawData;
         }
 
         public unsafe byte[] ReadBytes(uint rvaAddress, int nBytes)
@@ -240,101 +145,27 @@ namespace Ton618.Utilities.PE
             return list.ToArray();
         }
 
-        public IMAGE_COR20_HEADER GetClrDirectoryHeader()
-        {
-            if (CLRRuntimeHeaderDirectory.VirtualAddress == 0)
-                return default;
-
-            if (_corHeader == null)
-                _corHeader = Read<IMAGE_COR20_HEADER>(CLRRuntimeHeaderDirectory.VirtualAddress);
-
-            return _corHeader.Value;
-        }
-
-        public unsafe ExportFunctionInfo[] GetExportFunctions()
-        {
-            if (ExportDirectory.VirtualAddress == 0)
-                return null;
-
-            var section = GetSection(ExportDirectory.VirtualAddress);
-
-            GetSafeBuffer(0, section.VirtualAddress + section.SizeOfRawData, out var buffer);
-            var list = new List<ExportFunctionInfo>();
-
-            try
-            {
-                var exportDirPos = GetSafeBuffer(buffer, ExportDirectory.VirtualAddress);
-                var dir = (IMAGE_EXPORT_DIRECTORY)Marshal.PtrToStructure(exportDirPos, typeof(IMAGE_EXPORT_DIRECTORY));
-
-                var nameListPtr = GetSafeBuffer(buffer, dir.AddressOfNames);
-                var ums = new UnmanagedMemoryStream((byte*)nameListPtr.ToPointer(), dir.NumberOfNames * sizeof(int));
-                var br = new BinaryReader(ums);
-
-                for (var i = 0; i < dir.NumberOfNames; i++)
-                {
-                    var namePos = br.ReadUInt32();
-                    var namePtr = GetSafeBuffer(buffer, namePos);
-
-                    ExportFunctionInfo efi;
-                    efi.Name = Marshal.PtrToStringAnsi(namePtr);
-
-                    efi.NameOrdinal = GetSafeBuffer(buffer, dir.AddressOfNameOrdinals).ReadUInt16ByIndex(i);
-                    efi.RvaAddress = GetSafeBuffer(buffer, dir.AddressOfFunctions).ReadUInt32ByIndex(efi.NameOrdinal);
-
-                    efi.Ordinal = efi.NameOrdinal + dir.Base;
-
-                    list.Add(efi);
-                }
-            }
-            finally
-            {
-                buffer.Clear();
-            }
-
-            return list.ToArray();
-        }
-
-        public IEnumerable<CodeViewRSDS> EnumerateCodeViewDebugInfo()
-        {
-            foreach (var debugDir in EnumerateDebugDir())
-            {
-                if (debugDir.Type != (uint)DebugDirectoryType.IMAGE_DEBUG_TYPE_CODEVIEW)
-                    continue;
-
-                var debugDirPtr = GetSafeBuffer(debugDir.AddressOfRawData, debugDir.SizeOfData, out var buffer);
-
-                try
-                {
-                    yield return debugDir.GetCodeViewHeader(debugDirPtr);
-                }
-                finally
-                {
-                    buffer.Clear();
-                }
-            }
-        }
-
         IntPtr GetSafeBuffer(uint rva, uint size, out BufferPtr buffer)
         {
             buffer = null;
 
-            if (_readFromFile)
+            if (readFromFile)
             {
                 var startAddress = Rva2Raw(rva);
                 var endAddress = startAddress + size;
 
                 buffer = new BufferPtr((int)endAddress);
 
-                using (var fs = new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var fs = new FileStream(ModulePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     var br = new BinaryReader(fs);
                     br.Read(buffer.Buffer, 0, buffer.Length);
                 }
             }
-            else if (_bufferCached != null)
+            else if (bufferCached != null)
             {
-                buffer = new BufferPtr(_bufferCached.Length);
-                Array.Copy(_bufferCached, 0, buffer.Buffer, 0, _bufferCached.Length);
+                buffer = new BufferPtr(bufferCached.Length);
+                Array.Copy(bufferCached, 0, buffer.Buffer, 0, bufferCached.Length);
             }
 
             return GetSafeBuffer(buffer, rva);
@@ -344,7 +175,7 @@ namespace Ton618.Utilities.PE
         {
             IntPtr ptr;
 
-            if (_bufferCached != null)
+            if (bufferCached != null)
                 ptr = buffer.GetPtr((int)rva);
             else if (buffer != null)
             {
@@ -353,63 +184,13 @@ namespace Ton618.Utilities.PE
             }
             else
             {
-                ptr = _baseAddress.uplusptr(rva);
+                ptr = BaseAddress.uplusptr(rva);
             }
 
             return ptr;
         }
 
-        public IEnumerable<IMAGE_DEBUG_DIRECTORY> EnumerateDebugDir()
-        {
-            if (Debug.VirtualAddress == 0)
-                yield break;
-
-            var debugDirPtr = GetSafeBuffer(Debug.VirtualAddress, Debug.Size, out var buffer);
-
-            try
-            {
-                var safeObj = new IMAGE_DEBUG_DIRECTORY();
-                var sizeOfDir = Marshal.SizeOf(safeObj);
-
-                var count = Debug.Size / sizeOfDir;
-
-                for (var i = 0; i < count; i++)
-                {
-                    var dir = (IMAGE_DEBUG_DIRECTORY)Marshal.PtrToStructure(debugDirPtr, typeof(IMAGE_DEBUG_DIRECTORY));
-                    yield return dir;
-
-                    debugDirPtr += sizeOfDir;
-                }
-            }
-            finally
-            {
-                buffer.Clear();
-            }
-        }
-
-        private uint Rva2Raw(uint virtualAddress)
-        {
-            var section = GetSection(virtualAddress);
-            return virtualAddress - section.VirtualAddress + section.PointerToRawData;
-        }
-
-        private IMAGE_SECTION_HEADER GetSection(uint virtualAddress)
-        {
-            for (var i = 0; i < _sections.Length; i++)
-            {
-                var section = _sections[i];
-
-                var startAddr = section.VirtualAddress;
-                var endAddr = section.VirtualAddress + section.PhysicalAddressOrVirtualSize;
-
-                if (startAddr <= virtualAddress && virtualAddress <= endAddr)
-                    return section;
-            }
-
-            return default;
-        }
-
-        unsafe static PEImage ReadPEHeader(BinaryReader br)
+        private unsafe static PEImage ReadPEHeader(BinaryReader br)
         {
             var image = new PEImage();
 
@@ -419,7 +200,7 @@ namespace Ton618.Utilities.PE
                 if (!dosHeader.IsValid)
                     return null;
 
-                image._dosHeader = dosHeader;
+                image.DosHeader = dosHeader;
             }
 
             // IMAGE_NT_HEADERS - signature 를 읽어들이고,
@@ -431,7 +212,7 @@ namespace Ton618.Utilities.PE
 
             // IMAGE_NT_HEADERS - IMAGE_FILE_HEADER를 읽어들임
             var ntFileHeader = br.Read<IMAGE_FILE_HEADER>();
-            image._fileHeader = ntFileHeader;
+            image.fileHeader = ntFileHeader;
 
             /*
             AnyCPU로 빌드된 .NET Image인 경우,
@@ -442,30 +223,30 @@ namespace Ton618.Utilities.PE
 
             var magic = br.PeekUInt16();
             if (magic == (ushort)MagicType.IMAGE_NT_OPTIONAL_HDR64_MAGIC)
-                image._is64BitHeader = true;
+                image.Is64Bitness = true;
 
             // ushort optionalHeaderSize = ntFileHeader.SizeOfOptionalHeader;
             // optionalHeaderSize
             // 32bit PE == 0xe0(224)bytes
             // 64bit PE == 0xF0(240)bytes
 
-            if (!image._is64BitHeader)
-                image._optionalHeader32 = br.Read<IMAGE_OPTIONAL_HEADER32>();
+            if (!image.Is64Bitness)
+                image.optionalHeader32 = br.Read<IMAGE_OPTIONAL_HEADER32>();
             else
             {
-                image._optionalHeader64 = br.Read<IMAGE_OPTIONAL_HEADER64>();
+                image.optionalHeader64 = br.Read<IMAGE_OPTIONAL_HEADER64>();
             }
 
             {
                 var sections = new List<IMAGE_SECTION_HEADER>();
 
-                for (var i = 0; i < image._fileHeader.NumberOfSections; i++)
+                for (var i = 0; i < image.fileHeader.NumberOfSections; i++)
                 {
                     var sectionHeader = br.Read<IMAGE_SECTION_HEADER>();
                     sections.Add(sectionHeader);
                 }
 
-                image._sections = sections.ToArray();
+                image.sections = sections.ToArray();
             }
 
             return image;
@@ -478,10 +259,10 @@ namespace Ton618.Utilities.PE
                 if (pm.ModuleName.Equals(moduleName, StringComparison.OrdinalIgnoreCase))
                 {
                     var image = ReadFromMemory(pm.BaseAddress, pm.ModuleMemorySize);
-                    image._filePath = pm.FileName;
-                    image._readFromFile = false;
-                    image._baseAddress = pm.BaseAddress;
-                    image._memorySize = pm.ModuleMemorySize;
+                    image.ModulePath = pm.FileName;
+                    image.readFromFile = false;
+                    image.BaseAddress = pm.BaseAddress;
+                    image.MemorySize = pm.ModuleMemorySize;
                     return image;
                 }
             }
@@ -499,7 +280,7 @@ namespace Ton618.Utilities.PE
         {
             var ms = new MemoryStream(buffer);
             var image = ReadFromMemory(ms, baseAddress, memorySize);
-            image._bufferCached = buffer;
+            image.bufferCached = buffer;
 
             return image;
         }
@@ -512,9 +293,9 @@ namespace Ton618.Utilities.PE
             if (image == null)
                 return null;
 
-            image._readFromFile = false;
-            image._baseAddress = baseAddress;
-            image._memorySize = memorySize;
+            image.readFromFile = false;
+            image.BaseAddress = baseAddress;
+            image.MemorySize = memorySize;
 
             return image;
         }
@@ -528,165 +309,12 @@ namespace Ton618.Utilities.PE
                 if (image == null)
                     return null;
 
-                image._readFromFile = true;
-                image._filePath = filePath;
-                image._baseAddress = new IntPtr(image._is64BitHeader ? (long)image._optionalHeader64.ImageBase
-                                        : image._optionalHeader32.ImageBase);
+                image.readFromFile = true;
+                image.ModulePath = filePath;
+                image.BaseAddress = new IntPtr(image.Is64Bitness ? (long)image.optionalHeader64.ImageBase
+                                        : image.optionalHeader32.ImageBase);
 
                 return image;
-            }
-        }
-
-        public static string DownloadPdb(string modulePath, byte[] buffer, IntPtr baseOffset, int imageSize, string rootPathToSave)
-        {
-            var pe = ReadFromMemory(buffer, baseOffset, imageSize);
-
-            if (pe == null)
-            {
-                Console.WriteLine("Failed to read images");
-                return null;
-            }
-
-            return pe.DownloadPdb(modulePath, rootPathToSave);
-        }
-
-        public string DownloadPdb(string modulePath, string rootPathToSave)
-        {
-            var baseUri = new Uri("https://msdl.microsoft.com/download/symbols/");
-            var pdbDownloadedPath = string.Empty;
-
-            foreach (var codeView in EnumerateCodeViewDebugInfo())
-            {
-                if (string.IsNullOrEmpty(codeView.PdbFileName))
-                    continue;
-
-                var pdbFileName = codeView.PdbFileName;
-                if (Path.IsPathRooted(codeView.PdbFileName))
-                    pdbFileName = Path.GetFileName(codeView.PdbFileName);
-
-                var localPath = Path.Combine(rootPathToSave, pdbFileName);
-                var localFolder = Path.GetDirectoryName(localPath);
-
-                if (!Directory.Exists(localFolder))
-                {
-                    try
-                    {
-                        Directory.CreateDirectory(localFolder);
-                    }
-                    catch (DirectoryNotFoundException)
-                    {
-                        Console.WriteLine("NOT Found on local: " + codeView.PdbLocalPath);
-                        continue;
-                    }
-                }
-
-                if (File.Exists(localPath))
-                {
-                    if (Path.GetExtension(localPath).Equals(".pdb", StringComparison.OrdinalIgnoreCase))
-                        pdbDownloadedPath = localPath;
-
-                    continue;
-                }
-
-                if (CopyPdbFromLocal(modulePath, codeView.PdbFileName, localPath))
-                    continue;
-
-                var target = new Uri(baseUri, codeView.PdbUriPath);
-                var pdbLocation = GetPdbLocation(target);
-
-                if (pdbLocation == null)
-                {
-                    var underscorePath = ProbeWithUnderscore(target.AbsoluteUri);
-                    pdbLocation = GetPdbLocation(new Uri(underscorePath));
-                }
-
-                if (pdbLocation != null)
-                {
-                    DownloadPdbFile(pdbLocation, localPath);
-
-                    if (Path.GetExtension(localPath).Equals(".pdb", StringComparison.OrdinalIgnoreCase))
-                        pdbDownloadedPath = localPath;
-                }
-                else
-                {
-                    Console.WriteLine("Not Found on symbol server: " + codeView.PdbFileName);
-                }
-            }
-
-            return pdbDownloadedPath;
-        }
-
-        private static string ProbeWithUnderscore(string path)
-        {
-            path = path.Remove(path.Length - 1);
-            path = path.Insert(path.Length, "_");
-            return path;
-        }
-
-        private static Uri GetPdbLocation(Uri target)
-        {
-            var req = System.Net.WebRequest.Create(target) as System.Net.HttpWebRequest;
-            req.Method = "HEAD";
-
-            try
-            {
-                using (var resp = req.GetResponse() as System.Net.HttpWebResponse)
-                {
-                    return resp.ResponseUri;
-                }
-            }
-            catch (System.Net.WebException)
-            {
-                return null;
-            }
-        }
-
-        private static bool CopyPdbFromLocal(string modulePath, string pdbFileName, string localTargetPath)
-        {
-            if (File.Exists(pdbFileName))
-            {
-                File.Copy(pdbFileName, localTargetPath);
-                return File.Exists(localTargetPath);
-            }
-
-            var fileName = Path.GetFileName(pdbFileName);
-            var pdbPath = Path.Combine(Environment.CurrentDirectory, fileName);
-
-            if (File.Exists(pdbPath))
-            {
-                File.Copy(pdbPath, localTargetPath);
-                return File.Exists(localTargetPath);
-            }
-
-            pdbPath = Path.ChangeExtension(modulePath, ".pdb");
-            if (File.Exists(pdbPath))
-            {
-                File.Copy(pdbPath, localTargetPath);
-                return File.Exists(localTargetPath);
-            }
-
-            return false;
-        }
-
-        private static void DownloadPdbFile(Uri target, string pathToSave)
-        {
-            var req = System.Net.WebRequest.Create(target) as System.Net.HttpWebRequest;
-
-            using (var resp = req.GetResponse() as System.Net.HttpWebResponse)
-            using (var fs = new FileStream(pathToSave, FileMode.CreateNew, FileAccess.Write, FileShare.None))
-            using (var bw = new BinaryWriter(fs))
-            {
-                var reader = new BinaryReader(resp.GetResponseStream());
-                var contentLength = resp.ContentLength;
-
-                while (contentLength > 0)
-                {
-                    var buffer = new byte[4096];
-                    var readBytes = reader.Read(buffer, 0, buffer.Length);
-                    bw.Write(buffer, 0, readBytes);
-
-                    contentLength -= readBytes;
-                }
             }
         }
     }

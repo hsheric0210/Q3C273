@@ -2,9 +2,9 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Ton618.Utilities.PE
+namespace Ton618.Utilities
 {
-    public static class ExtensionHelper
+    public static class NativeExtension
     {
         public static ushort PeekUInt16(this BinaryReader reader)
         {

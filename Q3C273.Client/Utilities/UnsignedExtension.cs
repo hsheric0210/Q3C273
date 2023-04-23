@@ -1,5 +1,4 @@
 ﻿using System;
-using Ton618.Utilities.PE;
 
 namespace Ton618.Utilities
 {

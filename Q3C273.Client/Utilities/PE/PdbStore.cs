@@ -23,7 +23,7 @@ namespace Ton618.Utilities.PE
 
         public void Add(SYMBOL_INFO si)
         {
-            if (_cache.ContainsKey(si.Name) == false) // duplicates of "<anonymous-tag>"
+            if (!_cache.ContainsKey(si.Name)) // duplicates of "<anonymous-tag>"
                 _cache.Add(si.Name, si);
         }
 
@@ -31,7 +31,7 @@ namespace Ton618.Utilities.PE
         {
             get
             {
-                if (_cache.ContainsKey(key) == false)
+                if (!_cache.ContainsKey(key))
                     return default;
 
                 return _cache[key];

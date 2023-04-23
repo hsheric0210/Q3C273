@@ -52,6 +52,8 @@ namespace Ton618.Loader
             //var setpriv = ReflectiveDllLoader.SetPrivilege();
             //MessageBox.Show("SetPrivilege finished: " + setpriv);
             var procs = Process.GetProcessesByName("cmd");
+            MessageBox.Show("Acquire privileges");
+            Privileges.EnableDebugPrivilege();
 
             MessageBox.Show("Candidate count " + procs.Length);
             foreach (var proc in procs)

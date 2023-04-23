@@ -170,22 +170,10 @@ enum _POOL_TYPE
         public ushort Count;
         public CorVtableDefines Type;
 
-        public bool Is64bit
-        {
-            get
-            {
-                return (Type & CorVtableDefines.COR_VTABLE_64BIT) == CorVtableDefines.COR_VTABLE_64BIT;
-            }
-        }
+        public bool Is64bit => (Type & CorVtableDefines.COR_VTABLE_64BIT) == CorVtableDefines.COR_VTABLE_64BIT;
 
-        public int GetItemSize()
-        {
-            return Is64bit ? sizeof(long) : sizeof(int);
-        }
+        public int GetItemSize() => Is64bit ? sizeof(long) : sizeof(int);
 
-        public override string ToString()
-        {
-            return $"RVA: 0x{rva:x}, # of entries: {Count}, Type: 0x{Type:x}";
-        }
+        public override string ToString() => $"RVA: 0x{rva:x}, # of entries: {Count}, Type: 0x{Type:x}";
     }
 }

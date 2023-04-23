@@ -9,34 +9,28 @@ namespace Ton618.Utilities.PE
     /// </summary>
     public sealed class ProcessHandleInfo : IDisposable
     {
-        IntPtr _ptr = IntPtr.Zero;
-        int _handleCount = 0;
-        int _handleOffset = 0;
+        private IntPtr ptr = IntPtr.Zero;
+        private int handleCount = 0;
+        private int handleOffset = 0;
 
-        public int HandleCount
-        {
-            get { return _handleCount; }
-        }
+        public int HandleCount => handleCount;
 
-        public ProcessHandleInfo(int pid)
-        {
-            Initialize(pid);
-        }
+        public ProcessHandleInfo(int pid) => Initialize(pid);
 
         public void Dispose()
         {
-            if (_ptr == IntPtr.Zero)
+            if (ptr == IntPtr.Zero)
                 return;
 
-            Marshal.FreeHGlobal(_ptr);
-            _ptr = IntPtr.Zero;
+            Marshal.FreeHGlobal(ptr);
+            ptr = IntPtr.Zero;
         }
 
         public _PROCESS_HANDLE_TABLE_ENTRY_INFO this[int index]
         {
             get
             {
-                if (_ptr == IntPtr.Zero)
+                if (ptr == IntPtr.Zero)
                     return default;
 
                 unsafe
@@ -50,12 +44,12 @@ namespace Ton618.Utilities.PE
 
                     if (IntPtr.Size == 8)
                     {
-                        var handleTable = new IntPtr(_ptr.ToInt64() + _handleOffset);
+                        var handleTable = new IntPtr(ptr.ToInt64() + handleOffset);
                         entryPtr = new IntPtr(handleTable.ToInt64() + sizeof(_PROCESS_HANDLE_TABLE_ENTRY_INFO) * index);
                     }
                     else
                     {
-                        var handleTable = new IntPtr(_ptr.ToInt32() + _handleOffset);
+                        var handleTable = new IntPtr(ptr.ToInt32() + handleOffset);
                         entryPtr = new IntPtr(handleTable.ToInt32() + sizeof(_PROCESS_HANDLE_TABLE_ENTRY_INFO) * index);
                     }
 
@@ -71,7 +65,7 @@ namespace Ton618.Utilities.PE
             var guessSize = 4096;
             NT_STATUS ret;
 
-            var ptr = Marshal.AllocHGlobal(guessSize);
+            var _ptr = Marshal.AllocHGlobal(guessSize);
             var processHandle = OpenProcess(
                 ProcessAccessRights.PROCESS_QUERY_INFORMATION | ProcessAccessRights.PROCESS_DUP_HANDLE, false, pid);
             if (processHandle == IntPtr.Zero)
@@ -79,13 +73,13 @@ namespace Ton618.Utilities.PE
 
             while (true)
             {
-                ret = NtQueryInformationProcess(processHandle, PROCESS_INFORMATION_CLASS.ProcessHandleInformation, ptr, guessSize, out var requiredSize);
+                ret = NtQueryInformationProcess(processHandle, PROCESS_INFORMATION_CLASS.ProcessHandleInformation, _ptr, guessSize, out var requiredSize);
 
                 if (ret == NT_STATUS.STATUS_INFO_LENGTH_MISMATCH)
                 {
-                    Marshal.FreeHGlobal(ptr);
+                    Marshal.FreeHGlobal(_ptr);
                     guessSize = requiredSize;
-                    ptr = Marshal.AllocHGlobal(guessSize);
+                    _ptr = Marshal.AllocHGlobal(guessSize);
                     continue;
                 }
 
@@ -99,17 +93,17 @@ namespace Ton618.Utilities.PE
                         } PROCESS_HANDLE_SNAPSHOT_INFORMATION, * PPROCESS_HANDLE_SNAPSHOT_INFORMATION;
                     */
 
-                    _handleCount = Marshal.ReadIntPtr(ptr).ToInt32();
+                    handleCount = Marshal.ReadIntPtr(_ptr).ToInt32();
 
 #pragma warning disable IDE0059 // Unnecessary assignment of a value
                     var dummy = new _PROCESS_HANDLE_SNAPSHOT_INFORMATION();
 #pragma warning restore IDE0059 // Unnecessary assignment of a value
-                    _handleOffset = Marshal.OffsetOf(typeof(_PROCESS_HANDLE_SNAPSHOT_INFORMATION), nameof(dummy.Handles)).ToInt32();
-                    _ptr = ptr;
+                    handleOffset = Marshal.OffsetOf(typeof(_PROCESS_HANDLE_SNAPSHOT_INFORMATION), nameof(dummy.Handles)).ToInt32();
+                    ptr = _ptr;
                     break;
                 }
 
-                Marshal.FreeHGlobal(ptr);
+                Marshal.FreeHGlobal(_ptr);
                 break;
             }
         }
