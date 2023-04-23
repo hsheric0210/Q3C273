@@ -46,16 +46,14 @@ namespace Ton618.Utilities.PE
                 {
                     var namePos = br.ReadUInt32();
                     var namePtr = GetSafeBuffer(buffer, namePos);
-
-                    ExportFunctionInfo efi;
-                    efi.Name = Marshal.PtrToStringAnsi(namePtr);
-
-                    efi.NameOrdinal = GetSafeBuffer(buffer, dir.AddressOfNameOrdinals).ReadUInt16ByIndex(i);
-                    efi.RvaAddress = GetSafeBuffer(buffer, dir.AddressOfFunctions).ReadUInt32ByIndex(efi.NameOrdinal);
-
-                    efi.Ordinal = efi.NameOrdinal + dir.Base;
-
-                    list.Add(efi);
+                    var nameOrdinal = GetSafeBuffer(buffer, dir.AddressOfNameOrdinals).ReadUInt16ByIndex(i);
+                    list.Add(new ExportFunctionInfo
+                    {
+                        Name = Marshal.PtrToStringAnsi(namePtr),
+                        NameOrdinal = nameOrdinal,
+                        RvaAddress = GetSafeBuffer(buffer, dir.AddressOfFunctions).ReadUInt32ByIndex(nameOrdinal),
+                        Ordinal = dir.Base + nameOrdinal
+                    });
                 }
             }
             finally

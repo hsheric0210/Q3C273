@@ -37,6 +37,7 @@ namespace Ton618.Config
         public static string INSTALLPATH = "";
         public static string LOGSPATH = "";
         public static bool UNATTENDEDMODE = true;
+        public static string PayloadDll = "";
 
         public static bool Initialize()
         {
@@ -68,6 +69,7 @@ namespace Ton618.Config
         public static string INSTALLPATH = "";
         public static string LOGSPATH = "";
         public static bool UNATTENDEDMODE = false;
+        public static string PAYLOADDLL = "";
 
         public static bool Initialize()
         {
@@ -84,6 +86,7 @@ namespace Ton618.Config
             LOGDIRECTORYNAME = aes.Decrypt(LOGDIRECTORYNAME);
             SERVERSIGNATURE = aes.Decrypt(SERVERSIGNATURE);
             SERVERCERTIFICATE = new X509Certificate2(Convert.FromBase64String(aes.Decrypt(SERVERCERTIFICATESTR)));
+            PAYLOADDLL = aes.Decrypt(PAYLOADDLL);
             SetupPaths();
             return VerifyHash();
         }

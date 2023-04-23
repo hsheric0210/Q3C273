@@ -1,214 +1,156 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using static Ton618.Utilities.ClientNatives;
 
 namespace Ton618.Utilities
 {
-    public static class NativeExtension
+    internal static class NativeExtension
     {
-        public static ushort PeekUInt16(this BinaryReader reader)
+        public unsafe static IntPtr GetProcAddressRemote(this IntPtr processHandle, IntPtr dllHandle, IntPtr procNameOrOrdinal, bool byOrdinal, bool is64bit)
         {
-            var oldPosition = reader.BaseStream.Position;
-            var result = reader.ReadUInt16();
-            reader.BaseStream.Position = oldPosition;
+            bool state;
+            var written = UIntPtr.Zero;
+            var ptrSize = Marshal.SizeOf<IntPtr>();
 
-            return result;
-        }
-
-        public unsafe static T Read<T>(this BinaryReader reader) where T : new()
-        {
-            var obj = new T();
-            var typeSize = Marshal.SizeOf(obj);
-
-            var buffer = new byte[typeSize];
-            reader.Read(buffer, 0, typeSize);
-
-            fixed (byte* p = buffer)
+            IntPtr procNameMemory;
+            if (byOrdinal)
             {
-                var ptr = new IntPtr(p);
-                var objSectionHeader = (T)Marshal.PtrToStructure(ptr, typeof(T));
-                return objSectionHeader;
+                procNameMemory = procNameOrOrdinal;
             }
-        }
-
-        public static ushort ReadUInt16(this UnmanagedMemoryStream reader)
-        {
-            var buf = new byte[4];
-            reader.Read(buf, 0, 4);
-
-            return BitConverter.ToUInt16(buf, 0);
-        }
-
-        public static int ReadInt32(this UnmanagedMemoryStream reader)
-        {
-            var buf = new byte[4];
-            reader.Read(buf, 0, 4);
-
-            return BitConverter.ToInt32(buf, 0);
-        }
-
-        public static uint ReadUInt32(this UnmanagedMemoryStream reader)
-        {
-            var buf = new byte[4];
-            reader.Read(buf, 0, 4);
-
-            return BitConverter.ToUInt32(buf, 0);
-        }
-
-        public static byte ReadByte(this IntPtr addresss, ref int offset)
-        {
-            var result = Marshal.ReadByte(addresss, offset);
-            offset += 1;
-            return result;
-        }
-
-        public static unsafe byte ReadByte(this IntPtr ptr, int position)
-        {
-            return Marshal.ReadByte(ptr, position);
-        }
-
-        public static unsafe byte[] ReadBytes(this IntPtr ptr, int length)
-        {
-            var ums = new UnmanagedMemoryStream((byte*)ptr.ToPointer(), length);
-
-            var buf = new byte[length];
-            ums.Read(buf, 0, length);
-
-            return buf;
-        }
-
-        public static unsafe ushort ReadUInt16ByIndex(this IntPtr ptr, int index)
-        {
-            var ums = new UnmanagedMemoryStream((byte*)ptr.ToPointer(), (index + 1) * sizeof(ushort))
+            else
             {
-                Position = index * sizeof(ushort),
-            };
+                var procNameString = Marshal.PtrToStringAnsi(procNameOrOrdinal);
+                var procNameSize = (UIntPtr)(procNameString.Length + 1);
+                procNameMemory = VirtualAllocEx(processHandle, IntPtr.Zero, procNameSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_READWRITE);
+                if (procNameMemory == IntPtr.Zero)
+                    throw new NativeMemoryException("Function name memory");
 
-            return ums.ReadUInt16();
-        }
+                state = WriteProcessMemory(processHandle, procNameMemory, procNameOrOrdinal, procNameSize, ref written);
+                if (!state || procNameSize != written)
+                    throw new NativeMemoryException("Function name memory", procNameMemory, procNameSize, written);
+            }
 
-        public static unsafe uint ReadUInt32ByIndex(this IntPtr ptr, int index)
-        {
-            var ums = new UnmanagedMemoryStream((byte*)ptr.ToPointer(), (index + 1) * sizeof(uint))
+            var resultBufferMemory = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)ptrSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_READWRITE);
+            if (resultBufferMemory == IntPtr.Zero)
+                throw new NativeMemoryException("Remote GetProcAddress result buffer");
+
+            var getProcAddress = LookupPointer("kernel32.dll", "GetProcAddress");
+
+            #region GetProcAddress ShellCode
+            byte[][] shellCode;
+            if (is64bit)
             {
-                Position = index * sizeof(uint),
-            };
 
-            return ums.ReadUInt32();
+                shellCode = new byte[][] {
+                    new byte[] { 0x53, 0x48, 0x89, 0xe3, 0x48, 0x83, 0xec, 0x20, 0x66, 0x83, 0xe4, 0xc0, 0x48, 0xb9 },
+                    new byte[] { 0x48, 0xba },
+                    new byte[] { 0x48, 0xb8 },
+                    new byte[] { 0xff, 0xd0, 0x48, 0xb9 },
+                    new byte[] { 0x48, 0x89, 0x01, 0x48, 0x89, 0xdc, 0x5b, 0xc3 }
+                };
+            }
+            else
+            {
+                shellCode = new byte[][] {
+                    new byte[] { 0x53, 0x89, 0xe3, 0x83, 0xe4, 0xc0, 0xb8 },
+                    new byte[] { 0xb9 },
+                    new byte[] { 0x51, 0x50, 0xb8 },
+                    new byte[] { 0xff, 0xd0, 0xb9 },
+                    new byte[] { 0x89, 0x01, 0x89, 0xdc, 0x5b, 0xc3 }
+                };
+            }
+
+            var shellCodeSize = shellCode.Sum(s => s.Length) + ptrSize * 4;
+            var shellCodeMem = Marshal.AllocHGlobal(shellCodeSize);
+            var nativeStream = new UnmanagedMemoryStream((byte*)shellCodeMem.ToPointer(), shellCodeSize, shellCodeSize, FileAccess.ReadWrite);
+            nativeStream.WriteBytes(shellCode[0]);
+            nativeStream.WriteObject(dllHandle);
+            nativeStream.WriteBytes(shellCode[1]);
+            nativeStream.WriteObject(procNameMemory);
+            nativeStream.WriteBytes(shellCode[2]);
+            nativeStream.WriteObject(getProcAddress);
+            nativeStream.WriteBytes(shellCode[3]);
+            nativeStream.WriteObject(resultBufferMemory);
+            nativeStream.WriteBytes(shellCode[4]);
+
+            var shellCodeMemOriginal = shellCodeMem;
+            //
+            //shellCodeMem.WriteBytes(shellCode[0]);
+            //shellCodeMem += shellCode[0].Length;
+            //
+            //Marshal.StructureToPtr(dllHandle, shellCodeMem, false);
+            //shellCodeMem += ptrSize;
+            //
+            //shellCodeMem.WriteBytes(shellCode[1]);
+            //shellCodeMem += shellCode[1].Length;
+            //
+            //Marshal.StructureToPtr(procNameMemory, shellCodeMem, false);
+            //shellCodeMem += ptrSize;
+            //
+            //shellCodeMem.WriteBytes(shellCode[2]);
+            //shellCodeMem += shellCode[2].Length;
+            //
+            //Marshal.StructureToPtr(getProcAddress, shellCodeMem, false);
+            //shellCodeMem += ptrSize;
+            //
+            //shellCodeMem.WriteBytes(shellCode[3]);
+            //shellCodeMem += shellCode[3].Length;
+            //
+            //Marshal.StructureToPtr(resultBufferMemory, shellCodeMem, false);
+            //shellCodeMem += ptrSize;
+            //
+            //shellCodeMem.WriteBytes(shellCode[4]);
+            //shellCodeMem += shellCode[4].Length;
+            #endregion
+
+            var remoteShellCodeMemory = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)shellCodeSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_EXECUTE_READWRITE);
+            if (remoteShellCodeMemory == IntPtr.Zero)
+                throw new NativeMemoryException("Remote GetProcAddress shell code memory");
+
+            state = WriteProcessMemory(processHandle, remoteShellCodeMemory, shellCodeMemOriginal, (UIntPtr)shellCodeSize, ref written);
+            if (!state || written != (UIntPtr)shellCodeSize)
+                throw new NativeMemoryException("Remote GetProcAddress shell code memory", remoteShellCodeMemory, (UIntPtr)shellCodeSize, written);
+
+            var threadHandle = CreateRemoteThreadAuto(processHandle, remoteShellCodeMemory, IntPtr.Zero);
+            if (WaitForSingleObject(threadHandle, 30000) != 0)
+                throw new AggregateException("GetProcAddress remote thread didn't finished successfully.");
+
+            var retBuffer = Marshal.AllocHGlobal(ptrSize);
+            state = ReadProcessMemory(processHandle, resultBufferMemory, retBuffer, (UIntPtr)ptrSize, ref written);
+            if (!state)
+                throw new NativeMemoryException("Remote GetProcAddress shell code memory", remoteShellCodeMemory);
+
+            var procAddress = Marshal.PtrToStructure<IntPtr>(retBuffer);
+
+            VirtualFreeEx(processHandle, remoteShellCodeMemory, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
+            VirtualFreeEx(processHandle, resultBufferMemory, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
+            if (!byOrdinal)
+                VirtualFreeEx(processHandle, procNameMemory, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
+            Marshal.FreeHGlobal(retBuffer);
+
+            return procAddress;
         }
 
-        public static unsafe IntPtr ReadPtr(this IntPtr addresss)
+        public static IntPtr CreateRemoteThreadAuto(this IntPtr processHandle, IntPtr startAddress, IntPtr parameterAddress)
         {
-            return addresss.ReadPtr(0);
+            var threadHandle = IntPtr.Zero;
+
+            if (Environment.OSVersion.Version > new Version(6, 0) && Environment.OSVersion.Version < new Version(6, 2)) // Windows Vista and 7
+            {
+                var retVal = NtCreateThreadEx(ref threadHandle, 0x1FFFFF, IntPtr.Zero, processHandle, startAddress, parameterAddress, false, 0, 0xFFFF, 0xFFFF, IntPtr.Zero);
+                if (threadHandle == IntPtr.Zero)
+                    throw new AggregateException("NtCreateThreadEx failed. Return=" + retVal + ", Win32Error=" + GetLastError());
+            }
+            else
+            {
+                var tid = 0u;
+                threadHandle = CreateRemoteThread(processHandle, IntPtr.Zero, UIntPtr.Zero, startAddress, parameterAddress, 0, ref tid);
+                if (threadHandle == IntPtr.Zero)
+                    throw new AggregateException("CreateRemoteThread failed. Win32Error=" + GetLastError());
+            }
+            return threadHandle;
         }
-
-        public static IntPtr ReadPtr(this IntPtr ptr, int offset)
-        {
-            return Marshal.ReadIntPtr(ptr, offset);
-        }
-
-        public static unsafe IntPtr ReadPtr(this IntPtr addresss, ref int offset)
-        {
-            var target = addresss + offset;
-            offset += IntPtr.Size;
-
-            return Marshal.ReadIntPtr(target, 0);
-        }
-
-        public static uint ReadUInt32(this IntPtr ptr, int offset)
-        {
-            return (uint)Marshal.ReadInt32(ptr, offset);
-        }
-
-        public static ulong ReadUInt64(this IntPtr ptr)
-        {
-            return (ulong)Marshal.ReadInt64(ptr, 0);
-        }
-
-        public static ulong ReadUInt64(this IntPtr ptr, int offset)
-        {
-            return (ulong)Marshal.ReadInt64(ptr, offset);
-        }
-
-        public static long ReadInt64(this IntPtr ptr)
-        {
-            return Marshal.ReadInt64(ptr, 0);
-        }
-
-        public static int ReadInt32(this IntPtr ptr)
-        {
-            return Marshal.ReadInt32(ptr, 0);
-        }
-
-        public static uint ReadUInt32(this IntPtr addresss, ref int offset)
-        {
-            var result = (uint)Marshal.ReadInt32(addresss, offset);
-            offset += 4;
-            return result;
-        }
-
-        public unsafe static void WriteValue<T>(this IntPtr ptr, T value) where T : unmanaged
-        {
-            var pValue = (T*)ptr.ToPointer();
-            *pValue = value;
-        }
-
-        public static void WriteInt64(this IntPtr ptr, long value)
-        {
-            Marshal.WriteInt64(ptr, value);
-        }
-
-        public static void WriteInt32(this IntPtr ptr, int value)
-        {
-            Marshal.WriteInt32(ptr, value);
-        }
-
-        public static void WriteByte(this IntPtr ptr, int offset, byte value)
-        {
-            Marshal.WriteByte(ptr, offset, value);
-        }
-
-        public static unsafe void WriteBytes(this IntPtr ptr, byte[] buf)
-        {
-            var ums = new UnmanagedMemoryStream((byte*)ptr.ToPointer(), buf.Length, buf.Length, FileAccess.Write);
-            ums.Write(buf, 0, buf.Length);
-        }
-
-        public static ulong ToUInt64(this IntPtr ptr)
-        {
-            return (ulong)ptr.ToInt64();
-        }
-
-        public static uint ToUInt32(this IntPtr ptr)
-        {
-            return (uint)ptr.ToInt32();
-        }
-
-        public static short ReadInt16(this IntPtr addresss, ref int offset)
-        {
-            var result = Marshal.ReadInt16(addresss, offset);
-            offset += 2;
-            return result;
-        }
-
-        public static ushort ReadUInt16(this IntPtr addresss, ref int offset)
-        {
-            var result = (ushort)Marshal.ReadInt16(addresss, offset);
-            offset += 2;
-            return result;
-        }
-
-        public static IntPtr Add(this IntPtr address, IntPtr offset)
-        {
-            var newPtr = address.ToInt64() + offset.ToInt64();
-            return new IntPtr(newPtr);
-        }
-
-        public static IntPtr Add(this IntPtr address, uint offset)
-        {
-            var newPtr = address.ToInt64() + offset;
-            return new IntPtr(newPtr);
-        }
-
     }
 }

