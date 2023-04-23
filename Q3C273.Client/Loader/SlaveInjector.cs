@@ -81,13 +81,6 @@ namespace Ton618.Loader
                 var mem = Marshal.AllocHGlobal(strSize);
                 Marshal.StructureToPtr(str, mem, false);
                 var paramMem = handle.WriteToProcess(mem, (UIntPtr)strSize);
-                //var paramMem = VirtualAllocEx(handle, IntPtr.Zero, (UIntPtr)strSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_READWRITE);
-                //if (paramMem == IntPtr.Zero)
-                //    throw new Exception("Failed to allocate test method param mem.");
-                //var written = UIntPtr.Zero;
-                //var state = WriteProcessMemory(handle, paramMem, mem, (UIntPtr)strSize, ref written);
-                //if (!state || written != (UIntPtr)strSize)
-                //    throw new Exception("Failed to write test method param mem.");
                 var tid = 0u;
                 var funcpos = loader.GetProcAddr(local, "NotifyLoad");
                 if (funcpos == IntPtr.Zero)

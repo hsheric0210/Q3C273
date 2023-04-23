@@ -114,56 +114,9 @@ namespace Ton618.Loader
             if (!state || (UIntPtr)pe.SizeOfImage != written)
                 throw new NativeMemoryException("Remote injected PE memory", remoteMem, (UIntPtr)pe.SizeOfImage, written);
 
-            // call dllmain
+            // call DllMain
             var dllMainAddress = remoteMem.uplusptr(pe.EntryPoint);
             (pe.Is64Bitness ? ShellCode.DllMain_x64 : ShellCode.DllMain_x86).ExecuteOn(processHandle, remoteMem, dllMainAddress);
-            /*
-            byte[][] shellCode;
-            if (pe.Is64Bitness)
-            {
-                shellCode = new byte[][]
-                {
-                    new byte[] {0x53, 0x48, 0x89, 0xe3, 0x66, 0x83, 0xe4, 0x00, 0x48, 0xb9 },
-                    new byte[] {0xba, 0x01, 0x00, 0x00, 0x00, 0x41, 0xb8, 0x00, 0x00, 0x00, 0x00, 0x48, 0xb8 },
-                    new byte[] {0xff, 0xd0, 0x48, 0x89, 0xdc, 0x5b, 0xc3 }
-                };
-            }
-            else
-            {
-                shellCode = new byte[][]
-                {
-                     new byte[] {0x53, 0x89, 0xe3, 0x83, 0xe4, 0xf0, 0xb9 },
-                     new byte[] {0xba, 0x01, 0x00, 0x00, 0x00, 0xb8, 0x00, 0x00, 0x00, 0x00, 0x50, 0x52, 0x51, 0xb8 },
-                     new byte[] {0xff, 0xd0, 0x89, 0xdc, 0x5b, 0xc3 }
-                };
-            }
-            var shellCodeSize = shellCode.Sum(s => s.Length) + ptrSize * 2;
-            var shellCodeMem = Marshal.AllocHGlobal(shellCodeSize);
-            var nativeStream = new UnmanagedMemoryStream((byte*)shellCodeMem.ToPointer(), shellCodeSize, shellCodeSize, FileAccess.ReadWrite);
-            nativeStream.WriteBytes(shellCode[0]);
-            nativeStream.WriteObject(remoteMem);
-            nativeStream.WriteBytes(shellCode[1]);
-            nativeStream.WriteObject(dllMainAddress);
-            nativeStream.WriteBytes(shellCode[2]);
-
-            var remoteShellCodeMem = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)shellCodeSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_EXECUTE_READWRITE);
-            if (remoteShellCodeMem == IntPtr.Zero)
-                throw new NativeMemoryException("Remote DllMain caller shellcode memory");
-
-            state = WriteProcessMemory(processHandle, remoteShellCodeMem, shellCodeMem, (UIntPtr)shellCodeSize, ref written);
-            if (!state || written != (UIntPtr)shellCodeSize)
-                throw new NativeMemoryException("Remote DllMain caller shellcode memory", remoteShellCodeMem, (UIntPtr)shellCodeSize, written);
-
-            var threadHandle = processHandle.CreateRemoteThreadAuto(remoteShellCodeMem, IntPtr.Zero);
-            if (threadHandle == IntPtr.Zero)
-                throw new AggregateException("Cannot create remote DllMain caller thread");
-
-            if (WaitForSingleObject(threadHandle, 30000) != 0)
-                throw new AggregateException("DllMain caller thread didn't finished successfully");
-
-            VirtualFreeEx(processHandle, remoteShellCodeMem, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
-            */
-
             return (localMem, remoteMem);
         }
     }

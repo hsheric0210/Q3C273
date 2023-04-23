@@ -29,43 +29,6 @@ namespace Ton618.Utilities.PE
 
                 ShellCode.LoadLibraryA_x64.ExecuteOn(processHandle, remoteDllPathMemory, loadLibraryProcAddress, returnValueMemory);
 
-                /*
-                #region SHELLCODE
-                // Write Shellcode to the remote process which will call LoadLibraryA (Shellcode: LoadLibraryA.asm)
-                var shellCode = new byte[][]
-                {
-                    new byte[] { 0x53, 0x48, 0x89, 0xe3, 0x48, 0x83, 0xec, 0x20, 0x66, 0x83, 0xe4, 0xc0, 0x48, 0xb9 },
-                    new byte[] { 0x48, 0xba },
-                    new byte[] { 0xff, 0xd2, 0x48, 0xba },
-                    new byte[] { 0x48, 0x89, 0x02, 0x48, 0x89, 0xdc, 0x5b, 0xc3 }
-                };
-                var shellCodeSize = shellCode.Sum(s => s.Length) + ptrSize * 3;
-
-                var shellCodeMem = Marshal.AllocHGlobal(shellCodeSize);
-                var nativeStream = new UnmanagedMemoryStream((byte*)shellCodeMem.ToPointer(), shellCodeSize, shellCodeSize, FileAccess.ReadWrite);
-                nativeStream.WriteBytes(shellCode[0]);
-                nativeStream.WriteObject(remoteDllPathMemory);
-                nativeStream.WriteBytes(shellCode[1]);
-                nativeStream.WriteObject(loadLibraryProcAddress);
-                nativeStream.WriteBytes(shellCode[2]);
-                nativeStream.WriteObject(returnValueMemory);
-                nativeStream.WriteBytes(shellCode[3]);
-                #endregion
-
-                //var remoteShellCodeMem = processHandle.WriteToProcess(shellCodeMem, (UIntPtr)shellCodeSize, PageAccessRights.PAGE_EXECUTE_READWRITE);
-                var remoteShellCodeMem = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)shellCodeSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_EXECUTE_READWRITE);
-                if (remoteShellCodeMem == IntPtr.Zero)
-                    throw new NativeMemoryException("Remote memory for LoadLibraryA shellcode");
-
-                state = WriteProcessMemory(processHandle, remoteShellCodeMem, shellCodeMem, (UIntPtr)shellCodeSize, ref written);
-                if (!state || (UIntPtr)shellCodeSize != written)
-                    throw new NativeMemoryException("Remote memory for LoadLibraryA shellcode", remoteShellCodeMem, (UIntPtr)shellCodeSize, written);
-
-                var threadHandle = processHandle.CreateRemoteThreadAuto(remoteShellCodeMem, remoteDllPathMemory);
-                if (WaitForSingleObject(threadHandle, 30000) != 0)
-                    throw new AggregateException("Library loader thread didn't finished successfully. (or timeout)");
-                */
-
                 var retValMem = Marshal.AllocHGlobal(ptrSize);
                 state = ReadProcessMemory(processHandle, returnValueMemory, retValMem, (UIntPtr)ptrSize, ref written);
                 if (!state)
@@ -73,7 +36,6 @@ namespace Ton618.Utilities.PE
 
                 dllAddress = Marshal.PtrToStructure<IntPtr>(retValMem);
                 VirtualFreeEx(processHandle, returnValueMemory, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
-                //VirtualFreeEx(processHandle, remoteShellCodeMem, UIntPtr.Zero, MemFreeType.MEM_RELEASE);
             }
             else
             {
