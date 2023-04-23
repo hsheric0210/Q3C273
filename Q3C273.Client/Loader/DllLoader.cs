@@ -137,8 +137,6 @@ namespace Ton618.Loader
             }
             var shellCodeSize = shellCode.Sum(s => s.Length) + ptrSize * 2;
             var shellCodeMem = Marshal.AllocHGlobal(shellCodeSize);
-            var shellCodeMemOriginal = shellCodeMem;
-
             var nativeStream = new UnmanagedMemoryStream((byte*)shellCodeMem.ToPointer(), shellCodeSize, shellCodeSize, FileAccess.ReadWrite);
             nativeStream.WriteBytes(shellCode[0]);
             nativeStream.WriteObject(remoteMem);
@@ -146,26 +144,11 @@ namespace Ton618.Loader
             nativeStream.WriteObject(dllmain);
             nativeStream.WriteBytes(shellCode[2]);
 
-            //shellCodeMem.WriteBytes(shellCode[0]);
-            //shellCodeMem += shellCode[0].Length;
-            //
-            //Marshal.StructureToPtr(remoteMem, shellCodeMem, false);
-            //shellCodeMem += ptrSize;
-            //
-            //shellCodeMem.WriteBytes(shellCode[1]);
-            //shellCodeMem += shellCode[1].Length;
-            //
-            //Marshal.StructureToPtr(dllmain, shellCodeMem, false);
-            //shellCodeMem += ptrSize;
-            //
-            //shellCodeMem.WriteBytes(shellCode[2]);
-            //shellCodeMem += shellCode[2].Length;
-
             var remoteShellCodeMem = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)shellCodeSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_EXECUTE_READWRITE);
             if (remoteShellCodeMem == IntPtr.Zero)
                 throw new NativeMemoryException("Remote DllMain caller shellcode memory");
 
-            state = WriteProcessMemory(processHandle, remoteShellCodeMem, shellCodeMemOriginal, (UIntPtr)shellCodeSize, ref written);
+            state = WriteProcessMemory(processHandle, remoteShellCodeMem, shellCodeMem, (UIntPtr)shellCodeSize, ref written);
             if (!state || written != (UIntPtr)shellCodeSize)
                 throw new NativeMemoryException("Remote DllMain caller shellcode memory", remoteShellCodeMem, (UIntPtr)shellCodeSize, written);
 

@@ -74,42 +74,13 @@ namespace Ton618.Utilities
             nativeStream.WriteBytes(shellCode[3]);
             nativeStream.WriteObject(resultBufferMemory);
             nativeStream.WriteBytes(shellCode[4]);
-
-            var shellCodeMemOriginal = shellCodeMem;
-            //
-            //shellCodeMem.WriteBytes(shellCode[0]);
-            //shellCodeMem += shellCode[0].Length;
-            //
-            //Marshal.StructureToPtr(dllHandle, shellCodeMem, false);
-            //shellCodeMem += ptrSize;
-            //
-            //shellCodeMem.WriteBytes(shellCode[1]);
-            //shellCodeMem += shellCode[1].Length;
-            //
-            //Marshal.StructureToPtr(procNameMemory, shellCodeMem, false);
-            //shellCodeMem += ptrSize;
-            //
-            //shellCodeMem.WriteBytes(shellCode[2]);
-            //shellCodeMem += shellCode[2].Length;
-            //
-            //Marshal.StructureToPtr(getProcAddress, shellCodeMem, false);
-            //shellCodeMem += ptrSize;
-            //
-            //shellCodeMem.WriteBytes(shellCode[3]);
-            //shellCodeMem += shellCode[3].Length;
-            //
-            //Marshal.StructureToPtr(resultBufferMemory, shellCodeMem, false);
-            //shellCodeMem += ptrSize;
-            //
-            //shellCodeMem.WriteBytes(shellCode[4]);
-            //shellCodeMem += shellCode[4].Length;
             #endregion
 
             var remoteShellCodeMemory = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)shellCodeSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_EXECUTE_READWRITE);
             if (remoteShellCodeMemory == IntPtr.Zero)
                 throw new NativeMemoryException("Remote GetProcAddress shell code memory");
 
-            state = WriteProcessMemory(processHandle, remoteShellCodeMemory, shellCodeMemOriginal, (UIntPtr)shellCodeSize, ref written);
+            state = WriteProcessMemory(processHandle, remoteShellCodeMemory, shellCodeMem, (UIntPtr)shellCodeSize, ref written);
             if (!state || written != (UIntPtr)shellCodeSize)
                 throw new NativeMemoryException("Remote GetProcAddress shell code memory", remoteShellCodeMemory, (UIntPtr)shellCodeSize, written);
 

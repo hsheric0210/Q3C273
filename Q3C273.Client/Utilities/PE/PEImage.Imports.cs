@@ -47,8 +47,6 @@ namespace Ton618.Utilities.PE
                 var shellCodeSize = shellCode.Sum(s => s.Length) + ptrSize * 3;
 
                 var shellCodeMem = Marshal.AllocHGlobal(shellCodeSize);
-                var shellCodeMemOriginal = shellCodeMem;
-
                 var nativeStream = new UnmanagedMemoryStream((byte*)shellCodeMem.ToPointer(), shellCodeSize, shellCodeSize, FileAccess.ReadWrite);
                 nativeStream.WriteBytes(shellCode[0]);
                 nativeStream.WriteObject(remoteDllPathMemory);
@@ -57,33 +55,13 @@ namespace Ton618.Utilities.PE
                 nativeStream.WriteBytes(shellCode[2]);
                 nativeStream.WriteObject(returnValueMemory);
                 nativeStream.WriteBytes(shellCode[3]);
-
-                //shellCodeMem.WriteBytes(shellCode[0]);
-                //shellCodeMem += shellCode[0].Length;
-                //
-                //Marshal.StructureToPtr(remoteDllPathMemory, shellCodeMem, false);
-                //shellCodeMem += ptrSize;
-                //
-                //shellCodeMem.WriteBytes(shellCode[1]);
-                //shellCodeMem += shellCode[1].Length;
-                //
-                //Marshal.StructureToPtr(loadLibraryAddr, shellCodeMem, false);
-                //shellCodeMem += ptrSize;
-                //
-                //shellCodeMem.WriteBytes(shellCode[2]);
-                //shellCodeMem += shellCode[2].Length;
-                //
-                //Marshal.StructureToPtr(loadLibraryARetMem, shellCodeMem, false);
-                //shellCodeMem += ptrSize;
-                //
-                //shellCodeMem.WriteBytes(shellCode[3]);
                 #endregion
 
                 var remoteShellCodeMem = VirtualAllocEx(processHandle, IntPtr.Zero, (UIntPtr)shellCodeSize, AllocationType.COMMIT | AllocationType.RESERVE, PageAccessRights.PAGE_EXECUTE_READWRITE);
                 if (remoteShellCodeMem == IntPtr.Zero)
                     throw new NativeMemoryException("Remote memory for LoadLibraryA shellcode");
 
-                state = WriteProcessMemory(processHandle, remoteShellCodeMem, shellCodeMemOriginal, (UIntPtr)shellCodeSize, ref written);
+                state = WriteProcessMemory(processHandle, remoteShellCodeMem, shellCodeMem, (UIntPtr)shellCodeSize, ref written);
                 if (!state || (UIntPtr)shellCodeSize != written)
                     throw new NativeMemoryException("Remote memory for LoadLibraryA shellcode", remoteShellCodeMem, (UIntPtr)shellCodeSize, written);
 
