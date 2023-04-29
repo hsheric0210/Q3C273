@@ -8,6 +8,7 @@
             <InputAssemblies Include="$(TargetDir)Q3C273.Shared.dll"/>
             <InputAssemblies Include="$(TargetDir)BouncyCastle.Crypto.dll"/>
             <InputAssemblies Include="$(TargetDir)Newtonsoft.Json.dll"/>
+            <InputAssemblies Include="$(TargetDir)ByteEncodings.dll"/>
         </ItemGroup>
 
         <ILRepack

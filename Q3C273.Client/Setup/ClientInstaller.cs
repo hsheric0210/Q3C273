@@ -63,8 +63,7 @@ namespace Ton618.Setup
                     if (ex is IOException || ex is UnauthorizedAccessException)
                     {
                         // kill old process running at destination path
-                        var foundProcesses =
-                            Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Settings.INSTALLPATH));
+                        var foundProcesses = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Settings.INSTALLPATH));
                         var myPid = Process.GetCurrentProcess().Id;
                         foreach (var prc in foundProcesses)
                         {

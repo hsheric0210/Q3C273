@@ -1,5 +1,7 @@
-﻿using System;
+﻿using ByteEncodings;
+using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -32,10 +34,7 @@ namespace Q3C273.Shared.Cryptography
             }
         }
 
-        public string Encrypt(string input)
-        {
-            return Convert.ToBase64String(Encrypt(Encoding.UTF8.GetBytes(input)));
-        }
+        public string Encrypt(string input) => Convert.ToBase64String(Encrypt(Alphabet.Base95Alphabet.GetBytes(input).ToArray()));
 
         /* FORMAT
          * ----------------------------------------
@@ -79,10 +78,7 @@ namespace Q3C273.Shared.Cryptography
             }
         }
 
-        public string Decrypt(string input)
-        {
-            return Encoding.UTF8.GetString(Decrypt(Convert.FromBase64String(input)));
-        }
+        public string Decrypt(string input) => Encoding.UTF8.GetString(Decrypt(Alphabet.Base95Alphabet.GetBytes(input).ToArray()));
 
         public byte[] Decrypt(byte[] input)
         {

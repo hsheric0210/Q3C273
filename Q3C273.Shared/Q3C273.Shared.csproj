@@ -20,6 +20,7 @@
         <Reference Include="System.ServiceModel" />
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="ByteEncodings" Version="1.2.1" />
         <PackageReference Include="protobuf-net">
             <Version>2.4.8</Version>
         </PackageReference>
