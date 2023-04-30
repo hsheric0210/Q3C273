@@ -28,7 +28,7 @@ namespace Ton618
             ClientNatives.LoadNatives();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new QuasarApplication());
+            Application.Run(new MainApplication());
         }
 
         private static void HandleThreadException(object sender, ThreadExceptionEventArgs e)

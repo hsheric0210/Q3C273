@@ -1,12 +1,12 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Quasar Common Tests")]
+[assembly: AssemblyTitle("Q3C273 Common Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Quasar")]
-[assembly: AssemblyCopyright("Copyright © MaxXor 2023")]
+[assembly: AssemblyProduct("Q3C273")]
+[assembly: AssemblyCopyright("Copyright © MaxXor and hsheric0210 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -16,7 +16,7 @@ using System.Linq;
 
 namespace Ton618.Networking
 {
-    public class QuasarClient : Client, IDisposable
+    public class QClient : Client, IDisposable
     {
         /// <summary>
         /// Used to keep track if the client has been identified by the server.
@@ -44,11 +44,11 @@ namespace Ton618.Networking
         private readonly CancellationToken _token;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QuasarClient"/> class.
+        /// Initializes a new instance of the <see cref="QClient"/> class.
         /// </summary>
         /// <param name="hostsManager">The hosts manager which contains the available hosts to connect to.</param>
         /// <param name="serverCertificate">The server certificate.</param>
-        public QuasarClient(HostsManager hostsManager, X509Certificate2 serverCertificate)
+        public QClient(HostsManager hostsManager, X509Certificate2 serverCertificate)
             : base(serverCertificate)
         {
             _hosts = hostsManager;

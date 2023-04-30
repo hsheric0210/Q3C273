@@ -25,7 +25,7 @@ namespace Ton618
     /// <summary>
     /// The client application which handles basic bootstrapping of the message processors and background tasks.
     /// </summary>
-    public class QuasarApplication : Form
+    public class MainApplication : Form
     {
         /// <summary>
         /// A system-wide mutex that ensures that only one instance runs at a time.
@@ -35,7 +35,7 @@ namespace Ton618
         /// <summary>
         /// The client used for the connection to the server.
         /// </summary>
-        private QuasarClient connectClient;
+        private QClient connectClient;
 
         /// <summary>
         /// List of <see cref="IMessageProcessor"/> to keep track of all used message processors.
@@ -65,9 +65,9 @@ namespace Ton618
         private readonly NotifyIcon notifyIcon;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QuasarApplication"/> class.
+        /// Initializes a new instance of the <see cref="MainApplication"/> class.
         /// </summary>
-        public QuasarApplication()
+        public MainApplication()
         {
             messageProcessors = new List<IMessageProcessor>();
             notifyIcon = new NotifyIcon();
@@ -90,7 +90,7 @@ namespace Ton618
         /// </summary>
         private void InitializeNotifyicon()
         {
-            notifyIcon.Text = "Quasar Client\nNo connection";
+            notifyIcon.Text = "Q3C273 Client\nNo connection";
             notifyIcon.Visible = true;
             try
             {
@@ -172,7 +172,7 @@ namespace Ton618
                 }
 
                 var hosts = new HostsManager(new HostsConverter().RawHostsToList(Settings.HOSTS));
-                connectClient = new QuasarClient(hosts, Settings.SERVERCERTIFICATE);
+                connectClient = new QClient(hosts, Settings.SERVERCERTIFICATE);
                 connectClient.ClientState += ConnectClientOnClientState;
                 InitializeMessageProcessors(connectClient);
 
@@ -192,9 +192,9 @@ namespace Ton618
         private void ConnectClientOnClientState(Client s, bool connected)
         {
             if (connected)
-                notifyIcon.Text = "Quasar Client\nConnection established";
+                notifyIcon.Text = "Q3C273 Client\nConnection established";
             else
-                notifyIcon.Text = "Quasar Client\nNo connection";
+                notifyIcon.Text = "Q3C273 Client\nNo connection";
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace Ton618
         /// </summary>
         /// <param name="client">The client which handles the connection.</param>
         /// <remarks>Always initialize from UI thread.</remarks>
-        private void InitializeMessageProcessors(QuasarClient client)
+        private void InitializeMessageProcessors(QClient client)
         {
             messageProcessors.Add(new ClientServicesHandler(this, client));
             messageProcessors.Add(new FileManagerHandler(client));
@@ -248,7 +248,7 @@ namespace Ton618
             if (Settings.UNATTENDEDMODE)
                 return;
 
-            notifyIcon.ShowBalloonTip(4000, "Quasar Client", value, ToolTipIcon.Info);
+            notifyIcon.ShowBalloonTip(4000, "Q3C273 Client", value, ToolTipIcon.Info);
         }
 
         protected override void Dispose(bool disposing)

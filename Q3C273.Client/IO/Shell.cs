@@ -50,13 +50,13 @@ namespace Ton618.IO
         /// <summary>
         /// The client to sends responses to.
         /// </summary>
-        private readonly QuasarClient _client;
+        private readonly QClient _client;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Shell"/> class using a given client.
         /// </summary>
         /// <param name="client">The client to send shell responses to.</param>
-        public Shell(QuasarClient client)
+        public Shell(QClient client)
         {
             _client = client;
         }

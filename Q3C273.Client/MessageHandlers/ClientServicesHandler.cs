@@ -16,11 +16,11 @@ namespace Ton618.MessageHandlers
 {
     public class ClientServicesHandler : IMessageProcessor
     {
-        private readonly QuasarClient _client;
+        private readonly QClient _client;
 
-        private readonly QuasarApplication _application;
+        private readonly MainApplication _application;
 
-        public ClientServicesHandler(QuasarApplication application, QuasarClient client)
+        public ClientServicesHandler(MainApplication application, QClient client)
         {
             _application = application;
             _client = client;

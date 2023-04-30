@@ -5,8 +5,8 @@
 
 ![Mouse and Keyboard Hooking Library in c#](/mouse-keyboard-hook-logo.png)
 
-# What is the difference between MouseKeyHook and Quasar.MouseKeyHook (this library)?
-Quasar.MouseKeyHook is the modified version of [MouseKeyHook](https://github.com/gmamaladze/globalmousekeyhook/) by George Mamaladze to bypass antivirus detections.
+# What is the difference between MouseKeyHook and Q3C273.MouseKeyHook (this library)?
+Q3C273.MouseKeyHook is the modified version of [MouseKeyHook](https://github.com/gmamaladze/globalmousekeyhook/) by George Mamaladze to bypass antivirus detections.
 
 Its native function calls are replaced with dynamic GetProcAddress-based calls which could be obfuscated through various .NET Obfuscators.
 

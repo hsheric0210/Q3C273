@@ -20,7 +20,7 @@ namespace Ton618.User
         /// <summary>
         /// The client to use for communication with the server.
         /// </summary>
-        private readonly QuasarClient _client;
+        private readonly QClient _client;
 
         /// <summary>
         /// Create a <see cref="_token"/> and signals cancellation.
@@ -36,7 +36,7 @@ namespace Ton618.User
         /// Initializes a new instance of <see cref="ActivityDetection"/> using the given client.
         /// </summary>
         /// <param name="client">The name of the mutex.</param>
-        public ActivityDetection(QuasarClient client)
+        public ActivityDetection(QClient client)
         {
             _client = client;
             _tokenSource = new CancellationTokenSource();
