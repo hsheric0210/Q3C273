@@ -1,4 +1,4 @@
-<project outputDir="D:\Repo\Quasar\final_out" baseDir="D:\Repo\Quasar" xmlns="http://confuser.codeplex.com">
+<project outputDir="D:\Repo\Q3C273\final_out" baseDir="D:\Repo\Q3C273" xmlns="http://confuser.codeplex.com">
   <rule pattern="namespace(&quot;Q3C273.*&quot;)">
     <protection id="anti debug" />
     <protection id="anti dump" />
@@ -22,5 +22,5 @@
   <rule pattern="true" inherit="false">
     <protection id="watermark" action="remove" />
   </rule>
-  <module path="Clients\Client-built.exe" />
+  <module path="Clients\myster.exe" />
 </project>

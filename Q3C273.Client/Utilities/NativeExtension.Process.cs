@@ -6,7 +6,7 @@ using static Ton618.Utilities.ClientNatives;
 
 namespace Ton618.Utilities
 {
-    internal static class NativeExtension
+    internal static partial class NativeExtension
     {
         public static IntPtr WriteToProcess(this IntPtr processHandle, IntPtr localMemory, UIntPtr sizeOfData, PageAccessRights protect = PageAccessRights.PAGE_READWRITE)
         {

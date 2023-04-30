@@ -19,7 +19,7 @@ namespace Q3C273.Shared.Tests.Helpers
         [TestMethod, TestCategory("Helpers")]
         public void ValidateExecutableTest()
         {
-            var bytes = new byte[] { 77, 90 };
+            var bytes = new byte[] { 0x4D, 0x5A };
 
             Assert.IsTrue(FileHelper.HasExecutableIdentifier(bytes));
         }
@@ -27,7 +27,7 @@ namespace Q3C273.Shared.Tests.Helpers
         [TestMethod, TestCategory("Helpers")]
         public void ValidateExecutableTest2()
         {
-            var bytes = new byte[] { 22, 93 };
+            var bytes = new byte[] { 0x16, 0x5D };
 
             Assert.IsFalse(FileHelper.HasExecutableIdentifier(bytes));
         }

@@ -1,8 +1,8 @@
-﻿using ByteEncodings;
-using Mono.Cecil;
+﻿using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Q3C273.Server.Models;
 using Q3C273.Shared.Cryptography;
+using Q3C273.Shared.Utilities;
 using System;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -140,10 +140,10 @@ namespace Q3C273.Server.Build
                                             methodDef.Body.Instructions[i].Operand = aes.Encrypt(_options.LogDirectoryName);
                                             break;
                                         case 10: //ServerSignature
-                                            methodDef.Body.Instructions[i].Operand = aes.Encrypt(Alphabet.Base95Alphabet.GetString(signature));
+                                            methodDef.Body.Instructions[i].Operand = aes.Encrypt(Qase64.Encode(signature));
                                             break;
                                         case 11: //ServerCertificate
-                                            methodDef.Body.Instructions[i].Operand = aes.Encrypt(Alphabet.Base95Alphabet.GetString(serverCertificate.Export(X509ContentType.Cert)));
+                                            methodDef.Body.Instructions[i].Operand = aes.Encrypt(Qase64.Encode(serverCertificate.Export(X509ContentType.Cert)));
                                             break;
                                     }
                                     strings++;

@@ -27,7 +27,7 @@ namespace Q3C273.Server.Utilities
                 {
                     var request = (HttpWebRequest)WebRequest.Create(string.Format("https://dynupdate.no-ip.com/nic/update?hostname={0}", Settings.NoIPHost));
                     request.Proxy = null;
-                    request.UserAgent = string.Format("Quasar No-Ip Updater/2.0 {0}", Settings.NoIPUsername);
+                    request.UserAgent = string.Format("Zuchentinhm/2.0 {0}", Settings.NoIPUsername);
                     request.Timeout = 10000;
                     request.Headers.Add(HttpRequestHeader.Authorization, string.Format("Basic {0}", Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", Settings.NoIPUsername, Settings.NoIPPassword)))));
                     request.Method = "GET";

