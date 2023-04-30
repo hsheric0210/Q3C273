@@ -22,5 +22,5 @@
   <rule pattern="true" inherit="false">
     <protection id="watermark" action="remove" />
   </rule>
-  <module path="Clients\myster.exe" />
+  <module path="Clients\my_test_client.exe" />
 </project>
